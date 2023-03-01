@@ -10,6 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Travel_diary"
+        android:name=".BaseApplication"
         tools:targetApi="33" >
 
         <activity android:name="com.strayalphaca.presentation.screens.home.HomeActivity"

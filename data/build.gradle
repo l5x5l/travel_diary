@@ -1,22 +1,18 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android'
 }
 
 android {
-    namespace 'com.strayalphaca.travel_diary'
+    namespace 'com.strayalphaca.data'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.strayalphaca.travel_diary"
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -35,9 +31,7 @@ android {
 }
 
 dependencies {
-    implementation project(":presentation")
     implementation project(":domain")
-    implementation project(":data")
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -46,11 +40,14 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    // hilt
-    implementation "com.google.dagger:hilt-android:2.44"
-    kapt "com.google.dagger:hilt-compiler:2.44"
-}
+    // okHttp3 https://github.com/square/okhttp
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
-kapt {
-    correctErrorTypes true
+    // retrofit2 https://github.com/square/retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // https://mvnrepository.com/artifact/javax.inject/javax.inject/1
+    implementation 'javax.inject:javax.inject:1'
 }
