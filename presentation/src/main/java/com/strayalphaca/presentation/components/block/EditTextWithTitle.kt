@@ -58,7 +58,7 @@ fun EditTextWithTitle(
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .padding(vertical = 12.dp),
             textStyle = TextStyle(fontSize = 14.sp, color = if (state == EditTextState.ACTIVE) MaterialTheme.colors.onBackground else Gray4),
             visualTransformation = if (textVisible) VisualTransformation.None else PasswordVisualTransformation(),
             decorationBox = { innerTextField ->

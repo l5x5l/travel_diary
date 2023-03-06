@@ -35,6 +35,7 @@ fun TextButton(
         Text(
             text = text,
             modifier = Modifier.padding(vertical = 12.dp),
+            style = MaterialTheme.typography.button,
             color = if (state == TextButtonState.ACTIVE) MaterialTheme.colors.onBackground else Gray4
         )
     }

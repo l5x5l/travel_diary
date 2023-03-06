@@ -4,6 +4,7 @@ package com.strayalphaca.presentation.components.atom.base_button
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +35,7 @@ fun BaseButton(
     ) {
         Text(
             text = text,
+            style = MaterialTheme.typography.button,
             modifier = Modifier.padding(vertical = 12.dp),
             color = getButtonTextColor(baseButtonState = state)
         )
