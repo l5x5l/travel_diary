@@ -1,4 +1,4 @@
-package com.strayalphaca.presentation.components.atom.base_button
+package com.strayalphaca.presentation.components.atom.base_icon_button
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height

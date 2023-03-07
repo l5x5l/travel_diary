@@ -16,12 +16,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.strayalphaca.presentation.R
-import com.strayalphaca.presentation.components.atom.base_button.BaseIconButton
+import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
 @Composable
 fun SettingsBaseScreen(
-    exitSettingNav : () -> Unit = {}
+    exitSettingNav : () -> Unit = {},
+    goToLogin : () -> Unit = {}
 ) {
     val navController : NavHostController = rememberNavController()
     val currentBackStack by navController.currentBackStackEntryAsState()
@@ -42,7 +43,7 @@ fun SettingsBaseScreen(
                 }
             )
 
-            SettingsNavHost(navController = navController)
+            SettingsNavHost(navController = navController, navigateToLogin = goToLogin)
         }
     }
 }

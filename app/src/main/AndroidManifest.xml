@@ -13,13 +13,12 @@
         android:name=".BaseApplication"
         tools:targetApi="33" >
 
-        <activity android:name="com.strayalphaca.presentation.screens.home.HomeActivity"
+        <activity android:name=".RootActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
     </application>

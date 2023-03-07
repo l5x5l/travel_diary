@@ -14,7 +14,8 @@ import com.strayalphaca.presentation.screens.settings.withdrawal.WithdrawalScree
 @Composable
 fun SettingsNavHost(
     navController: NavHostController,
-    modifier : Modifier = Modifier
+    modifier : Modifier = Modifier,
+    navigateToLogin : () -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -27,7 +28,8 @@ fun SettingsNavHost(
                 navigateToLanguageSetting = { navController.navigate(LanguageSettingScreenDestination.route) },
                 navigateToPushAlarm = { navController.navigate(PushAlarmScreenDestination.route) },
                 navigateToScreenLock = { navController.navigate(ScreenLockScreenDestination.route) },
-                navigateToWithdrawal = { navController.navigate(WithdrawalScreenDestination.route) }
+                navigateToWithdrawal = { navController.navigate(WithdrawalScreenDestination.route) },
+                navigateToLogin = { navigateToLogin() }
             )
         }
 

@@ -18,6 +18,7 @@ fun SettingsHomeScreen(
     navigateToLanguageSetting : () -> Unit = {},
     navigateToScreenLock : () -> Unit = {},
     navigateToWithdrawal : () -> Unit = {},
+    navigateToLogin : () -> Unit = {}
 ) {
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -27,6 +28,8 @@ fun SettingsHomeScreen(
         TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.screen_lock), onClick = navigateToScreenLock)
         TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.language_setting), onClick = navigateToLanguageSetting)
         TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.withdrawal), onClick = navigateToWithdrawal)
+        // 로그인 상태에 따라 로그인/로그아웃 전환 필요
+        TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.login), onClick = navigateToLogin)
     }
 }
 
