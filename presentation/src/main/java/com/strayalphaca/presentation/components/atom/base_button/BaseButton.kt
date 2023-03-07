@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
@@ -23,7 +24,8 @@ fun BaseButton(
     modifier : Modifier = Modifier,
     text : String,
     onClick : () -> Unit,
-    state : BaseButtonState = BaseButtonState.ACTIVE
+    state : BaseButtonState = BaseButtonState.ACTIVE,
+    textStyle : TextStyle = MaterialTheme.typography.button
 ) {
     Box(
         modifier
@@ -35,7 +37,7 @@ fun BaseButton(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.button,
+            style = textStyle,
             modifier = Modifier.padding(vertical = 12.dp),
             color = getButtonTextColor(baseButtonState = state)
         )

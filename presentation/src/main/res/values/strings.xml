@@ -4,6 +4,12 @@
     <string name="email">이메일</string>
     <string name="password">비밀번호</string>
     <string name="signup">회원가입</string>
+    <string name="settings">설정</string>
+    <string name="push_alarm">푸시 알림</string>
+    <string name="screen_lock">화면 잠금</string>
+    <string name="language_setting">언어 설정</string>
+    <string name="withdrawal">회원탈퇴</string>
+    <string name="time">시간</string>
 
     <string name="login_with_social_account">소셜 계정으로 로그인</string>
     <string name="signup_with_email">이메일로 회원가입</string>
@@ -15,4 +21,18 @@
 
     <string name="placeholder_input_email">이메일을 입력해주세요</string>
     <string name="placeholder_input_password">인증번호 4자리 입력</string>
+
+    <string name="use_screen_lock">화면 잠금 사용</string>
+    <string name="use_biometric">생체인식 사용</string>
+    <string name="change_password">비밀번호 변경</string>
+    <string name="use_push_alarm">푸시 알림 사용</string>
+    <string name="sub_message_push_alarm">지정된 시간마다 알림을 보내드려요</string>
+    <string name="push_alarm_click_event">푸시 알림 클릭 이벤트</string>
+    <string name="sub_message_push_alarm_click_event">푸시 알람을 클릭하면 아래 선택한 화면으로 이동해요</string>
+
+    <string name="calendar_page">달력 페이지</string>
+    <string name="map_page">지도 페이지</string>
+    <string name="diary_write_page">일기 작성</string>
+    <string name="not_select">선택 안함</string>
+
 </resources>

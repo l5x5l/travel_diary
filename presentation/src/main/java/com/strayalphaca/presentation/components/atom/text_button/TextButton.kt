@@ -7,8 +7,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.strayalphaca.presentation.ui.theme.Gray4
@@ -23,19 +23,19 @@ fun TextButton(
     modifier: Modifier = Modifier,
     text : String,
     state : TextButtonState = TextButtonState.ACTIVE,
-    onClick : () -> Unit = {}
+    onClick : () -> Unit = {},
+    textStyle : TextStyle = MaterialTheme.typography.button
 ) {
     Box(
         modifier
             .clickable(enabled = state != TextButtonState.INACTIVE) {
                 onClick()
             },
-        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = text,
             modifier = Modifier.padding(vertical = 12.dp),
-            style = MaterialTheme.typography.button,
+            style = textStyle,
             color = if (state == TextButtonState.ACTIVE) MaterialTheme.colors.onBackground else Gray4
         )
     }
