@@ -6,6 +6,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,12 +17,17 @@ import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconBu
 import com.strayalphaca.presentation.components.block.EditTextType
 import com.strayalphaca.presentation.components.block.EditTextWithTitle
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.getValue
 
 @Composable
 fun SignupPasswordScreen(
     navigateToSignup : () -> Unit = {},
-    navigateToLogin : () -> Unit = {}
+    navigateToLogin : () -> Unit = {},
+    viewModel : SignupPasswordViewModel = viewModel()
 ) {
+    val password by viewModel.password.collectAsState()
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
             BaseIconButton(
@@ -31,7 +37,20 @@ fun SignupPasswordScreen(
             )
             
             Spacer(modifier = Modifier.height(100.dp))
-            SignupPasswordBody()
+
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp)) {
+                Text(text = stringResource(id = R.string.signup), style = MaterialTheme.typography.h2)
+                Spacer(modifier = Modifier.height(60.dp))
+                EditTextWithTitle(
+                    title = stringResource(id = R.string.password),
+                    placeHolder = "",
+                    type = EditTextType.PASSWORD,
+                    value = password,
+                    onValueChange = viewModel::inputPassword
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -44,21 +63,6 @@ fun SignupPasswordScreen(
             )
         }
     }
-}
-
-@Composable
-fun SignupPasswordBody() {
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)) {
-        Text(text = stringResource(id = R.string.signup), style = MaterialTheme.typography.h2)
-        Spacer(modifier = Modifier.height(60.dp))
-        EditTextWithTitle(
-            title = stringResource(id = R.string.password),
-            placeHolder = "",
-            value = "",
-            type = EditTextType.PASSWORD
-        )
-    }
-
 }
 
 @Preview(

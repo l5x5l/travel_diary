@@ -6,24 +6,31 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_button.BaseButton
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
 import com.strayalphaca.presentation.components.atom.text_button.TextButton
 import com.strayalphaca.presentation.components.block.EditTextWithTitle
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
+import androidx.compose.runtime.getValue
+import com.strayalphaca.presentation.components.block.EditTextType
 
-/* TODO viewModel 생성 및 연결 필요 */
 @Composable
 fun LoginScreen(
     navigateToSignup : () -> Unit = {},
-    navigateToBack : () -> Unit = {}
+    navigateToBack : () -> Unit = {},
+    viewModel : LoginViewModel = viewModel()
 ) {
+    val email by viewModel.email.collectAsState()
+    val password by viewModel.password.collectAsState()
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -35,15 +42,50 @@ fun LoginScreen(
                 onClick = navigateToBack
             )
 
-
             Spacer(modifier = Modifier.weight(1f))
 
-            LoginBodyArea(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp),
-                onClickSignup = navigateToSignup
-            )
+            ) {
+                Text(text = stringResource(id = R.string.login), style = MaterialTheme.typography.h2)
+
+                Spacer(modifier = Modifier.height(60.dp))
+
+                EditTextWithTitle(
+                    title = stringResource(id = R.string.email),
+                    placeHolder = "",
+                    value = email,
+                    onValueChange = viewModel::inputEmail
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                EditTextWithTitle(
+                    title = stringResource(id = R.string.password),
+                    placeHolder = "",
+                    value = password,
+                    onValueChange = viewModel::inputPassword,
+                    type = EditTextType.PASSWORD,
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                BaseButton(
+                    text = stringResource(id = R.string.login),
+                    onClick = {  },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                TextButton(
+                    text = stringResource(id = R.string.signup),
+                    modifier = Modifier.align(Alignment.End),
+                    onClick = navigateToSignup
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -51,23 +93,6 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(120.dp))
         }
-    }
-}
-
-@Composable
-fun LoginBodyArea(modifier : Modifier = Modifier, onClickSignup : () ->  Unit) {
-    Column(
-        modifier = modifier
-    ) {
-        Text(text = stringResource(id = R.string.login), style = MaterialTheme.typography.h2)
-        Spacer(modifier = Modifier.height(60.dp))
-        EditTextWithTitle(title = stringResource(id = R.string.email), placeHolder = "", value = "")
-        Spacer(modifier = Modifier.height(16.dp))
-        EditTextWithTitle(title = stringResource(id = R.string.password), placeHolder = "", value = "")
-        Spacer(modifier = Modifier.height(24.dp))
-        BaseButton(text = stringResource(id = R.string.email), onClick = {  }, modifier = Modifier.fillMaxWidth())
-        Spacer(modifier = Modifier.height(0.dp))
-        TextButton(text = stringResource(id = R.string.signup), modifier = Modifier.align(Alignment.End), onClick = onClickSignup)
     }
 }
 

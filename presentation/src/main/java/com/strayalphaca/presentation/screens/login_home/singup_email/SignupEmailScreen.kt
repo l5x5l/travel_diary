@@ -6,6 +6,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,12 +17,21 @@ import com.strayalphaca.presentation.components.atom.base_button.BaseButton
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
 import com.strayalphaca.presentation.components.block.EditTextWithTitle
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.getValue
+import com.strayalphaca.presentation.components.atom.base_button.BaseButtonState
+import com.strayalphaca.presentation.components.block.EditTextState
 
 @Composable
 fun SignupEmailScreen(
     navigateToSignup : () -> Unit = {},
-    navigateToPassword : () -> Unit = {}
+    navigateToPassword : () -> Unit = {},
+    viewModel : SignupEmailViewModel = viewModel()
 ) {
+    val viewState by viewModel.viewState.collectAsState()
+    val email by viewModel.email.collectAsState()
+    val authCode by viewModel.authCode.collectAsState()
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
             BaseIconButton(
@@ -32,42 +42,74 @@ fun SignupEmailScreen(
 
             Spacer(modifier = Modifier.height(100.dp))
 
-            SignupEmailBody()
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp)
+            ) {
+                Text(text = stringResource(id = R.string.signup), style = MaterialTheme.typography.h2)
+                Spacer(modifier = Modifier.height(60.dp))
+                Row(verticalAlignment = Alignment.Bottom) {
+                    EditTextWithTitle(
+                        modifier = Modifier.weight(1f),
+                        title = stringResource(id = R.string.email),
+                        placeHolder = stringResource(id = R.string.placeholder_input_email),
+                        value = email,
+                        onValueChange = viewModel::inputEmail,
+                        state = if (viewState.isActiveEmailTextField) EditTextState.ACTIVE else EditTextState.INACTIVE
+                    )
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    if (viewState.isShowChangeEmailButton) {
+                        BaseButton(
+                            modifier = Modifier.width(88.dp),
+                            text = stringResource(id = R.string.change_email),
+                            onClick = viewModel::backToInputEmailStep
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(40.dp))
+
+                if (viewState.isShowAuthCodeArea) {
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        EditTextWithTitle(
+                            modifier = Modifier.weight(1f),
+                            title = stringResource(id = R.string.input_auth_code),
+                            placeHolder = stringResource(id = R.string.placeholder_input_auth_code),
+                            value = authCode,
+                            onValueChange = viewModel::inputAuthCode,
+                            state = if (viewState.isActiveAuthCodeTextField) EditTextState.ACTIVE else EditTextState.INACTIVE
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        BaseButton(
+                            modifier = Modifier.width(88.dp),
+                            text = stringResource(id = R.string.request_again),
+                            onClick = { /*TODO*/ },
+                            state = if (viewState.isActiveRequestAuthCodeButton) BaseButtonState.ACTIVE else BaseButtonState.INACTIVE
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            /* TODO step에 따라 클릭 이벤트 및 텍스트 변경되도록 수정하기 */
-            BaseButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp), text = "", onClick = { navigateToPassword() })
-        }
-    }
-}
-
-@Composable
-fun SignupEmailBody() {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 32.dp)
-    ) {
-        Text(text = stringResource(id = R.string.signup), style = MaterialTheme.typography.h2)
-        Spacer(modifier = Modifier.height(60.dp))
-        Row(verticalAlignment = Alignment.Bottom) {
-            EditTextWithTitle(modifier = Modifier.weight(1f), title = stringResource(id = R.string.email), placeHolder = "", value = "")
-            Spacer(modifier = Modifier.width(12.dp))
-            BaseButton(modifier = Modifier.width(88.dp), text = stringResource(id = R.string.change_email), onClick = { /*TODO*/ })
-        }
-        Spacer(modifier = Modifier.height(40.dp))
-        /* TODO step에 따라서 이메일이 정해졌을 때만 보여지도록 수정 */
-        Row(verticalAlignment = Alignment.Bottom) {
-            EditTextWithTitle(
-                modifier = Modifier.weight(1f),
-                title = stringResource(id = R.string.input_auth_code),
-                placeHolder = stringResource(id = R.string.placeholder_input_email),
-                value = ""
+            BaseButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                text = stringResource(id = viewState.bottomButtonTextResource),
+                onClick = {
+                    when (viewState){
+                        SignupEmailViewState.InputEmailStep -> {
+                            viewModel.moveToAuthCodeStep()
+                        }
+                        SignupEmailViewState.AuthCodeStep -> {
+                            navigateToPassword()
+                        }
+                    }
+                }
             )
-            Spacer(modifier = Modifier.width(12.dp))
-            BaseButton(modifier = Modifier.width(88.dp), text = stringResource(id = R.string.request_again), onClick = { /*TODO*/ })
+
         }
     }
 }

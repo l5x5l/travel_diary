@@ -20,7 +20,7 @@
     <string name="move_to_next_step">다음 단계로 이동하기</string>
 
     <string name="placeholder_input_email">이메일을 입력해주세요</string>
-    <string name="placeholder_input_password">인증번호 4자리 입력</string>
+    <string name="placeholder_input_auth_code">인증번호 4자리 입력</string>
     <string name="placeholder_write_diary">일기 내용을 작성해보세요.</string>
 
     <string name="use_screen_lock">화면 잠금 사용</string>
