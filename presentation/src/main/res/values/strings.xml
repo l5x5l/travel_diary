@@ -21,6 +21,7 @@
 
     <string name="placeholder_input_email">이메일을 입력해주세요</string>
     <string name="placeholder_input_password">인증번호 4자리 입력</string>
+    <string name="placeholder_write_diary">일기 내용을 작성해보세요.</string>
 
     <string name="use_screen_lock">화면 잠금 사용</string>
     <string name="use_biometric">생체인식 사용</string>
@@ -34,5 +35,8 @@
     <string name="map_page">지도 페이지</string>
     <string name="diary_write_page">일기 작성</string>
     <string name="not_select">선택 안함</string>
-
+    <string name="today_feeling">오늘의 감정</string>
+    <string name="weather">날씨</string>
+    <string name="recording_file">녹음 파일</string>
+    <string name="register">등록하기</string>
 </resources>
