@@ -15,9 +15,12 @@ private val DarkColorPalette = darkColors(
     onBackground = Color.White,
     primary = Color.Black,
     onPrimary = Color.White,
-    secondary = Tape
+    secondary = Tape,
+    onError = errorRed
 )
 
+
+// primary 색상이 background 와 동일한 경우, text field 의 위치를 표시하는 ui 색상도 동일해져 안보기에 된다.
 private val LightColorPalette = lightColors(
     surface = Color.White,
     onSurface = Color.Black,
@@ -27,6 +30,7 @@ private val LightColorPalette = lightColors(
     onPrimary = Color.Black,
     primaryVariant = Gray2,
     secondary = Tape,
+    onError = errorRed
 
     /* Other default colors to override
     background = Color.White,
