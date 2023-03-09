@@ -74,7 +74,7 @@ fun LoginScreen(
 
                 BaseButton(
                     text = stringResource(id = R.string.login),
-                    onClick = {  },
+                    onClick = { viewModel.tryLogin() },
                     modifier = Modifier.fillMaxWidth()
                 )
 
