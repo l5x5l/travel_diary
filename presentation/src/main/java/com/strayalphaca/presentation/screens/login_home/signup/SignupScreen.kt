@@ -41,7 +41,7 @@ fun SignupScreen(
                 Text(text = stringResource(id = R.string.signup), style = MaterialTheme.typography.h2)
                 Spacer(modifier = Modifier.height(60.dp))
                 BaseButton(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().height(40.dp),
                     text = stringResource(id = R.string.signup_with_email),
                     onClick = { navigateToSignupEmail() }
                 )

@@ -57,7 +57,8 @@ fun SignupPasswordScreen(
             BaseButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(8.dp)
+                    .height(48.dp),
                 text = stringResource(id = R.string.signup),
                 onClick = { navigateToLogin() }
             )

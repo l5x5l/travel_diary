@@ -62,7 +62,7 @@ fun SignupEmailScreen(
 
                     if (viewState.isShowChangeEmailButton) {
                         BaseButton(
-                            modifier = Modifier.width(88.dp),
+                            modifier = Modifier.width(88.dp).height(40.dp),
                             text = stringResource(id = R.string.change_email),
                             onClick = viewModel::backToInputEmailStep
                         )
@@ -82,7 +82,7 @@ fun SignupEmailScreen(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         BaseButton(
-                            modifier = Modifier.width(88.dp),
+                            modifier = Modifier.width(88.dp).height(40.dp),
                             text = stringResource(id = R.string.request_again),
                             onClick = { /*TODO*/ },
                             state = if (viewState.isActiveRequestAuthCodeButton) BaseButtonState.ACTIVE else BaseButtonState.INACTIVE
@@ -96,7 +96,8 @@ fun SignupEmailScreen(
             BaseButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(8.dp)
+                    .height(48.dp),
                 text = stringResource(id = viewState.bottomButtonTextResource),
                 onClick = {
                     when (viewState){

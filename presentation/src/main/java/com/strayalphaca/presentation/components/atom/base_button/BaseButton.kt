@@ -4,6 +4,7 @@ package com.strayalphaca.presentation.components.atom.base_button
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -24,6 +25,7 @@ fun BaseButton(
     modifier : Modifier = Modifier,
     text : String,
     onClick : () -> Unit,
+    isLoading : Boolean = false,
     state : BaseButtonState = BaseButtonState.ACTIVE,
     textStyle : TextStyle = MaterialTheme.typography.button
 ) {
@@ -35,12 +37,19 @@ fun BaseButton(
             },
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = text,
-            style = textStyle,
-            modifier = Modifier.padding(vertical = 12.dp),
-            color = getButtonTextColor(baseButtonState = state)
-        )
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(24.dp),
+                color = getButtonTextColor(baseButtonState = state)
+            )
+        } else {
+            Text(
+                text = text,
+                style = textStyle,
+                color = getButtonTextColor(baseButtonState = state)
+            )
+        }
     }
 }
 
@@ -55,11 +64,17 @@ fun BaseButtonPreview() {
     TravelDiaryTheme {
         Surface(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.fillMaxWidth()) {
-                BaseButton(modifier = Modifier.fillMaxWidth(), text = "Button", onClick = {})
+                BaseButton(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp), text = "Button", onClick = {})
                 Spacer(modifier = Modifier.height(8.dp))
-                BaseButton(modifier = Modifier.fillMaxWidth(), text = "Button", onClick = {}, state = BaseButtonState.INACTIVE)
+                BaseButton(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp), text = "Button", onClick = {}, state = BaseButtonState.INACTIVE)
                 Spacer(modifier = Modifier.height(8.dp))
-                BaseButton(modifier = Modifier.fillMaxWidth(), text = "Button", onClick = {}, state = BaseButtonState.SELECTED)
+                BaseButton(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp), isLoading = true, text = "Button", onClick = {}, state = BaseButtonState.SELECTED)
             }
         }
     }

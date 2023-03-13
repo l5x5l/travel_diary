@@ -63,7 +63,8 @@ fun PushAlarmScreen() {
                     text = "$index item",
                     onClick = {  },
                     textStyle = MaterialTheme.typography.caption,
-                    state = if (index == 1) BaseButtonState.SELECTED else BaseButtonState.ACTIVE
+                    state = if (index == 1) BaseButtonState.SELECTED else BaseButtonState.ACTIVE,
+                    modifier = Modifier.height(40.dp)
                 )
 
             }
