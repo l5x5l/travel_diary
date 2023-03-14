@@ -30,6 +30,7 @@ fun LoginScreen(
 ) {
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
+    val loginLoading by viewModel.networkLoading.collectAsState()
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -75,7 +76,8 @@ fun LoginScreen(
                 BaseButton(
                     text = stringResource(id = R.string.login),
                     onClick = { viewModel.tryLogin() },
-                    modifier = Modifier.fillMaxWidth().height(40.dp)
+                    modifier = Modifier.fillMaxWidth().height(40.dp),
+                    isLoading = loginLoading
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))

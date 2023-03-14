@@ -19,6 +19,7 @@ import com.strayalphaca.presentation.components.block.EditTextWithTitle
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
+import com.strayalphaca.presentation.utils.observeWithLifecycle
 
 @Composable
 fun SignupPasswordScreen(
@@ -26,7 +27,12 @@ fun SignupPasswordScreen(
     navigateToLogin : () -> Unit = {},
     viewModel : SignupPasswordViewModel = viewModel()
 ) {
+    viewModel.signupSuccessEvent.observeWithLifecycle { success ->
+        if (success) navigateToLogin()
+    }
+
     val password by viewModel.password.collectAsState()
+    val signupState by viewModel.signupState.collectAsState()
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -38,9 +44,11 @@ fun SignupPasswordScreen(
             
             Spacer(modifier = Modifier.height(100.dp))
 
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp)
+            ) {
                 Text(text = stringResource(id = R.string.signup), style = MaterialTheme.typography.h2)
                 Spacer(modifier = Modifier.height(60.dp))
                 EditTextWithTitle(
@@ -48,7 +56,8 @@ fun SignupPasswordScreen(
                     placeHolder = "",
                     type = EditTextType.PASSWORD,
                     value = password,
-                    onValueChange = viewModel::inputPassword
+                    onValueChange = viewModel::inputPassword,
+                    state = signupState.passwordTextField
                 )
             }
 
@@ -60,7 +69,10 @@ fun SignupPasswordScreen(
                     .padding(8.dp)
                     .height(48.dp),
                 text = stringResource(id = R.string.signup),
-                onClick = { navigateToLogin() }
+                onClick = {
+                    viewModel.trySignUp()
+                },
+                state = signupState.bottomButtonState
             )
         }
     }
