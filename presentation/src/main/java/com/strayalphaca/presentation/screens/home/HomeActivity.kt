@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -14,6 +15,7 @@ import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.block.HomeBottomNavigation
 import com.strayalphaca.presentation.models.BottomNavigationItem
 import com.strayalphaca.presentation.screens.home.calendar.CalendarScreen
+import com.strayalphaca.presentation.screens.home.calendar.CalendarViewModel
 import com.strayalphaca.presentation.screens.home.map.MapScreen
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
@@ -69,7 +71,8 @@ fun HomeNavHost(
         composable(
             route = CalendarScreenDestination.route
         ) {
-            CalendarScreen(onDiaryClick = goToDiary)
+            val calendarViewModel = hiltViewModel<CalendarViewModel>()
+            CalendarScreen(onDiaryClick = goToDiary, viewModel = calendarViewModel)
         }
 
         composable(
