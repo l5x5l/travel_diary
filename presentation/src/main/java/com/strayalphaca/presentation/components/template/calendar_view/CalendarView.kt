@@ -36,7 +36,7 @@ fun <T> CalendarView(
             }
 
             itemsIndexed(lastDaysOfPrevMonth(year, month)) { _, date ->
-                outRangeView(date + 1)
+                outRangeView(date)
             }
 
             itemsIndexed(calendarData) { index, item ->
@@ -48,7 +48,7 @@ fun <T> CalendarView(
 
             // 다음 달 날짜
             itemsIndexed(firstDaysOfNextMonth(year, month)) { _, date ->
-                outRangeView(date + 1)
+                outRangeView(date)
             }
         },
         verticalArrangement = Arrangement.spacedBy(8.dp),

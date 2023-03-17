@@ -1,7 +1,7 @@
 package com.strayalphaca.data.login.repository_impl
 
 import com.strayalphaca.data.login.data_source.LoginDataSource
-import com.strayalphaca.data.login.utils.mapBaseResponse
+import com.strayalphaca.data.all.utils.mapBaseResponse
 import com.strayalphaca.data.login.utils.tokenDtoToToken
 import com.strayalphaca.domain.login.model.Tokens
 import com.strayalphaca.domain.model.BaseResponse

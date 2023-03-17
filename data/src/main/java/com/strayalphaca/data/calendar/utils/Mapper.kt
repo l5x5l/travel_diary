@@ -2,22 +2,6 @@ package com.strayalphaca.data.calendar.utils
 
 import com.strayalphaca.data.all.model.DiaryDto
 import com.strayalphaca.domain.calendar.model.DiaryInCalendar
-import com.strayalphaca.domain.model.BaseResponse
-
-fun <T, K> mapBaseResponse(response : BaseResponse<T>, mapper : (T) -> K) : BaseResponse<K> {
-    return when (response) {
-        is BaseResponse.Success -> {
-            BaseResponse.Success(mapper(response.data))
-        }
-        is BaseResponse.Failure -> {
-            response
-        }
-        is BaseResponse.EmptySuccess -> {
-            response
-        }
-    }
-}
-
 
 fun diaryDtoToDiaryInCalendar(diaryDto: DiaryDto) : DiaryInCalendar {
     val dateString = diaryDto.date
