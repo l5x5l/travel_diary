@@ -22,6 +22,7 @@ import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 @Composable
 fun HomeScreen(
     goToDiary : (Int) -> Unit = {},
+    goToDiaryWrite : (Int?) -> Unit = {},
     goToSettings : () -> Unit = {}
 ) {
     TravelDiaryTheme {
@@ -34,6 +35,7 @@ fun HomeScreen(
             HomeNavHost(
                 navHostController = navController,
                 goToDiary = goToDiary,
+                goToDiaryWrite = goToDiaryWrite,
                 modifier = Modifier.weight(1f)
             )
 
@@ -61,7 +63,8 @@ fun HomeScreen(
 fun HomeNavHost(
     navHostController: NavHostController,
     modifier : Modifier = Modifier,
-    goToDiary : (Int) -> Unit
+    goToDiary : (Int) -> Unit,
+    goToDiaryWrite : (Int?) -> Unit
 ) {
     NavHost(
         navController = navHostController,
@@ -72,7 +75,11 @@ fun HomeNavHost(
             route = CalendarScreenDestination.route
         ) {
             val calendarViewModel = hiltViewModel<CalendarViewModel>()
-            CalendarScreen(onDiaryClick = goToDiary, viewModel = calendarViewModel)
+            CalendarScreen(
+                onDiaryClick = goToDiary,
+                onEmptyDiaryClick = goToDiaryWrite,
+                viewModel = calendarViewModel
+            )
         }
 
         composable(

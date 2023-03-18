@@ -9,6 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailScreen
+import com.strayalphaca.presentation.screens.diary.write.DiaryWriteScreen
 import com.strayalphaca.presentation.screens.home.HomeScreen
 import com.strayalphaca.presentation.screens.login_home.loginNavGraph
 import com.strayalphaca.presentation.screens.settings.SettingsBaseScreen
@@ -25,7 +27,6 @@ class RootActivity : ComponentActivity() {
                 val navHostController = rememberNavController()
 
                 RootNavHost(navController = navHostController)
-                //SettingsBaseScreen(navController = navHostController)
             }
         }
     }
@@ -33,7 +34,7 @@ class RootActivity : ComponentActivity() {
 
 @Composable
 fun RootNavHost(
-    navController : NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -43,11 +44,13 @@ fun RootNavHost(
     ) {
         composable(HomeGraph.route) {
             HomeScreen(
+                goToDiary = { navController.navigate(DiaryDetail.route) },
+                goToDiaryWrite = { navController.navigate(DiaryWrite.route) },
                 goToSettings = { navController.navigate(SettingsGraph.route) }
             )
         }
 
-        composable(SettingsGraph.route){
+        composable(SettingsGraph.route) {
             SettingsBaseScreen(
                 exitSettingNav = { navController.popBackStack() },
                 goToLogin = { navController.navigate(LoginGraph.route) }
@@ -58,5 +61,13 @@ fun RootNavHost(
             navController = navController,
             onExitLogin = { navController.popBackStack() }
         )
+
+        composable(DiaryDetail.route) {
+            DiaryDetailScreen()
+        }
+
+        composable(DiaryWrite.route) {
+            DiaryWriteScreen()
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.strayalphaca.presentation.screens.home.calendar
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -22,6 +23,7 @@ import com.strayalphaca.presentation.components.template.calendar_view.CalendarV
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     onDiaryClick: (Int) -> Unit = {},
+    onEmptyDiaryClick : (Int?) -> Unit = {},
     viewModel: CalendarViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -53,10 +55,12 @@ fun CalendarScreen(
                 month = state.month,
                 calendarData = state.diaryData,
                 contentView = { data, day, isToday ->
-                    CalendarItemView(item = data, day = day, isToday = isToday)
+                    CalendarItemView(item = data, day = day, isToday = isToday,
+                    modifier = Modifier.clickable { onDiaryClick(0) })
                 },
                 emptyView = { day, isToday ->
-                    CalendarItemEmptyView(day = day, isToday = isToday)
+                    CalendarItemEmptyView(day = day, isToday = isToday,
+                        modifier = Modifier.clickable { onEmptyDiaryClick(null) })
                 },
                 outRangeView = { day ->
                     CalendarItemEmptyView(day = day, isToday = false, isCurrentMonth = false)
