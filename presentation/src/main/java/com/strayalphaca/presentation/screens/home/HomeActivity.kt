@@ -1,11 +1,13 @@
 package com.strayalphaca.presentation.screens.home
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -19,6 +21,11 @@ import com.strayalphaca.presentation.screens.home.calendar.CalendarViewModel
 import com.strayalphaca.presentation.screens.home.map.MapScreen
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
+private fun NavHostController.navigateToHome(route : String) =
+    this.navigate(route) {
+        popUpTo(this@navigateToHome.graph.findStartDestination().id)
+        launchSingleTop = true
+    }
 @Composable
 fun HomeScreen(
     goToDiary : (Int) -> Unit = {},
@@ -31,7 +38,7 @@ fun HomeScreen(
         val currentDestination = currentBackStack?.destination
         val currentScreen = homeScreens.find { it.route == currentDestination?.route } ?: CalendarScreenDestination
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
             HomeNavHost(
                 navHostController = navController,
                 goToDiary = goToDiary,
@@ -46,11 +53,18 @@ fun HomeScreen(
                     BottomNavigationItem("settings", R.drawable.ic_setting),
                 ),
                 onClick = {bottomMenuItem ->
-                    if (bottomMenuItem.route == "settings") {
-                        goToSettings()
-                    } else {
-                        navController.navigate(bottomMenuItem.route)
+                    when (bottomMenuItem.route) {
+                        "settings" -> {
+                            goToSettings()
+                        }
+                        CalendarScreenDestination.route -> {
+                            navController.navigateToHome(bottomMenuItem.route)
+                        }
+                        else -> {
+                            navController.navigate(bottomMenuItem.route)
+                        }
                     }
+
                 },
                 currentRoute = currentScreen.route
             )
