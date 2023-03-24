@@ -11,6 +11,9 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+    versionCatalogs {
+
+    }
 }
 rootProject.name = "travel_diary"
 include ':app'

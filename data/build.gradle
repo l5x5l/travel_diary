@@ -33,21 +33,19 @@ android {
 dependencies {
     implementation project(":domain")
 
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation libs.android.ktx
+    implementation libs.android.appcompat
+    implementation libs.android.material
+    testImplementation libs.junit
+    androidTestImplementation libs.test.junit
+    androidTestImplementation libs.test.espresso
 
     // okHttp3 https://github.com/square/okhttp
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+    implementation libs.bundles.okhttp3
 
     // retrofit2 https://github.com/square/retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation libs.bundles.retrofit2
 
     // https://mvnrepository.com/artifact/javax.inject/javax.inject/1
-    implementation 'javax.inject:javax.inject:1'
+    implementation libs.javax.inject
 }
