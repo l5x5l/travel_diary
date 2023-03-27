@@ -9,9 +9,9 @@ import androidx.compose.ui.Modifier
 @Composable
 fun MapScreen(
     modifier : Modifier = Modifier,
-    onDiaryClick : (Int) -> Unit = {}
+    onDiaryClick : (String) -> Unit = {}
 ) {
     Row(modifier = modifier) {
-        Text(modifier = Modifier.clickable { onDiaryClick(2) } , text = "Map")
+        Text(modifier = Modifier.clickable { onDiaryClick("2") } , text = "Map")
     }
 }

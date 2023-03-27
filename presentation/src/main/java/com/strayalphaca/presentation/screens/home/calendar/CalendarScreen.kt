@@ -22,8 +22,8 @@ import com.strayalphaca.presentation.components.template.calendar_view.CalendarV
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
-    onDiaryClick: (Int) -> Unit = {},
-    onEmptyDiaryClick : (Int?) -> Unit = {},
+    onDiaryClick: (String) -> Unit = {},
+    onEmptyDiaryClick : (String?) -> Unit = {},
     viewModel: CalendarViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -56,7 +56,7 @@ fun CalendarScreen(
                 calendarData = state.diaryData,
                 contentView = { data, day, isToday ->
                     CalendarItemView(item = data, day = day, isToday = isToday,
-                    modifier = Modifier.clickable { onDiaryClick(0) })
+                    modifier = Modifier.clickable { onDiaryClick(data.id) })
                 },
                 emptyView = { day, isToday ->
                     CalendarItemEmptyView(day = day, isToday = isToday,

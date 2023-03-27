@@ -1,5 +1,9 @@
 package com.strayalphaca.travel_diary
 
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+
 interface RootDestinations {
     val route : String
 }
@@ -17,11 +21,17 @@ object LoginGraph : RootDestinations {
 }
 
 object DiaryDetail : RootDestinations {
-    override val route: String
-        get() = "diary_detail"
+    override val route: String = "diary_detail"
+    const val diaryId = "diary_id"
+    val routeWithArgs = "$route/{$diaryId}"
+    val arguments = listOf(navArgument(diaryId){type = NavType.StringType})
+    val deepLinks = listOf(navDeepLink { uriPattern = "traily://$route/{$diaryId}" })
 }
 
 object DiaryWrite : RootDestinations {
-    override val route: String
-        get() = "diary_write"
+    override val route: String = "diary_write"
+    const val diaryId = "diary_id"
+    val routeWithArgs = "${route}/{${diaryId}}"
+    val arguments = listOf(navArgument(diaryId){type = NavType.StringType})
+    val deepLinks = listOf(navDeepLink { uriPattern = "traily://${route}/{$diaryId}" })
 }

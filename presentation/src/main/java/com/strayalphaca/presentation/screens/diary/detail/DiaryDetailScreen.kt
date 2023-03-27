@@ -9,6 +9,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,11 +21,21 @@ import com.strayalphaca.presentation.components.block.PolaroidView
 import com.strayalphaca.presentation.components.block.SoundView
 import com.strayalphaca.presentation.ui.theme.Gray2
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.getValue
 
 @Composable
-fun DiaryDetailScreen() {
+fun DiaryDetailScreen(
+    viewModel : DiaryDetailViewModel = viewModel(),
+    id : String
+) {
     val scrollState = rememberScrollState()
+    val state by viewModel.state.collectAsState()
 
+    LaunchedEffect(id) {
+        viewModel.tryLoadDetail(id)
+    }
+    
     Surface() {
         Column(modifier = Modifier.fillMaxSize()) {
             BaseIconButton(
@@ -35,40 +47,47 @@ fun DiaryDetailScreen() {
                 .height(1.dp)
                 .background(Gray2))
 
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .verticalScroll(scrollState)
-            ) {
-                Text(text = "2023년 2월 10일")
+            if (state.diaryDetail != null) {
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .verticalScroll(scrollState)
+                ) {
+                    Text(text = state.diaryDetail!!.createdAt)
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Row(modifier = Modifier.weight(1f)) {
-                        Text(text = stringResource(id = R.string.today_feeling), style = MaterialTheme.typography.body2)
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Row(modifier = Modifier.weight(1f)) {
+                            Text(text = stringResource(id = R.string.today_feeling), style = MaterialTheme.typography.body2)
+                        }
+                        Row(modifier = Modifier.weight(1f)) {
+                            Text(text = stringResource(id = R.string.weather), style = MaterialTheme.typography.body2)
+                        }
                     }
-                    Row(modifier = Modifier.weight(1f)) {
-                        Text(text = stringResource(id = R.string.weather), style = MaterialTheme.typography.body2)
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    if (state.diaryDetail!!.files.isNotEmpty()) {
+                        PolaroidView()
                     }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        text = state.diaryDetail!!.content,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        style = MaterialTheme.typography.body2
+                    )
+
+                    Spacer(modifier = Modifier.height(40.dp))
+
+                    SoundView()
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                PolaroidView()
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "오늘은 새로운 이빨친구가 입주했다.\u2028새 친구라 기분 좋지만, 지갑은 슬퍼져 이젠 그만 들어와도 괜찮을 것 같다.",
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    style = MaterialTheme.typography.body2
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                SoundView()
+            } else {
+                // todo empty View 및 에러 view 생성
             }
+
         }
     }
 }
@@ -83,6 +102,6 @@ fun DiaryDetailScreen() {
 @Preview(showBackground = true, widthDp = 360)
 fun DiaryDetailScreenPreview() {
     TravelDiaryTheme() {
-        DiaryDetailScreen()
+        DiaryDetailScreen(id = "1")
     }
 }

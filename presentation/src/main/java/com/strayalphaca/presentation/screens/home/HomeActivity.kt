@@ -28,8 +28,8 @@ private fun NavHostController.navigateToHome(route : String) =
     }
 @Composable
 fun HomeScreen(
-    goToDiary : (Int) -> Unit = {},
-    goToDiaryWrite : (Int?) -> Unit = {},
+    goToDiary : (String) -> Unit = {},
+    goToDiaryWrite : (String?) -> Unit = {},
     goToSettings : () -> Unit = {}
 ) {
     TravelDiaryTheme {
@@ -77,8 +77,8 @@ fun HomeScreen(
 fun HomeNavHost(
     navHostController: NavHostController,
     modifier : Modifier = Modifier,
-    goToDiary : (Int) -> Unit,
-    goToDiaryWrite : (Int?) -> Unit
+    goToDiary : (String) -> Unit,
+    goToDiaryWrite : (String?) -> Unit
 ) {
     NavHost(
         navController = navHostController,
