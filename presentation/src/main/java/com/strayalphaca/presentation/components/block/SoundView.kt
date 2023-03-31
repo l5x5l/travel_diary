@@ -13,7 +13,9 @@ import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import com.strayalphaca.presentation.R
 
 @Composable
-fun SoundView() {
+fun SoundView(
+    file : ByteArray
+) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Surface(modifier = Modifier
             .fillMaxWidth()
@@ -53,7 +55,7 @@ fun SoundView() {
 fun SoundViewPreview() {
     TravelDiaryTheme {
         Surface(modifier = Modifier.padding(16.dp)) {
-            SoundView()
+            SoundView(byteArrayOf())
         }
     }
 }

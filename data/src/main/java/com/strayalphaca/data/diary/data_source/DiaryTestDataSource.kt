@@ -12,7 +12,7 @@ class DiaryTestDataSource @Inject constructor() : DiaryDataSource {
 
         val diary = DiaryDto(
             id = "1", date = "2023/03.01",
-            files = listOf(FileDto(id = "", shortLink = "")))
+            files = listOf<FileDto>())
 
         return BaseResponse.Success(diary)
     }

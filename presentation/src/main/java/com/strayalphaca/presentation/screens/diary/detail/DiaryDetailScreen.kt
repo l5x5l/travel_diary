@@ -1,6 +1,7 @@
 package com.strayalphaca.presentation.screens.diary.detail
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -23,6 +24,8 @@ import com.strayalphaca.presentation.ui.theme.Gray2
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun DiaryDetailScreen(
@@ -58,11 +61,23 @@ fun DiaryDetailScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        Row(modifier = Modifier.weight(1f)) {
+                        Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                             Text(text = stringResource(id = R.string.today_feeling), style = MaterialTheme.typography.body2)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_feeling_angry),
+                                contentDescription = null,
+                                modifier = Modifier.size(36.dp)
+                            )
                         }
-                        Row(modifier = Modifier.weight(1f)) {
+                        Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                             Text(text = stringResource(id = R.string.weather), style = MaterialTheme.typography.body2)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_weather_sunny),
+                                contentDescription = null,
+                                modifier = Modifier.size(36.dp)
+                            )
                         }
                     }
 
@@ -82,7 +97,8 @@ fun DiaryDetailScreen(
 
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    SoundView()
+                    // voice 파일 유무에 따라 변경 필요
+                    // SoundView()
                 }
             } else {
                 // todo empty View 및 에러 view 생성

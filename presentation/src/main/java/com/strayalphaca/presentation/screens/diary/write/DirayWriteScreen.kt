@@ -1,6 +1,10 @@
 package com.strayalphaca.presentation.screens.diary.write
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -26,6 +30,8 @@ import com.strayalphaca.presentation.ui.theme.Gray2
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import com.strayalphaca.presentation.utils.getFileFromLocal
 
 @Composable
 fun DiaryWriteScreen(
@@ -35,6 +41,22 @@ fun DiaryWriteScreen(
     val scrollState = rememberScrollState()
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
+
+    val pickMP3File = getFileFromLocal(context = context) { file ->
+        viewModel.inputVoiceFile(file)
+    }
+
+    val pickImage = getFileFromLocal(context = context) { file ->
+        viewModel.inputImageFile(file)
+    }
+
+    val requestPermissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                pickMP3File.launch("audio/*")
+            }
+        }
 
     LaunchedEffect(id) {
         if (id != null) viewModel.tryLoadDetail(id)
@@ -65,62 +87,101 @@ fun DiaryWriteScreen(
                     .background(Gray2)
             )
 
-            if (state.diaryDetail != null) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .verticalScroll(scrollState)
-                ) {
-                    Text(text = state.diaryDetail!!.createdAt)
 
-                    Spacer(modifier = Modifier.height(16.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(16.dp)
+                    .verticalScroll(scrollState)
+            ) {
+                Text(text = "")
 
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Row(modifier = Modifier.weight(1f)) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Row(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(id = R.string.today_feeling),
+                            style = MaterialTheme.typography.body2
+                        )
+                    }
+                    Row(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(id = R.string.weather),
+                            style = MaterialTheme.typography.body2
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                if (state.imageFiles.isNotEmpty()) {
+                    PolaroidView(imageFile = state.imageFiles[0])
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                BasicTextField(
+                    value = content,
+                    onValueChange = viewModel::inputContent,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
+                    decorationBox = { innerTextField ->
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            innerTextField()
+                            Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = stringResource(id = R.string.today_feeling),
-                                style = MaterialTheme.typography.body2
-                            )
-                        }
-                        Row(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = stringResource(id = R.string.weather),
-                                style = MaterialTheme.typography.body2
+                                text = "${content.length}/300",
+                                modifier = Modifier.align(Alignment.End),
+                                style = MaterialTheme.typography.caption
                             )
                         }
                     }
+                )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                    PolaroidView()
+                if (state.voiceFile != null)
+                    SoundView(state.voiceFile!!)
+            }
 
-                    Spacer(modifier = Modifier.height(24.dp))
 
-                    BasicTextField(
-                        value = content,
-                        onValueChange = viewModel::inputContent,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
-                        decorationBox = { innerTextField ->
-                            Column(modifier = Modifier.fillMaxWidth()) {
-                                innerTextField()
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text = "${content.length}/300",
-                                    modifier = Modifier.align(Alignment.End),
-                                    style = MaterialTheme.typography.caption
-                                )
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(Gray2)
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    BaseIconButton(
+                        iconResourceId = R.drawable.ic_map,
+                        onClick = {
+                            if (context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            } else {
+                                pickMP3File.launch("audio/*")
                             }
                         }
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    BaseIconButton(
+                        iconResourceId = R.drawable.ic_map,
+                        onClick = {
+                            if (context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            } else {
+                                pickImage.launch("image/*")
+                            }
+                        }
+                    )
 
-                    SoundView()
                 }
-            } else {
-                // todo empty View 및 에러 view 생성
             }
 
         }

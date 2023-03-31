@@ -42,6 +42,30 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
+    fun inputVoiceFile(file : ByteArray) {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.AddVoiceFile(file))
+        }
+    }
+
+    fun removeVoiceFile() {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.RemoveVoiceFile)
+        }
+    }
+
+    fun inputImageFile(file : ByteArray) {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.AddImageFile(file))
+        }
+    }
+
+    fun removeImageFile() {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.RemoveImageFile)
+        }
+    }
+
     private fun reduce(state: DiaryWriteState, events: DiaryWriteEvent): DiaryWriteState {
         return when (events) {
             DiaryWriteEvent.DiaryLoading -> {
@@ -52,7 +76,7 @@ class DiaryWriteViewModel @Inject constructor(
             }
             is DiaryWriteEvent.DiaryLoadingSuccess -> {
                 inputContent(events.diaryDetail.content)
-                state.copy(buttonActive = true, showLoadingError = false, diaryDetail = events.diaryDetail)
+                state.copy(buttonActive = true, showLoadingError = false)
             }
             DiaryWriteEvent.DiaryWriteLoading -> {
                 state.copy(buttonActive = false)
@@ -63,8 +87,21 @@ class DiaryWriteViewModel @Inject constructor(
             DiaryWriteEvent.DiaryWriteSuccess -> {
                 state.copy(buttonActive = true)
             }
+            is DiaryWriteEvent.AddVoiceFile -> {
+                state.copy(voiceFile = events.file)
+            }
+            DiaryWriteEvent.RemoveVoiceFile -> {
+                state.copy(voiceFile = null)
+            }
+            is DiaryWriteEvent.AddImageFile -> {
+                state.copy(imageFiles = listOf(events.file))
+            }
+            DiaryWriteEvent.RemoveImageFile -> {
+                state.copy(imageFiles = listOf())
+            }
         }
     }
+
 }
 
 sealed class DiaryWriteEvent {
@@ -74,10 +111,42 @@ sealed class DiaryWriteEvent {
     object DiaryWriteLoading : DiaryWriteEvent()
     object DiaryWriteFail : DiaryWriteEvent()
     object DiaryWriteSuccess : DiaryWriteEvent()
+    class AddVoiceFile(val file : ByteArray) : DiaryWriteEvent()
+    object RemoveVoiceFile : DiaryWriteEvent()
+    class AddImageFile(val file : ByteArray) : DiaryWriteEvent()
+    object RemoveImageFile : DiaryWriteEvent()
 }
 
 data class DiaryWriteState(
-    val diaryDetail: DiaryDetail? = null,
     val buttonActive: Boolean = true,
-    val showLoadingError : Boolean = false
-)
+    val showLoadingError : Boolean = false,
+    val voiceFile : ByteArray ?= null,
+    val imageFiles : List<ByteArray> = listOf()
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as DiaryWriteState
+
+        if (buttonActive != other.buttonActive) return false
+        if (showLoadingError != other.showLoadingError) return false
+        if (voiceFile != null) {
+            if (other.voiceFile == null) return false
+            if (!voiceFile.contentEquals(other.voiceFile)) return false
+        } else if (other.voiceFile != null) return false
+        if (imageFiles != other.imageFiles) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = buttonActive.hashCode()
+        result = 31 * result + showLoadingError.hashCode()
+        result = 31 * result + (voiceFile?.contentHashCode() ?: 0)
+        result = 31 * result + imageFiles.hashCode()
+        return result
+    }
+
+
+}
