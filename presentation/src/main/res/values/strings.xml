@@ -40,4 +40,6 @@
     <string name="weather">날씨</string>
     <string name="recording_file">녹음 파일</string>
     <string name="register">등록하기</string>
+
+    <string name="lock_input_password">비밀번호 4자리를 입력해주세요</string>
 </resources>
