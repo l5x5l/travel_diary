@@ -16,6 +16,8 @@ import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailViewModel
 import com.strayalphaca.presentation.screens.diary.write.DiaryWriteScreen
 import com.strayalphaca.presentation.screens.diary.write.DiaryWriteViewModel
 import com.strayalphaca.presentation.screens.home.HomeScreen
+import com.strayalphaca.presentation.screens.lock.LockScreen
+import com.strayalphaca.presentation.screens.lock.LockViewModel
 import com.strayalphaca.presentation.screens.login_home.loginNavGraph
 import com.strayalphaca.presentation.screens.settings.SettingsBaseScreen
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
@@ -84,6 +86,14 @@ fun RootNavHost(
             val viewModel = hiltViewModel<DiaryWriteViewModel>()
             val diaryId = navBackStackEntry.arguments?.getString(DiaryWrite.diaryId)
             DiaryWriteScreen(id = diaryId, viewModel = viewModel)
+        }
+
+        composable(route = Lock.route) {
+            val viewModel = hiltViewModel<LockViewModel>()
+            LockScreen(
+                backToContent = navController::popBackStack,
+                viewModel = viewModel
+            )
         }
     }
 }

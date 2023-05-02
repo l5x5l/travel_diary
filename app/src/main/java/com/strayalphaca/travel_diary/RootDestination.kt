@@ -35,3 +35,8 @@ object DiaryWrite : RootDestinations {
     val arguments = listOf(navArgument(diaryId){type = NavType.StringType})
     val deepLinks = listOf(navDeepLink { uriPattern = "traily://${route}/{$diaryId}" })
 }
+
+object Lock : RootDestinations {
+    override val route: String = "lock"
+
+}
