@@ -6,3 +6,12 @@ fun toTimerFormat(timeSecond : Int) : String {
 
     return String.format("%d:%02d", minute, second)
 }
+
+fun minuteIn24HourToHour12(minuteIn24 : Int) : Int {
+    val hourIn24 = minuteIn24 / 60
+    return if (hourIn24 <= 12) {
+        hourIn24
+    } else {
+        hourIn24 - 12
+    }
+}
