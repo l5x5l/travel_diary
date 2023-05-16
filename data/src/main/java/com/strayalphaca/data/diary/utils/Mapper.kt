@@ -4,20 +4,44 @@ import com.strayalphaca.data.all.model.DiaryDto
 import com.strayalphaca.data.all.model.FileDto
 import com.strayalphaca.domain.diary.model.*
 
-// todo typeScript enum 클래스 사용하는 부분 수정하기
 fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {
     val dateString = diaryDto.date
     return DiaryDetail(
         id = diaryDto.id,
         date = dateString,
-        weather = null,
-        feeling = Feeling.HAPPY,
+        weather = weatherStringToEnum(diaryDto.weather),
+        feeling = feelingStringToEnum(diaryDto.feeling),
         content = diaryDto.content,
         files = diaryDto.files.map { fileDtoToFile(it) },
         createdAt = diaryDto.createdAt,
         updatedAt = diaryDto.updatedAt,
         status = DiaryStatus.NORMAL
     )
+}
+
+internal fun feelingStringToEnum(feeling : String) : Feeling {
+    return when(feeling) {
+        "HAPPY" -> Feeling.HAPPY
+        "CALM" -> Feeling.CALM
+        "SATISFIED" -> Feeling.SATISFIED
+        "EXCITING" -> Feeling.EXCITING
+        "ANGRY" -> Feeling.ANGRY
+        "SAD" -> Feeling.SAD
+        else -> Feeling.HAPPY
+    }
+}
+
+internal fun weatherStringToEnum(weather : String?) : Weather? {
+    return when (weather) {
+        "SUNNY" -> Weather.SUNNY
+        "PARTLY_CLOUDY" -> Weather.PARTLY_CLOUDY
+        "CLOUDY" -> Weather.CLOUDY
+        "STORMY" -> Weather.STORMY
+        "RAINY" -> Weather.RAINY
+        "SNOWY" -> Weather.SNOWY
+        "WINDY" -> Weather.WINDY
+        else -> null
+    }
 }
 
 fun fileDtoToFile(fileDto: FileDto) : File {

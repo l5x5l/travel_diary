@@ -1,11 +1,12 @@
 package com.strayalphaca.presentation.screens.diary.write
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
@@ -14,6 +15,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -30,36 +32,59 @@ import com.strayalphaca.presentation.ui.theme.Gray2
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
-import com.strayalphaca.presentation.utils.getFileFromLocal
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import com.strayalphaca.domain.diary.model.Feeling
+import com.strayalphaca.domain.diary.model.Weather
+import com.strayalphaca.presentation.screens.diary.component.ContentIconImage
+import com.strayalphaca.presentation.screens.diary.component.ContentSelectView
+import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
+import com.strayalphaca.presentation.screens.diary.util.getFeelingIconId
+import com.strayalphaca.presentation.screens.diary.util.getWeatherIconId
 
 @Composable
 fun DiaryWriteScreen(
     id : String?,
-    viewModel : DiaryWriteViewModel = viewModel()
+    viewModel : DiaryWriteViewModel = viewModel(),
+    goBack : () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
-    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    val pickMP3File = getFileFromLocal(context = context) { file ->
-        viewModel.inputVoiceFile(file)
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(3)
+    ) { uriList ->
+        viewModel.inputImageFile(uriList)
     }
 
-    val pickImage = getFileFromLocal(context = context) { file ->
-        viewModel.inputImageFile(file)
-    }
-
-    val requestPermissionLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
-                pickMP3File.launch("audio/*")
-            }
+    val mp3PickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let {
+            val isNewDiary = (id == null || id == "null")
+            viewModel.inputVoiceFile(it, isNewDiary)
         }
+    }
 
     LaunchedEffect(id) {
         if (id != null) viewModel.tryLoadDetail(id)
+    }
+    
+    DisposableEffect(key1 = lifecycleOwner) {
+        val observer = LifecycleEventObserver {_, event ->
+            if (event == Lifecycle.Event.ON_STOP) {
+                viewModel.pauseMusic()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            viewModel.releaseMusicPlayer()
+        }
     }
 
     Surface {
@@ -71,7 +96,7 @@ fun DiaryWriteScreen(
             ) {
                 BaseIconButton(
                     iconResourceId = R.drawable.ic_back,
-                    onClick = {}
+                    onClick = goBack
                 )
 
                 TextButton(
@@ -87,7 +112,6 @@ fun DiaryWriteScreen(
                     .background(Gray2)
             )
 
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -100,16 +124,64 @@ fun DiaryWriteScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    Row(modifier = Modifier.weight(1f)) {
+                    Row(modifier = Modifier
+                        .weight(1f)
+                        .align(Alignment.CenterVertically)) {
                         Text(
                             text = stringResource(id = R.string.today_feeling),
-                            style = MaterialTheme.typography.body2
+                            style = MaterialTheme.typography.body2,
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .padding(end = 10.dp)
+                        )
+                        ContentIconImage(
+                            iconId = getFeelingIconId(state.feeling),
+                            descriptionText = state.feeling.name,
+                            onClick = {
+                                viewModel.showSelectView(CurrentShowSelectView.FEELING)
+                            }
                         )
                     }
-                    Row(modifier = Modifier.weight(1f)) {
+                    Row(modifier = Modifier
+                        .weight(1f)
+                        .align(Alignment.CenterVertically)) {
                         Text(
                             text = stringResource(id = R.string.weather),
-                            style = MaterialTheme.typography.body2
+                            style = MaterialTheme.typography.body2,
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .padding(end = 10.dp)
+                        )
+                        ContentIconImage(
+                            iconId = state.weather?.let { getWeatherIconId(it) } ?: R.drawable.ic_weather_sunny,
+                            descriptionText = state.weather?.toString(),
+                            onClick = {
+                                viewModel.showSelectView(CurrentShowSelectView.WEATHER)
+                            }
+                        )
+                    }
+                }
+                
+                AnimatedVisibility (state.currentShowSelectView == CurrentShowSelectView.WEATHER) {
+                    ContentSelectView(contentList = Weather.values().toList()) {
+                        ContentIconImage(
+                            iconId = getWeatherIconId(it),
+                            descriptionText = it.name,
+                            onClick = {
+                                viewModel.setWeather(it)
+                            }
+                        )
+                    }
+                }
+
+                AnimatedVisibility (state.currentShowSelectView == CurrentShowSelectView.FEELING) {
+                    ContentSelectView(contentList = Feeling.values().toList()) {
+                        ContentIconImage(
+                            iconId = getFeelingIconId(it),
+                            descriptionText = it.name,
+                            onClick = {
+                                viewModel.setFeeling(it)
+                            }
                         )
                     }
                 }
@@ -118,19 +190,22 @@ fun DiaryWriteScreen(
 
                 if (state.imageFiles.isNotEmpty()) {
                     PolaroidView(imageFile = state.imageFiles[0])
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
 
                 BasicTextField(
                     value = content,
                     onValueChange = viewModel::inputContent,
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colors.onBackground)
+                        .defaultMinSize(minHeight = 250.dp),
                     textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
                     decorationBox = { innerTextField ->
-                        Column(modifier = Modifier.fillMaxWidth()) {
+                        Column(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween) {
                             innerTextField()
-                            Spacer(modifier = Modifier.height(8.dp))
+
                             Text(
                                 text = "${content.length}/300",
                                 modifier = Modifier.align(Alignment.End),
@@ -142,8 +217,16 @@ fun DiaryWriteScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                if (state.voiceFile != null)
-                    SoundView(state.voiceFile!!)
+                state.voiceFile?.let { uri ->
+                    SoundView(
+                        file = uri,
+                        playing = state.musicPlaying,
+                        play = viewModel::playMusic,
+                        pause = viewModel::pauseMusic,
+                        remove = viewModel::removeVoiceFile,
+                        soundProgressChange = viewModel::setMusicProgress
+                    )
+                }
             }
 
 
@@ -160,24 +243,16 @@ fun DiaryWriteScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     BaseIconButton(
-                        iconResourceId = R.drawable.ic_map,
+                        iconResourceId = R.drawable.ic_image,
                         onClick = {
-                            if (context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-                            } else {
-                                pickMP3File.launch("audio/*")
-                            }
+                            photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
                         }
                     )
 
                     BaseIconButton(
-                        iconResourceId = R.drawable.ic_map,
+                        iconResourceId = R.drawable.ic_music,
                         onClick = {
-                            if (context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-                            } else {
-                                pickImage.launch("image/*")
-                            }
+                            mp3PickerLauncher.launch("audio/*")
                         }
                     )
 

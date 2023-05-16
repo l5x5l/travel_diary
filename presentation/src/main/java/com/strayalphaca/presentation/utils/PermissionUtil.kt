@@ -16,3 +16,12 @@ fun getFileFromLocal(context : Context, callback : (ByteArray) -> Unit) =
             if (file != null) callback(file)
         }
     }
+
+@SuppressLint("ComposableNaming")
+@Composable
+fun getUriFromLocal(context : Context, callback : (Uri) -> Unit) =
+    rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    if (uri != null) {
+        callback(uri)
+    }
+}

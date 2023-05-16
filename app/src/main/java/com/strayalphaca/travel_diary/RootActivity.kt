@@ -85,7 +85,7 @@ fun RootNavHost(
         ) { navBackStackEntry ->
             val viewModel = hiltViewModel<DiaryWriteViewModel>()
             val diaryId = navBackStackEntry.arguments?.getString(DiaryWrite.diaryId)
-            DiaryWriteScreen(id = diaryId, viewModel = viewModel)
+            DiaryWriteScreen(id = diaryId, viewModel = viewModel, goBack = {navController.popBackStack()})
         }
 
         composable(route = Lock.route) {
