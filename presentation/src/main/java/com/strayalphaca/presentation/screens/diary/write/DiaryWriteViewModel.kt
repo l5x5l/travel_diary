@@ -11,7 +11,9 @@ import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,6 +30,19 @@ class DiaryWriteViewModel @Inject constructor(
 
     private val _writingContent = MutableStateFlow("")
     val writingContent = _writingContent.asStateFlow()
+
+    private val _musicProgress = MutableStateFlow(0f)
+    val musicProgress = _musicProgress.asStateFlow()
+
+    private var musicPlayerJob : Job? = null
+
+    init {
+        musicPlayer.setCompleteCallback {
+            viewModelScope.launch {
+                events.send(DiaryWriteEvent.PauseMusic)
+            }
+        }
+    }
 
     fun tryLoadDetail(id : String) {
         viewModelScope.launch {
@@ -128,8 +143,22 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
-    fun setMusicProgress(progress : Float) {
+    private fun startMusicPlayerJob() {
+        musicPlayerJob = viewModelScope.launch {
+            while (true) {
+
+                if (state.value.musicPlaying) {
+                    _musicProgress.value = musicPlayer.getProgress()
+                }
+                delay(250L)
+            }
+        }
+    }
+
+    fun dragMusicProgressByUser(progress : Float) {
+        pauseMusic()
         musicPlayer.setPosition(progress)
+        _musicProgress.value = progress
     }
 
     private fun reduce(state: DiaryWriteState, events: DiaryWriteEvent): DiaryWriteState {
@@ -180,9 +209,11 @@ class DiaryWriteViewModel @Inject constructor(
                 state.copy(currentShowSelectView = CurrentShowSelectView.WEATHER)
             }
             DiaryWriteEvent.PlayingMusic -> {
+                startMusicPlayerJob()
                 state.copy(musicPlaying = true)
             }
             DiaryWriteEvent.PauseMusic -> {
+                musicPlayerJob?.cancel()
                 state.copy(musicPlaying = false)
             }
         }

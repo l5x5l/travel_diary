@@ -53,6 +53,7 @@ fun DiaryWriteScreen(
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val musicProgress by viewModel.musicProgress.collectAsState()
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(3)
@@ -224,7 +225,8 @@ fun DiaryWriteScreen(
                         play = viewModel::playMusic,
                         pause = viewModel::pauseMusic,
                         remove = viewModel::removeVoiceFile,
-                        soundProgressChange = viewModel::setMusicProgress
+                        soundProgressChange = viewModel::dragMusicProgressByUser,
+                        soundProgress = musicProgress
                     )
                 }
             }

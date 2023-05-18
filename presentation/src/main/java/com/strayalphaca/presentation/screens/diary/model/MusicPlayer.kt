@@ -10,4 +10,5 @@ interface MusicPlayer {
     fun setPosition(progress : Float)
     fun release()
     fun remove()
+    fun setCompleteCallback(callback : () -> Unit)
 }

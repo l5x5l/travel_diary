@@ -66,4 +66,8 @@ class MusicPlayerImpl @Inject constructor(private val context : Context) : Music
     override fun remove() {
         mediaPlayer.reset()
     }
+
+    override fun setCompleteCallback(callback: () -> Unit) {
+        mediaPlayer.setOnCompletionListener { callback() }
+    }
 }

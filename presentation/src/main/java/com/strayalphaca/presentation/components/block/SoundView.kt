@@ -2,13 +2,17 @@ package com.strayalphaca.presentation.components.block
 
 import android.content.res.Configuration
 import android.net.Uri
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,8 +27,10 @@ fun SoundView(
     play : () -> Unit = {},
     pause : () -> Unit = {},
     remove : () -> Unit = {},
-    soundProgressChange : (Float) -> Unit = {}
+    soundProgressChange : (Float) -> Unit = {},
+    soundProgress : Float = 0f
 ) {
+
     Box(modifier = Modifier.fillMaxWidth()) {
         Surface(modifier = Modifier
             .fillMaxWidth()
@@ -66,17 +72,14 @@ fun SoundView(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Slider(
-                    value = 0.5f,
+                    value = soundProgress,
                     onValueChange = {
                         soundProgressChange(it)
                     },
                     colors = SliderDefaults.colors(
                         thumbColor = MaterialTheme.colors.onBackground,
                         activeTrackColor = MaterialTheme.colors.onBackground
-                    ),
-                    modifier = Modifier.pointerInput(Unit) {
-
-                    },
+                    )
                 )
             }
         }
