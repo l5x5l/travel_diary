@@ -1,13 +1,16 @@
 package com.strayalphaca.presentation.screens.diary.write
 
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
@@ -32,6 +35,7 @@ import com.strayalphaca.presentation.ui.theme.Gray2
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -42,23 +46,75 @@ import com.strayalphaca.presentation.screens.diary.component.ContentSelectView
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
 import com.strayalphaca.presentation.screens.diary.util.getFeelingIconId
 import com.strayalphaca.presentation.screens.diary.util.getWeatherIconId
+import com.strayalphaca.presentation.utils.GetMediaActivityResultContract
+import com.strayalphaca.presentation.utils.checkUriIsVideo
+import com.strayalphaca.presentation.utils.isPhotoPickerAvailable
 
 @Composable
-fun DiaryWriteScreen(
-    id : String?,
-    viewModel : DiaryWriteViewModel = viewModel(),
-    goBack : () -> Unit = {}
+fun DiaryWriteContainer(
+    id: String?,
+    viewModel: DiaryWriteViewModel = viewModel(),
+    goBack: () -> Unit = {}
 ) {
-    val scrollState = rememberScrollState()
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
-    val lifecycleOwner = LocalLifecycleOwner.current
     val musicProgress by viewModel.musicProgress.collectAsState()
+
+    DiaryWriteScreen(
+        id = id,
+        goBack = goBack,
+        content= content,
+        changeContent= viewModel::inputContent,
+        state= state,
+        musicProgress= musicProgress,
+        changeImageFile= viewModel::inputImageFile,
+        changeVoiceFile = viewModel::inputVoiceFile,
+        removeVoiceFile= viewModel::removeVoiceFile,
+        loadDiary= viewModel::tryLoadDetail,
+        playMusic = viewModel::playMusic,
+        pauseMusic = viewModel::pauseMusic,
+        releaseMusicPlayer = viewModel::releaseMusicPlayer,
+        changeMusicProgress = viewModel::dragMusicProgressByUser,
+        showSelectView = viewModel::showSelectView,
+        setWeather = viewModel::setWeather,
+        setFeeling = viewModel::setFeeling
+    )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun DiaryWriteScreen(
+    id: String?,
+    goBack: () -> Unit = {},
+    content: String = "",
+    changeContent: (String) -> Unit = {},
+    state: DiaryWriteState = DiaryWriteState(),
+    musicProgress: Float = 0f,
+    changeImageFile: (List<Uri>) -> Unit = {},
+    changeVoiceFile: (Uri, Boolean) -> Unit = { _, _ -> },
+    removeVoiceFile: () -> Unit = {},
+    loadDiary: (String) -> Unit = {},
+    playMusic: () -> Unit = {},
+    pauseMusic: () -> Unit = {},
+    releaseMusicPlayer: () -> Unit = {},
+    changeMusicProgress: (Float) -> Unit = {},
+    showSelectView: (CurrentShowSelectView) -> Unit = {},
+    setWeather: (Weather) -> Unit = {},
+    setFeeling: (Feeling) -> Unit = {}
+) {
+    val scrollState = rememberScrollState()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
+
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(3)
     ) { uriList ->
-        viewModel.inputImageFile(uriList)
+        changeImageFile(uriList)
+    }
+
+    val prevPhotoPickerLauncher = rememberLauncherForActivityResult(contract = GetMediaActivityResultContract()) { uriList ->
+        changeImageFile(uriList)
     }
 
     val mp3PickerLauncher = rememberLauncherForActivityResult(
@@ -66,25 +122,25 @@ fun DiaryWriteScreen(
     ) { uri ->
         uri?.let {
             val isNewDiary = (id == null || id == "null")
-            viewModel.inputVoiceFile(it, isNewDiary)
+            changeVoiceFile(it, isNewDiary)
         }
     }
 
     LaunchedEffect(id) {
-        if (id != null) viewModel.tryLoadDetail(id)
+        if (id != null) loadDiary(id)
     }
-    
+
     DisposableEffect(key1 = lifecycleOwner) {
-        val observer = LifecycleEventObserver {_, event ->
+        val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_STOP) {
-                viewModel.pauseMusic()
+                pauseMusic()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
 
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
-            viewModel.releaseMusicPlayer()
+            releaseMusicPlayer()
         }
     }
 
@@ -125,9 +181,11 @@ fun DiaryWriteScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    Row(modifier = Modifier
-                        .weight(1f)
-                        .align(Alignment.CenterVertically)) {
+                    Row(
+                        modifier = Modifier
+                            .weight(1f)
+                            .align(Alignment.CenterVertically)
+                    ) {
                         Text(
                             text = stringResource(id = R.string.today_feeling),
                             style = MaterialTheme.typography.body2,
@@ -139,13 +197,15 @@ fun DiaryWriteScreen(
                             iconId = getFeelingIconId(state.feeling),
                             descriptionText = state.feeling.name,
                             onClick = {
-                                viewModel.showSelectView(CurrentShowSelectView.FEELING)
+                                showSelectView(CurrentShowSelectView.FEELING)
                             }
                         )
                     }
-                    Row(modifier = Modifier
-                        .weight(1f)
-                        .align(Alignment.CenterVertically)) {
+                    Row(
+                        modifier = Modifier
+                            .weight(1f)
+                            .align(Alignment.CenterVertically)
+                    ) {
                         Text(
                             text = stringResource(id = R.string.weather),
                             style = MaterialTheme.typography.body2,
@@ -154,34 +214,35 @@ fun DiaryWriteScreen(
                                 .padding(end = 10.dp)
                         )
                         ContentIconImage(
-                            iconId = state.weather?.let { getWeatherIconId(it) } ?: R.drawable.ic_weather_sunny,
+                            iconId = state.weather?.let { getWeatherIconId(it) }
+                                ?: R.drawable.ic_weather_sunny,
                             descriptionText = state.weather?.toString(),
                             onClick = {
-                                viewModel.showSelectView(CurrentShowSelectView.WEATHER)
-                            }
-                        )
-                    }
-                }
-                
-                AnimatedVisibility (state.currentShowSelectView == CurrentShowSelectView.WEATHER) {
-                    ContentSelectView(contentList = Weather.values().toList()) {
-                        ContentIconImage(
-                            iconId = getWeatherIconId(it),
-                            descriptionText = it.name,
-                            onClick = {
-                                viewModel.setWeather(it)
+                                showSelectView(CurrentShowSelectView.WEATHER)
                             }
                         )
                     }
                 }
 
-                AnimatedVisibility (state.currentShowSelectView == CurrentShowSelectView.FEELING) {
+                AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.WEATHER) {
+                    ContentSelectView(contentList = Weather.values().toList()) {
+                        ContentIconImage(
+                            iconId = getWeatherIconId(it),
+                            descriptionText = it.name,
+                            onClick = {
+                                setWeather(it)
+                            }
+                        )
+                    }
+                }
+
+                AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.FEELING) {
                     ContentSelectView(contentList = Feeling.values().toList()) {
                         ContentIconImage(
                             iconId = getFeelingIconId(it),
                             descriptionText = it.name,
                             onClick = {
-                                viewModel.setFeeling(it)
+                                setFeeling(it)
                             }
                         )
                     }
@@ -190,21 +251,26 @@ fun DiaryWriteScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 if (state.imageFiles.isNotEmpty()) {
-                    PolaroidView(imageFile = state.imageFiles[0])
+                    HorizontalPager(pageCount = state.imageFiles.size) {
+                        val isVideo = !checkUriIsVideo(state.imageFiles[it], context)
+                        PolaroidView(fileUri = state.imageFiles[it], isVideo = isVideo)
+                    }
                     Spacer(modifier = Modifier.height(24.dp))
                 }
 
                 BasicTextField(
                     value = content,
-                    onValueChange = viewModel::inputContent,
+                    onValueChange = changeContent,
                     modifier = Modifier
                         .border(1.dp, MaterialTheme.colors.onBackground)
                         .defaultMinSize(minHeight = 250.dp),
                     textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
                     decorationBox = { innerTextField ->
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
+                        ) {
                             innerTextField()
 
                             Text(
@@ -222,10 +288,10 @@ fun DiaryWriteScreen(
                     SoundView(
                         file = uri,
                         playing = state.musicPlaying,
-                        play = viewModel::playMusic,
-                        pause = viewModel::pauseMusic,
-                        remove = viewModel::removeVoiceFile,
-                        soundProgressChange = viewModel::dragMusicProgressByUser,
+                        play = playMusic,
+                        pause = pauseMusic,
+                        remove = removeVoiceFile,
+                        soundProgressChange = changeMusicProgress,
                         soundProgress = musicProgress
                     )
                 }
@@ -247,7 +313,15 @@ fun DiaryWriteScreen(
                     BaseIconButton(
                         iconResourceId = R.drawable.ic_image,
                         onClick = {
-                            photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+                            if (isPhotoPickerAvailable()) {
+                                photoPickerLauncher.launch(
+                                    PickVisualMediaRequest(
+                                        ActivityResultContracts.PickVisualMedia.ImageAndVideo
+                                    )
+                                )
+                            } else {
+                                prevPhotoPickerLauncher.launch("*/*")
+                            }
                         }
                     )
 
@@ -275,6 +349,6 @@ fun DiaryWriteScreen(
 @Preview(showBackground = true, widthDp = 360)
 fun DiaryWriteScreenPreview() {
     TravelDiaryTheme() {
-        DiaryWriteScreen(null)
+        DiaryWriteScreen("null")
     }
 }

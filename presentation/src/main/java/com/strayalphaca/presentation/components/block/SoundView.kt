@@ -2,14 +2,9 @@ package com.strayalphaca.presentation.components.block
 
 import android.content.res.Configuration
 import android.net.Uri
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -26,7 +21,7 @@ fun SoundView(
     playing : Boolean = false,
     play : () -> Unit = {},
     pause : () -> Unit = {},
-    remove : () -> Unit = {},
+    remove : (() -> Unit)? = null,
     soundProgressChange : (Float) -> Unit = {},
     soundProgress : Float = 0f
 ) {
@@ -62,10 +57,12 @@ fun SoundView(
 
                         Spacer(modifier = Modifier.width(12.dp))
 
-                        BaseIconButton(
-                            iconResourceId = R.drawable.ic_close,
-                            onClick = remove
-                        )
+                        remove?.let {
+                            BaseIconButton(
+                                iconResourceId = R.drawable.ic_close,
+                                onClick = remove
+                            )
+                        }
                     }
                 }
 

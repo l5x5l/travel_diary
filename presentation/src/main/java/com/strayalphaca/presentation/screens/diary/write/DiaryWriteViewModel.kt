@@ -80,13 +80,7 @@ class DiaryWriteViewModel @Inject constructor(
 
     fun inputImageFile(file : List<Uri>) {
         viewModelScope.launch {
-            events.send(DiaryWriteEvent.AddImageFile(file))
-        }
-    }
-
-    fun removeImageFile() {
-        viewModelScope.launch {
-            events.send(DiaryWriteEvent.RemoveImageFile)
+            events.send(DiaryWriteEvent.ChangeImageList(file))
         }
     }
 
@@ -116,12 +110,6 @@ class DiaryWriteViewModel @Inject constructor(
             if (target == CurrentShowSelectView.FEELING) {
                 events.send(DiaryWriteEvent.ShowSelectFeelingView)
             }
-        }
-    }
-
-    fun hideSelectView() {
-        viewModelScope.launch {
-            events.send(DiaryWriteEvent.HideSelectView)
         }
     }
 
@@ -187,11 +175,8 @@ class DiaryWriteViewModel @Inject constructor(
             DiaryWriteEvent.RemoveVoiceFile -> {
                 state.copy(voiceFile = null)
             }
-            is DiaryWriteEvent.AddImageFile -> {
+            is DiaryWriteEvent.ChangeImageList -> {
                 state.copy(imageFiles = events.file)
-            }
-            DiaryWriteEvent.RemoveImageFile -> {
-                state.copy(imageFiles = listOf())
             }
             is DiaryWriteEvent.SetFeeling -> {
                 state.copy(feeling = events.feeling, currentShowSelectView = null)
@@ -230,8 +215,7 @@ sealed class DiaryWriteEvent {
     object DiaryWriteSuccess : DiaryWriteEvent()
     class AddVoiceFile(val file : Uri) : DiaryWriteEvent()
     object RemoveVoiceFile : DiaryWriteEvent()
-    class AddImageFile(val file : List<Uri>) : DiaryWriteEvent()
-    object RemoveImageFile : DiaryWriteEvent()
+    class ChangeImageList(val file : List<Uri>) : DiaryWriteEvent()
     class SetFeeling(val feeling: Feeling) : DiaryWriteEvent()
     class SetWeather(val weather: Weather) : DiaryWriteEvent()
     object ShowSelectFeelingView : DiaryWriteEvent()

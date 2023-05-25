@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -25,7 +26,7 @@ import com.strayalphaca.presentation.utils.getFileFromUri
 
 @Composable
 fun PolaroidView(
-    imageFile : Uri = Uri.EMPTY,
+    fileUri : Uri = Uri.EMPTY,
     isVideo : Boolean = false,
     dateString : String = "2023.02.10_18:34",
     positionString : String = "1/1"
@@ -40,17 +41,31 @@ fun PolaroidView(
             .shadow(elevation = 6.dp)
         ) {
             Column(modifier = Modifier.padding(12.dp)) {
-                Image(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(280.dp)
-                    .background(Color.Cyan)
-                    .onGloballyPositioned { coordinates ->
-                        imageViewSize.value = coordinates.size
-                    },
-                    bitmap = decodeSampledBitmapFromResource(getFileFromUri(imageFile, context) ?: byteArrayOf(), imageViewSize.value.width, imageViewSize.value.height),
-                    contentDescription = "diary image",
-                    contentScale = ContentScale.Crop
-                )
+                if (isVideo) {
+                    Image(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(280.dp)
+                        .background(Color.Cyan)
+                        .onGloballyPositioned { coordinates ->
+                            imageViewSize.value = coordinates.size
+                        },
+                        bitmap = ImageBitmap(280, 280),
+                        contentDescription = "diary image",
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Image(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(280.dp)
+                        .background(Color.Cyan)
+                        .onGloballyPositioned { coordinates ->
+                            imageViewSize.value = coordinates.size
+                        },
+                        bitmap = decodeSampledBitmapFromResource(getFileFromUri(fileUri, context) ?: byteArrayOf(), imageViewSize.value.width, imageViewSize.value.height),
+                        contentDescription = "diary image",
+                        contentScale = ContentScale.Crop
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
 

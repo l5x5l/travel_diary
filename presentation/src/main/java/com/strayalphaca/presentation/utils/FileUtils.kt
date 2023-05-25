@@ -17,3 +17,9 @@ fun getFileFromUri(uri : Uri, context : Context) : ByteArray? {
     }
     return null
 }
+
+fun checkUriIsVideo(uri : Uri, context : Context) : Boolean {
+    val contentResolver = context.contentResolver
+    val result = contentResolver.getType(uri)
+    return result?.startsWith("video") ?: false
+}

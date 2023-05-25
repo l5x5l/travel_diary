@@ -11,9 +11,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailScreen
+import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailContainer
 import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailViewModel
-import com.strayalphaca.presentation.screens.diary.write.DiaryWriteScreen
+import com.strayalphaca.presentation.screens.diary.write.DiaryWriteContainer
 import com.strayalphaca.presentation.screens.diary.write.DiaryWriteViewModel
 import com.strayalphaca.presentation.screens.home.HomeScreen
 import com.strayalphaca.presentation.screens.lock.LockScreen
@@ -75,7 +75,7 @@ fun RootNavHost(
         ) { navBackStackEntry ->
             val viewModel = hiltViewModel<DiaryDetailViewModel>()
             val diaryId = navBackStackEntry.arguments?.getString(DiaryDetail.diaryId)
-            DiaryDetailScreen(id = diaryId ?: "", viewModel = viewModel)
+            DiaryDetailContainer(id = diaryId ?: "", viewModel = viewModel)
         }
 
         composable(
@@ -85,7 +85,7 @@ fun RootNavHost(
         ) { navBackStackEntry ->
             val viewModel = hiltViewModel<DiaryWriteViewModel>()
             val diaryId = navBackStackEntry.arguments?.getString(DiaryWrite.diaryId)
-            DiaryWriteScreen(id = diaryId, viewModel = viewModel, goBack = {navController.popBackStack()})
+            DiaryWriteContainer(id = diaryId, viewModel = viewModel, goBack = {navController.popBackStack()})
         }
 
         composable(route = Lock.route) {

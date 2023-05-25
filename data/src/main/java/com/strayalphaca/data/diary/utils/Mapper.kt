@@ -15,7 +15,8 @@ fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {
         files = diaryDto.files.map { fileDtoToFile(it) },
         createdAt = diaryDto.createdAt,
         updatedAt = diaryDto.updatedAt,
-        status = DiaryStatus.NORMAL
+        status = DiaryStatus.NORMAL,
+        voiceFile = diaryDto.voice?.let { fileDtoToFile(it) }
     )
 }
 

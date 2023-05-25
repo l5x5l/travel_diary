@@ -9,5 +9,6 @@ data class DiaryDetail(
     val files : List<File>,
     val createdAt : String,
     val updatedAt : String,
-    val status : DiaryStatus
+    val status : DiaryStatus,
+    val voiceFile : File?
 )
