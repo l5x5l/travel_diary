@@ -73,6 +73,9 @@ dependencies {
 
     // exoplayer
     implementation libs.bundles.exoplayer
+
+    // coil
+    implementation libs.bundles.coil
 }
 
 kapt {
