@@ -1,5 +1,6 @@
 package com.strayalphaca.travel_diary
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,8 @@ import com.strayalphaca.presentation.screens.lock.LockScreen
 import com.strayalphaca.presentation.screens.lock.LockViewModel
 import com.strayalphaca.presentation.screens.login_home.loginNavGraph
 import com.strayalphaca.presentation.screens.settings.SettingsBaseScreen
+import com.strayalphaca.presentation.screens.video.VideoContainer
+import com.strayalphaca.presentation.screens.video.VideoViewModel
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -75,7 +78,14 @@ fun RootNavHost(
         ) { navBackStackEntry ->
             val viewModel = hiltViewModel<DiaryDetailViewModel>()
             val diaryId = navBackStackEntry.arguments?.getString(DiaryDetail.diaryId)
-            DiaryDetailContainer(id = diaryId ?: "", viewModel = viewModel)
+            DiaryDetailContainer(
+                id = diaryId ?: "",
+                viewModel = viewModel,
+                goBack = {navController.popBackStack()},
+                goToVideo = { uri ->
+                    navController.navigate("${Video.route}?${uri}")
+                }
+            )
         }
 
         composable(
@@ -85,7 +95,24 @@ fun RootNavHost(
         ) { navBackStackEntry ->
             val viewModel = hiltViewModel<DiaryWriteViewModel>()
             val diaryId = navBackStackEntry.arguments?.getString(DiaryWrite.diaryId)
-            DiaryWriteContainer(id = diaryId, viewModel = viewModel, goBack = {navController.popBackStack()})
+            DiaryWriteContainer(
+                id = diaryId,
+                viewModel = viewModel,
+                goBack = {navController.popBackStack()},
+                goToVideo = { uri ->
+                    navController.navigate("${Video.route}?${uri}")
+                }
+            )
+        }
+
+        composable(
+            route = Video.routeWithArgs,
+            arguments = Video.arguments,
+            deepLinks = Video.deepLinks
+        ) { navBackStackEntry ->
+            val viewModel = hiltViewModel<VideoViewModel>()
+            val videoUri = navBackStackEntry.arguments?.getString(Video.videoUri)?.let { Uri.parse(it) }
+            VideoContainer(viewModel = viewModel, uri = videoUri, goBack = {navController.popBackStack()})
         }
 
         composable(route = Lock.route) {

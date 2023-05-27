@@ -1,6 +1,7 @@
 package com.strayalphaca.presentation.screens.diary.detail
 
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -38,7 +39,9 @@ import com.strayalphaca.domain.diary.model.FileType
 @Composable
 fun DiaryDetailContainer(
     viewModel: DiaryDetailViewModel = viewModel(),
-    id : String
+    id : String,
+    goBack: () -> Unit = {},
+    goToVideo  : (Uri) -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
@@ -46,6 +49,8 @@ fun DiaryDetailContainer(
     DiaryDetailScreen(
         id = id,
         state = state,
+        goBack = goBack,
+        goToVideo = goToVideo,
         loadDiary = viewModel::tryLoadDetail,
         playMusic = viewModel::playMusic,
         pauseMusic = viewModel::pauseMusic,
@@ -59,6 +64,8 @@ fun DiaryDetailContainer(
 fun DiaryDetailScreen(
     id : String = "",
     state : DiaryDetailState = DiaryDetailState(),
+    goBack: () -> Unit = {},
+    goToVideo  : (Uri) -> Unit = {},
     loadDiary : (String) -> Unit = {},
     playMusic : () -> Unit = {},
     pauseMusic : () -> Unit = {},
@@ -75,7 +82,7 @@ fun DiaryDetailScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             BaseIconButton(
                 iconResourceId = R.drawable.ic_back,
-                onClick = {}
+                onClick = { goBack() }
             )
             Box(modifier = Modifier
                 .fillMaxWidth()
@@ -117,7 +124,11 @@ fun DiaryDetailScreen(
 
                     if (state.diaryDetail.files.isNotEmpty()) {
                         HorizontalPager(pageCount = state.diaryDetail.files.size) {
-                            PolaroidView(isVideo = state.diaryDetail.files[it].type == FileType.VIDEO)
+                            PolaroidView(
+                                fileUri = Uri.parse(state.diaryDetail.files[it].shortLink),
+                                isVideo = state.diaryDetail.files[it].type == FileType.VIDEO,
+                                onClick = goToVideo
+                            )
                         }
                     }
 

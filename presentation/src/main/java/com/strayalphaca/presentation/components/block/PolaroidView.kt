@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -24,12 +25,14 @@ import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import com.strayalphaca.presentation.utils.decodeSampledBitmapFromResource
 import com.strayalphaca.presentation.utils.getFileFromUri
 
+// todo 동영상인 경우 썸네일 이미지 표시 및 위에 재생 버튼 표시
 @Composable
 fun PolaroidView(
     fileUri : Uri = Uri.EMPTY,
     isVideo : Boolean = false,
     dateString : String = "2023.02.10_18:34",
-    positionString : String = "1/1"
+    positionString : String = "1/1",
+    onClick : (Uri) -> Unit = {}
 ) {
     val imageViewSize = remember { mutableStateOf(IntSize(0, 0)) }
     val context = LocalContext.current
@@ -48,6 +51,9 @@ fun PolaroidView(
                         .background(Color.Cyan)
                         .onGloballyPositioned { coordinates ->
                             imageViewSize.value = coordinates.size
+                        }
+                        .clickable {
+                           onClick(fileUri)
                         },
                         bitmap = ImageBitmap(280, 280),
                         contentDescription = "diary image",

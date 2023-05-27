@@ -23,9 +23,9 @@ object LoginGraph : RootDestinations {
 object DiaryDetail : RootDestinations {
     override val route: String = "diary_detail"
     const val diaryId = "diary_id"
-    val routeWithArgs = "$route/{$diaryId}"
+    val routeWithArgs = "${route}/{$diaryId}"
     val arguments = listOf(navArgument(diaryId){type = NavType.StringType})
-    val deepLinks = listOf(navDeepLink { uriPattern = "traily://$route/{$diaryId}" })
+    val deepLinks = listOf(navDeepLink { uriPattern = "traily://${route}/{$diaryId}" })
 }
 
 object DiaryWrite : RootDestinations {
@@ -34,6 +34,14 @@ object DiaryWrite : RootDestinations {
     val routeWithArgs = "${route}/{${diaryId}}"
     val arguments = listOf(navArgument(diaryId){type = NavType.StringType})
     val deepLinks = listOf(navDeepLink { uriPattern = "traily://${route}/{$diaryId}" })
+}
+
+object Video : RootDestinations {
+    override val route: String = "video"
+    const val videoUri = "video_uri"
+    val routeWithArgs = "${route}?{$videoUri}"
+    val arguments = listOf(navArgument(videoUri){type = NavType.StringType})
+    val deepLinks = listOf(navDeepLink { uriPattern = "traily://${route}?{$videoUri}" })
 }
 
 object Lock : RootDestinations {

@@ -54,7 +54,8 @@ import com.strayalphaca.presentation.utils.isPhotoPickerAvailable
 fun DiaryWriteContainer(
     id: String?,
     viewModel: DiaryWriteViewModel = viewModel(),
-    goBack: () -> Unit = {}
+    goBack: () -> Unit = {},
+    goToVideo  : (Uri) -> Unit = {}
 ) {
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
@@ -63,6 +64,7 @@ fun DiaryWriteContainer(
     DiaryWriteScreen(
         id = id,
         goBack = goBack,
+        goToVideo = goToVideo,
         content= content,
         changeContent= viewModel::inputContent,
         state= state,
@@ -86,6 +88,7 @@ fun DiaryWriteContainer(
 fun DiaryWriteScreen(
     id: String?,
     goBack: () -> Unit = {},
+    goToVideo : (Uri) -> Unit = {},
     content: String = "",
     changeContent: (String) -> Unit = {},
     state: DiaryWriteState = DiaryWriteState(),
