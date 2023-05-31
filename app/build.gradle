@@ -70,6 +70,9 @@ dependencies {
 
     // compose navigation
     implementation libs.androidx.navigation.compose
+
+    // data store
+    implementation libs.datastore
 }
 
 kapt {

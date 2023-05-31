@@ -48,4 +48,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/javax.inject/javax.inject/1
     implementation libs.javax.inject
+
+    // data store core
+    implementation libs.datastore.core
 }

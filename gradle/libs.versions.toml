@@ -19,6 +19,7 @@ androidx_activity = "1.5.0"
 exoplayer = "1.0.1"
 coil = "2.4.0"
 gson = "2.8.5"
+datastore = "1.0.0"
 
 [libraries]
 android-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -63,6 +64,9 @@ coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 gson =  { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
+datastore_core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore"}
 
 [bundles]
 okhttp3 = ["okhttp3-okhttp", "okhttp3-logging-interceptor"]
