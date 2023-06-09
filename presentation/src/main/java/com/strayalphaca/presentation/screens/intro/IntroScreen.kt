@@ -25,7 +25,8 @@ import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
 @Composable
 fun IntroScreen(
-
+    goToLogin : () -> Unit = {},
+    goToHome : () -> Unit = {}
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -60,7 +61,7 @@ fun IntroScreen(
 
             BaseButton(
                 text = stringResource(id = R.string.login),
-                onClick = {  },
+                onClick = { goToLogin() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(40.dp)
@@ -73,7 +74,7 @@ fun IntroScreen(
             TextButton(
                 text = stringResource(id = R.string.continue_offline),
                 modifier = Modifier.padding(horizontal = 32.dp),
-                onClick = {  }
+                onClick = { goToHome() }
             )
 
             Spacer(modifier = Modifier.weight(0.25f))

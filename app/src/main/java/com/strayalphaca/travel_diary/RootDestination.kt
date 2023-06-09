@@ -44,6 +44,10 @@ object Video : RootDestinations {
     val deepLinks = listOf(navDeepLink { uriPattern = "traily://${route}?{$videoUri}" })
 }
 
+object Intro : RootDestinations {
+    override val route: String = "intro"
+}
+
 object Lock : RootDestinations {
     override val route: String = "lock"
 

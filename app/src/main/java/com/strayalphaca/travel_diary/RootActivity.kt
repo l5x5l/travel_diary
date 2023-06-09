@@ -17,6 +17,7 @@ import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailViewModel
 import com.strayalphaca.presentation.screens.diary.write.DiaryWriteContainer
 import com.strayalphaca.presentation.screens.diary.write.DiaryWriteViewModel
 import com.strayalphaca.presentation.screens.home.HomeScreen
+import com.strayalphaca.presentation.screens.intro.IntroScreen
 import com.strayalphaca.presentation.screens.lock.LockScreen
 import com.strayalphaca.presentation.screens.lock.LockViewModel
 import com.strayalphaca.presentation.screens.login_home.loginNavGraph
@@ -120,6 +121,19 @@ fun RootNavHost(
             LockScreen(
                 backToContent = navController::popBackStack,
                 viewModel = viewModel
+            )
+        }
+
+        composable(route = Intro.route) {
+            IntroScreen(
+                goToHome = { navController.navigate(HomeGraph.route){
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                goToLogin = { navController.navigate(LoginGraph.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
     }
