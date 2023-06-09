@@ -45,4 +45,8 @@
     <string name="time_am">오전 %02d:%02d</string>
 
     <string name="lock_input_password">비밀번호 4자리를 입력해주세요</string>
+
+    <string name="hello">안녕하세요!</string>
+    <string name="intro">추억을 담는 여정,\nTraily에 오신 것을 환영합니다</string>
+    <string name="continue_offline">비회원으로 계속하기</string>
 </resources>
