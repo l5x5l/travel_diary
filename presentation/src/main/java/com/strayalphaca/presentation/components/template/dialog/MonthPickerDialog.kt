@@ -35,17 +35,18 @@ import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
 @Composable
 fun MonthPickerDialog(
-    year: Int, month: Int, onMonthSelect: (Int, Int) -> Unit
+    year: Int, month: Int, onDismissRequest : () -> Unit = {}, onMonthSelect: (Int, Int) -> Unit
 ) {
     var currentYear by remember { mutableStateOf(year) }
     var selectedMonthYear by remember { mutableStateOf(YearMonth(year, month)) }
 
-    CustomDialog(onDismissRequest = {}) {
+    CustomDialog(onDismissRequest = onDismissRequest) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
                 modifier = Modifier.padding(start = 34.dp, top = 24.dp),
                 text = stringResource(id = R.string.select_date),
-                style = MaterialTheme.typography.caption
+                style = MaterialTheme.typography.caption,
+                color = MaterialTheme.colors.onSurface
             )
 
             Row(
@@ -57,7 +58,8 @@ fun MonthPickerDialog(
                 Text(
                     modifier = Modifier.weight(1f),
                     text = currentYear.toString(),
-                    style = MaterialTheme.typography.h2
+                    style = MaterialTheme.typography.h2,
+                    color = MaterialTheme.colors.onSurface
                 )
 
                 BaseIconButton(iconResourceId = R.drawable.ic_before, onClick = { currentYear-- })
@@ -79,16 +81,16 @@ fun MonthPickerDialog(
                     Text(
                         modifier = Modifier
                             .background(
-                                color = if (currentYear == selectedMonthYear.year && it == selectedMonthYear.month) MaterialTheme.colors.onSurface else MaterialTheme.colors.surface
+                                color = if (currentYear == selectedMonthYear.year && (it + 1) == selectedMonthYear.month) MaterialTheme.colors.onSurface else MaterialTheme.colors.surface
                             )
                             .clickable {
-                                selectedMonthYear = YearMonth(currentYear, it)
+                                selectedMonthYear = YearMonth(currentYear, it + 1)
                             }
                             .padding(vertical = 8.dp)
                         ,
                         text = (it + 1).toString(),
                         style = MaterialTheme.typography.body1,
-                        color = if (currentYear == selectedMonthYear.year && it == selectedMonthYear.month) MaterialTheme.colors.surface else MaterialTheme.colors.onSurface,
+                        color = if (currentYear == selectedMonthYear.year && (it + 1) == selectedMonthYear.month) MaterialTheme.colors.surface else MaterialTheme.colors.onSurface,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -98,13 +100,18 @@ fun MonthPickerDialog(
                 modifier = Modifier.align(Alignment.End).padding(end = 12.dp, bottom = 12.dp)
             ) {
                 TextButton(
-                    onClick = {}
+                    onClick = {
+                        onDismissRequest()
+                    }
                 ) {
                     Text(text = stringResource(id = R.string.cancel), color = MaterialTheme.colors.onSurface)
                 }
 
                 TextButton(
-                    onClick = {}
+                    onClick = {
+                        onMonthSelect(selectedMonthYear.year, selectedMonthYear.month)
+                        onDismissRequest()
+                    }
                 ) {
                     Text(text = stringResource(id = R.string.confirm), color = MaterialTheme.colors.onSurface)
                 }

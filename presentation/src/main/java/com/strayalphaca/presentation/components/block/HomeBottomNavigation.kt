@@ -1,8 +1,10 @@
 package com.strayalphaca.presentation.components.block
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -13,6 +15,7 @@ import com.strayalphaca.presentation.models.BottomNavigationItem
 fun HomeBottomNavigation(menuList : List<BottomNavigationItem>, onClick : (BottomNavigationItem) -> Unit, currentRoute : String) {
     Row(modifier = Modifier
         .fillMaxWidth()
+        .background(MaterialTheme.colors.surface)
         .padding(bottom = 16.dp, start = 8.dp, end = 8.dp)
     ) {
         for (menu in menuList) {

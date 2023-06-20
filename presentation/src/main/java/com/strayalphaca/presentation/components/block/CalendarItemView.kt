@@ -22,7 +22,8 @@ fun CalendarItemView( modifier: Modifier = Modifier, item: DiaryInCalendar, day 
     Surface(
         modifier = modifier
             .padding(2.dp)
-            .shadow(4.dp)
+            .shadow(4.dp),
+        color = MaterialTheme.colors.background
     ) {
         Column(
             modifier = Modifier
