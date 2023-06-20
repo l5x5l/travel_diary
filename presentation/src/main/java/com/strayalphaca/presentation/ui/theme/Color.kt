@@ -10,3 +10,5 @@ val errorRed = Color(0xFFF15555)
 val Gray2 = Color(0xFFEEEEEE)
 
 val Gray4 = Color(0xFF7D7D7D)
+
+val GradientGray = Color(0x407D7D7D)

@@ -16,7 +16,7 @@ fun HomeBottomNavigation(menuList : List<BottomNavigationItem>, onClick : (Botto
     Row(modifier = Modifier
         .fillMaxWidth()
         .background(MaterialTheme.colors.surface)
-        .padding(bottom = 16.dp, start = 8.dp, end = 8.dp)
+        .padding(vertical = 16.dp, horizontal = 8.dp)
     ) {
         for (menu in menuList) {
             BottomNavigationButton(
