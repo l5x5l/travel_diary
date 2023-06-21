@@ -31,6 +31,8 @@ class DiaryDetailViewModel @Inject constructor(
     val musicProgress = _musicProgress.asStateFlow()
 
     fun tryLoadDetail(id : String) {
+        if (state.value.diaryDetail != null) return
+
         viewModelScope.launch {
             event.send(DiaryDetailEvent.DiaryLoading)
 
