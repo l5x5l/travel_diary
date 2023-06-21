@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -27,10 +28,16 @@ import androidx.compose.ui.zIndex
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
+sealed class TapeSize(val height : Dp, val width : Dp) {
+    object Normal : TapeSize(32.dp, 48.dp)
+    object Large : TapeSize(48.dp, 72.dp)
+}
+
 @Composable
-fun CustomDialog(
+fun TapeDialog(
     onDismissRequest: () -> Unit,
     properties: DialogProperties = DialogProperties(),
+    tapeSize : TapeSize = TapeSize.Normal,
     content: @Composable () -> Unit
 ) {
     Dialog(
@@ -47,8 +54,8 @@ fun CustomDialog(
                 .background(Color.Transparent)) {
                 Image(
                     modifier = Modifier
-                        .height(32.dp)
-                        .width(48.dp)
+                        .height(tapeSize.height)
+                        .width(tapeSize.width)
                         .align(Alignment.TopCenter)
                         .zIndex(1f),
                     painter = painterResource(id = R.drawable.img_tape),
@@ -68,7 +75,6 @@ fun CustomDialog(
             }
         }
 
-
     }
 }
 
@@ -81,7 +87,10 @@ fun CustomDialogPreview() {
             color = Color.Magenta
         ) {
 
-            CustomDialog(onDismissRequest = {  }) {
+            TapeDialog(
+                tapeSize = TapeSize.Large,
+                onDismissRequest = {  }
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

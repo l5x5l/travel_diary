@@ -40,7 +40,7 @@ fun MonthPickerDialog(
     var currentYear by remember { mutableStateOf(year) }
     var selectedMonthYear by remember { mutableStateOf(YearMonth(year, month)) }
 
-    CustomDialog(onDismissRequest = onDismissRequest) {
+    TapeDialog(onDismissRequest = onDismissRequest) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
                 modifier = Modifier.padding(start = 34.dp, top = 24.dp),
