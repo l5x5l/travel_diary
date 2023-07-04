@@ -38,6 +38,8 @@
     <string name="not_select">선택 안함</string>
     <string name="today_feeling">오늘의 감정</string>
     <string name="weather">날씨</string>
+    <string name="location">위치</string>
+    <string name="placeholder_location">위치 미설정</string>
     <string name="recording_file">녹음 파일</string>
     <string name="register">등록하기</string>
 

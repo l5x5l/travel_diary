@@ -183,6 +183,46 @@ fun DiaryWriteScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(id = R.string.location),
+                        style = MaterialTheme.typography.body2,
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(end = 10.dp)
+                    )
+
+                    Text(
+                        text = stringResource(id = R.string.placeholder_location),
+                        style = MaterialTheme.typography.body2,
+                        color = Gray2,
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .weight(1f)
+                            .padding(end = 10.dp)
+                    )
+
+                    ContentIconImage(
+                        iconId = R.drawable.ic_location,
+                        descriptionText = state.feeling.name,
+                        onClick = {
+
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    ContentIconImage(
+                        iconId = R.drawable.ic_gps,
+                        descriptionText = state.feeling.name,
+                        onClick = {
+
+                        }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Row(
                         modifier = Modifier
