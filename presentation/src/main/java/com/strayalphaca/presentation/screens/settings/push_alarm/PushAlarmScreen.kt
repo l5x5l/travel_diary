@@ -1,14 +1,12 @@
 package com.strayalphaca.presentation.screens.settings.push_alarm
 
 import android.app.TimePickerDialog
-import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_button.BaseButton
@@ -25,12 +22,11 @@ import com.strayalphaca.presentation.components.atom.base_button.BaseButtonState
 import com.strayalphaca.presentation.components.block.TextWithSwitch
 import com.strayalphaca.presentation.models.Route
 import com.strayalphaca.presentation.ui.theme.Gray4
-import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import com.strayalphaca.presentation.utils.minuteIn24HourToHour12
 
 @Composable
 fun PushAlarmScreen(
-    viewModel : PushAlarmViewModel = PushAlarmViewModelImpl()
+    viewModel : PushAlarmViewModel
 ) {
     val context = LocalContext.current
 
@@ -72,9 +68,12 @@ fun PushAlarmScreen(
                     minuteIn24HourToHour12(pushAlarmMinute),
                     pushAlarmMinute % 60
                 ),
-                modifier = Modifier.clickable { timePickerDialog.show() }
+                modifier = Modifier.clickable {
+                    if (usePushAlarm) timePickerDialog.show()
+                },
             )
         }
+        Spacer(modifier = Modifier.height(18.dp))
 
         Text(text = stringResource(id = R.string.push_alarm_click_event))
         Spacer(modifier = Modifier.height(6.dp))
@@ -95,27 +94,21 @@ fun PushAlarmScreen(
                     text = stringResource(id = item.screenNameId),
                     onClick = { viewModel.setPushAlarmClickTarget(item) },
                     textStyle = MaterialTheme.typography.caption,
-                    state = if (item == targetUrl) BaseButtonState.SELECTED else BaseButtonState.ACTIVE,
+                    state = when {
+                        (!usePushAlarm) -> {
+                            BaseButtonState.INACTIVE
+                        }
+                        (item == targetUrl) -> {
+                            BaseButtonState.SELECTED
+                        }
+                        else -> {
+                            BaseButtonState.ACTIVE
+                        }
+                    },
                     modifier = Modifier.height(40.dp)
                 )
 
             }
-        }
-    }
-}
-
-@Composable
-@Preview(
-    showBackground = true,
-    widthDp = 360,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "dark"
-)
-@Preview(showBackground = true, widthDp = 360)
-fun PushAlarmScreenPreview() {
-    TravelDiaryTheme {
-        Surface {
-            PushAlarmScreen(viewModel = PushAlarmViewModel.TestPushAlarmViewModel)
         }
     }
 }

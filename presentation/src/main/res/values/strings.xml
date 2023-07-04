@@ -55,4 +55,8 @@
     <string name="select_date">날짜 선택</string>
     <string name="cancel">취소</string>
     <string name="confirm">결정</string>
+
+    <string name="notification_title">오늘 하루는 어떠셨나요?</string>
+    <string name="notification_text">오늘 하루에 대한 기록을 남겨보세요</string>
+    <string name="notification_channel_name">작성 알림</string>
 </resources>

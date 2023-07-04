@@ -1,30 +1,49 @@
 package com.strayalphaca.presentation.screens.settings.push_alarm
 
+import androidx.lifecycle.ViewModel
+import com.strayalphaca.presentation.alarm.TrailyAlarmManager
 import com.strayalphaca.presentation.models.Route
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-interface PushAlarmViewModel {
-    val usePushAlarm : StateFlow<Boolean>
-    val pushAlarmMinute : StateFlow<Int>
-    val clickTarget : StateFlow<Route?>
-    fun setUsePushAlarm(use : Boolean)
-    fun setPushAlarmTime(hour : Int, minute : Int)
-    fun setPushAlarmClickTarget(targetLink : Route)
+@HiltViewModel
+class PushAlarmViewModel @Inject constructor(
+    private val alarmManager: TrailyAlarmManager
+) : ViewModel() {
+    // 초기값은 local data source 에서 가져와야 한다.
+    private val _usePushAlarm = MutableStateFlow(false)
+     val usePushAlarm: StateFlow<Boolean> = _usePushAlarm.asStateFlow()
 
-    companion object {
-        val TestPushAlarmViewModel = object : PushAlarmViewModel {
-            override val usePushAlarm: StateFlow<Boolean> = MutableStateFlow(false)
+    private val _pushAlarmMinute = MutableStateFlow(20 * 60 + 30)
+     val pushAlarmMinute: StateFlow<Int> = _pushAlarmMinute.asStateFlow()
 
-            override val pushAlarmMinute: StateFlow<Int> = MutableStateFlow(20 * 60 + 30)
+    private val _clickTarget = MutableStateFlow(Route.pushAlarmTargetList.last())
+     val clickTarget: StateFlow<Route?> = _clickTarget.asStateFlow()
 
-            override val clickTarget: StateFlow<Route?> = MutableStateFlow(null)
 
-            override fun setUsePushAlarm(use: Boolean) {}
-
-            override fun setPushAlarmTime(hour: Int, minute: Int) {}
-
-            override fun setPushAlarmClickTarget(targetLink: Route) {}
+     fun setUsePushAlarm(use: Boolean) {
+        _usePushAlarm.value = use
+        if (use) {
+            applyPushAlarm()
+        } else {
+            alarmManager.setAlarmOff()
         }
+    }
+
+    fun setPushAlarmTime(hour: Int, minute: Int) {
+        _pushAlarmMinute.value = hour * 60 + minute
+        applyPushAlarm()
+    }
+
+    fun setPushAlarmClickTarget(targetLink: Route) {
+        _clickTarget.value = targetLink
+        applyPushAlarm()
+    }
+
+    private fun applyPushAlarm() {
+        alarmManager.setAlarm(pushAlarmMinute.value / 60, pushAlarmMinute.value % 60, clickTarget.value?.uri)
     }
 }
