@@ -50,6 +50,10 @@ fun fileDtoToFile(fileDto: FileDto) : File {
         id = fileDto.id,
         shortLink = fileDto.shortLink,
         originalLink = fileDto.originalLink,
-        type = FileType.IMAGE
+        type = when (fileDto.type) {
+            "video" -> FileType.VIDEO
+            "voice" -> FileType.VOICE
+            else -> FileType.IMAGE
+        }
     )
 }
