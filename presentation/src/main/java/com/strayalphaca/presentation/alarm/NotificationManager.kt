@@ -18,7 +18,8 @@ class NotificationManager {
         channelId : String, iconResourceId : Int,
         title : String, text : String,
         notificationId : Int,
-        target : KClass<out Activity>?= null
+        target : KClass<out Activity>,
+        deepLink : String ?= null
     ) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -33,8 +34,8 @@ class NotificationManager {
             setSmallIcon(iconResourceId)
             setContentTitle(title)
             setContentText(text)
-            target?.let {
-                setContentIntent(createPendingIntent(context, it))
+            deepLink?.let {
+                setContentIntent(createPendingIntent(context, target, deepLink))
             }
             setAutoCancel(true)
         }.build()
@@ -42,8 +43,8 @@ class NotificationManager {
         notificationManager.notify(notificationId, builder)
     }
 
-    private fun createPendingIntent(context : Context, target : KClass<out Activity>) : PendingIntent? {
-        val resultIntent = Intent(context, target::class.java)
+    private fun createPendingIntent(context : Context, target : KClass<out Activity>, deepLink : String) : PendingIntent? {
+        val resultIntent = Intent(context, target.java).apply { putExtra("deepLink", deepLink) }
         val resultPendingIntent : PendingIntent? = TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(resultIntent)
             getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
