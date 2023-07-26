@@ -68,6 +68,8 @@ gson =  { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
 datastore_core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore"}
 
+kotlin_reflection = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version = "1.8.0" }
+
 [bundles]
 okhttp3 = ["okhttp3-okhttp", "okhttp3-logging-interceptor"]
 retrofit2 = ["retrofit2-retrofit", "retrofit2-converter-gson"]
