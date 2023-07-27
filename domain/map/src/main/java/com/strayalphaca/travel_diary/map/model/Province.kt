@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.map.model
 
-sealed class Province(val id: Int, val name: String) {
+sealed class Province(val id: Int, val name: String, val group : Int = id) {
     object Seoul : Province(1, "서울특별시")
     object Busan : Province(2, "부산광역시")
     object Daegu : Province(3, "대구광역시")
@@ -25,6 +25,10 @@ sealed class Province(val id: Int, val name: String) {
         fun findProvince(provinceId : Int) : Province {
             return listOfProvince().find { it.objectInstance?.id == provinceId }?.objectInstance
                 ?: throw IllegalArgumentException("Cannot find province which id is : $provinceId")
+        }
+
+        fun getSameGroupProvinceList(groupId : Int) : List<Province> {
+            return listOfProvince().filter { it.objectInstance?.group == groupId }.mapNotNull { it.objectInstance }
         }
     }
 }
