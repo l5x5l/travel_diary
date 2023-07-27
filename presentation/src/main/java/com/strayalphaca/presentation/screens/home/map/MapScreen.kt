@@ -26,7 +26,8 @@ import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    onDiaryClick: (String) -> Unit = {}
+    onDiaryClick: (String) -> Unit = {},
+    viewModel : MapViewModel
 ) {
     Box(
         modifier = Modifier
@@ -101,7 +102,7 @@ fun MapScreen(
 fun MapScreenPreview() {
     TravelDiaryTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
-            MapScreen()
+            // MapScreen()
         }
     }
 }

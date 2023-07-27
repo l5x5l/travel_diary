@@ -26,4 +26,12 @@ class TestMapRepository @Inject constructor() : MapRepository {
             )
         )
     }
+
+    override suspend fun loadCityPostListByProvince(provinceId: Int): List<CityDiary> {
+        return listOf(
+            CityDiary(
+                thumbnailUri = "", City.findCity(26)
+            )
+        )
+    }
 }
