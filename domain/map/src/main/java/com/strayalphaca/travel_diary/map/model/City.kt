@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.map.model
 
-sealed class City(val id : Int, val name : String, val provinceId : Int) {
+sealed class City(val id : Int, val name : String, val provinceId : Int, val group : Int = id) {
     object JongnoGu : City(1, "종로구", 1)
     object JungGuSeoul : City(2, "중구", 1)
     object YongsanGu : City(3, "용산구", 1)
@@ -258,5 +258,16 @@ sealed class City(val id : Int, val name : String, val provinceId : Int) {
     object BukJejuGun : City(237, "북제주군", 17)
     object NamJejiGun : City(238, "남제주군", 17)
 
-    fun listOfCity() = City::class.sealedSubclasses.toSet()
+    companion object {
+        fun listOfCity() = City::class.sealedSubclasses.toSet()
+
+        fun getSameGroupCityList(group : Int) : List<City> {
+            return listOfCity().filter { it.objectInstance?.group == group }.mapNotNull { it.objectInstance }
+        }
+
+        fun findCity(cityId : Int) : City {
+            return listOfCity().find { it.objectInstance?.id == cityId }?.objectInstance
+                ?: throw IllegalArgumentException("Cannot found city which id is : $cityId")
+        }
+    }
 }
