@@ -14,7 +14,8 @@ class TrailyAlarmManager @Inject constructor(
     @ApplicationContext private val context : Context
 ) {
     fun setAlarmOff() {
-        val intent = Intent(context, NotificationManager::class.java)
+        val intent = Intent(context, TrailyAlarmReceiver::class.java)
+        intent.action = CALL_NOTIFICATION
         val alarmManager = getAlarmManager()
         val pendingIntent = getAlarmPendingIntent(intent)
         alarmManager.cancel(pendingIntent)
