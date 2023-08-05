@@ -1,36 +1,35 @@
 package com.strayalphaca.travel_diary.data.map.repository
 
-import com.strayalphaca.travel_diary.map.model.City
-import com.strayalphaca.travel_diary.map.model.CityDiary
-import com.strayalphaca.travel_diary.map.model.Province
-import com.strayalphaca.travel_diary.map.model.ProvinceDiary
+import com.strayalphaca.travel_diary.map.model.Location
+import com.strayalphaca.travel_diary.map.model.LocationDiary
+import com.strayalphaca.travel_diary.map.model.LocationId
 import com.strayalphaca.travel_diary.map.repository.MapRepository
 import javax.inject.Inject
 
 // only for testing
 class TestMapRepository @Inject constructor() : MapRepository {
-    override suspend fun loadProvincePostList(provinceId: Int): List<ProvinceDiary> {
+    override suspend fun loadProvincePostList(provinceId: Int): List<LocationDiary> {
         return listOf(
-            ProvinceDiary("", Province.Busan),
-            ProvinceDiary("", Province.Sejong),
-            ProvinceDiary("", Province.Seoul),
-            ProvinceDiary("", Province.Daejeon),
-            ProvinceDiary("", Province.Ulsan),
+            LocationDiary("", Location(LocationId(2), "부산", LocationId(2))),
+            LocationDiary("", Location(LocationId(8), "세종", LocationId(8))),
+            LocationDiary("", Location(LocationId(1), "서울", LocationId(1))),
+            LocationDiary("", Location(LocationId(5), "대전", LocationId(5))),
+            LocationDiary("", Location(LocationId(3), "울산", LocationId(3))),
         )
     }
 
-    override suspend fun loadCityPostList(cityIdList: List<Int>): List<CityDiary> {
+    override suspend fun loadCityPostList(cityIdList: List<Int>): List<LocationDiary> {
         return listOf(
-            CityDiary(
-                thumbnailUri = "", City.findCity(26)
+            LocationDiary(
+                thumbnailUri = "", Location(LocationId(1), "서울", LocationId(1))
             )
         )
     }
 
-    override suspend fun loadCityPostListByProvince(provinceId: Int): List<CityDiary> {
+    override suspend fun loadCityPostListByProvince(provinceId: Int): List<LocationDiary> {
         return listOf(
-            CityDiary(
-                thumbnailUri = "", City.findCity(26)
+            LocationDiary(
+                thumbnailUri = "", Location(LocationId(1), "서울", LocationId(1))
             )
         )
     }
