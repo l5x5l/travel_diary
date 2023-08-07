@@ -20,15 +20,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.block.DiaryInMap
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
+import com.strayalphaca.presentation.utils.getMapImageRatioById
+import com.strayalphaca.presentation.utils.getMapImageResourceById
 import com.strayalphaca.presentation.utils.pxToDp
 import com.strayalphaca.travel_diary.map.model.Location
 import com.strayalphaca.travel_diary.map.model.LocationDiary
@@ -44,8 +46,7 @@ fun TrailyMap(
 ) {
     var imageSize by remember { mutableStateOf(IntSize.Zero) }
     var boxRatio by remember { mutableStateOf(2f) }
-    // todo ratio 기준값을 이미지의 비율로 설정해야 함!!!
-    val imageRatio = 0.66f
+    val imageRatio = getMapImageRatioById(locationId)
 
     Box(
         modifier
@@ -78,7 +79,8 @@ fun TrailyMap(
                     },
                 painter = painterResource(id = getMapImageResourceById(locationId)),
                 contentDescription = null,
-                contentScale = if (boxRatio < 1) { ContentScale.FillWidth } else { ContentScale.FillHeight }
+                contentScale = if (boxRatio < 1) { ContentScale.FillWidth } else { ContentScale.FillHeight },
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
             )
 
             locationDiaryList.forEach { locationDiary ->
@@ -129,18 +131,6 @@ fun getOffsetY(location: Location, totalHeight: Int): Int {
 
         else -> {
             0
-        }
-    }
-}
-
-fun getMapImageResourceById(id: Int?): Int {
-    return when (id) {
-        null -> {
-            R.drawable.ic_map_korea
-        }
-
-        else -> {
-            R.drawable.ic_map_korea
         }
     }
 }
