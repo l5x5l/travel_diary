@@ -1,7 +1,6 @@
 package com.strayalphaca.presentation.screens.home.map
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -12,15 +11,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.strayalphaca.presentation.R
+import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
 import com.strayalphaca.presentation.components.atom.gradient_box.GradientBox
 import com.strayalphaca.presentation.components.atom.gradient_box.GradientDirection
+import com.strayalphaca.presentation.components.block.MapEmptyView
+import com.strayalphaca.presentation.components.template.traily_map.TrailyMap
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
 @Composable
@@ -29,8 +32,11 @@ fun MapScreen(
     onDiaryClick: (String) -> Unit = {},
     viewModel : MapViewModel
 ) {
+
+    val state by viewModel.state.collectAsState()
+
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.surface)
             .padding(horizontal = 16.dp)
@@ -78,15 +84,43 @@ fun MapScreen(
                     .border(width = 1.dp, color = MaterialTheme.colors.onSurface)
                     .padding(16.dp)
             ) {
-                Image(
+                if (state.currentLocationId != null) {
+                    BaseIconButton(
+                        iconResourceId = R.drawable.ic_back,
+                        onClick = {
+                            viewModel.loadLocationDiaryList(null)
+                        }
+                    )
+                }
+
+                TrailyMap(
                     modifier = Modifier.fillMaxSize(),
-                    painter = painterResource(id = R.drawable.ic_map_korea),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit
+                    locationId = state.currentLocationId,
+                    locationDiaryList = state.dataList,
+                    onClickDiary = { id ->
+                        if (viewModel.isLeafLocation()) {
+
+                        } else {
+                            viewModel.loadLocationDiaryList(id)
+                        }
+                    }
                 )
             }
 
-
+            if (state.showEmpty) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colors.surface.copy(alpha = 0.8f))
+                ) {
+                    MapEmptyView(
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .align(Alignment.Center)
+                            .zIndex(4f)
+                    )
+                }
+            }
         }
     }
 }
