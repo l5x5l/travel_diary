@@ -19,6 +19,7 @@ import com.strayalphaca.presentation.models.BottomNavigationItem
 import com.strayalphaca.presentation.screens.home.calendar.CalendarScreen
 import com.strayalphaca.presentation.screens.home.calendar.CalendarViewModel
 import com.strayalphaca.presentation.screens.home.map.MapScreen
+import com.strayalphaca.presentation.screens.home.map.MapViewModel
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
 private fun NavHostController.navigateToHome(route : String) =
@@ -99,7 +100,11 @@ fun HomeNavHost(
         composable(
             route = MapScreenDestination.route
         ) {
-            MapScreen(onDiaryClick = goToDiary)
+            val mapViewModel = hiltViewModel<MapViewModel>()
+            MapScreen(
+                onDiaryClick = goToDiary,
+                viewModel = mapViewModel
+            )
         }
     }
 }
