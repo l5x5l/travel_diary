@@ -214,7 +214,7 @@ value class LocationId(val id : Int) {
                 Position(x = 0.408f, y = getYPositionRatioByLocalImage(0.428f, gyeongnam))
             }
             60 -> { // 하동/사천/진주/남해
-                Position(x = 0.191f, y = getYPositionRatioByLocalImage(0.384f, gyeongnam))
+                Position(x = 0.191f, y = getYPositionRatioByLocalImage(0.584f, gyeongnam))
             }
             61 -> { // 함안/창원/김해/양산
                 Position(x = 0.561f, y = getYPositionRatioByLocalImage(0.534f, gyeongnam))
