@@ -79,25 +79,27 @@ fun TrailyMap(
                     },
                 painter = painterResource(id = getMapImageResourceById(locationId)),
                 contentDescription = null,
-                contentScale = if (boxRatio < 1) { ContentScale.FillWidth } else { ContentScale.FillHeight },
+                contentScale = if (boxRatio < imageRatio) { ContentScale.FillWidth } else { ContentScale.FillHeight },
                 colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
             )
 
-            locationDiaryList.forEach { locationDiary ->
-                DiaryInMap(
-                    modifier = Modifier
-                        .width(40.dp)
-                        .offset(
-                            x = getOffsetX(
-                                locationDiary.location,
-                                imageSize.width
-                            ).pxToDp() - 20.dp,
-                            y = getOffsetY(locationDiary.location, imageSize.height).pxToDp()
-                        ),
-                    onClick = onClickDiary,
-                    thumbnailUrl = locationDiary.thumbnailUri,
-                    id = locationDiary.location.id.id
-                )
+            if (imageSize != IntSize.Zero) {
+                locationDiaryList.forEach { locationDiary ->
+                    DiaryInMap(
+                        modifier = Modifier
+                            .width(40.dp)
+                            .offset(
+                                x = getOffsetX(
+                                    locationDiary.location,
+                                    imageSize.width
+                                ).pxToDp() - 20.dp,
+                                y = getOffsetY(locationDiary.location, imageSize.height).pxToDp()
+                            ),
+                        onClick = onClickDiary,
+                        thumbnailUrl = locationDiary.thumbnailUri,
+                        id = locationDiary.location.id.id
+                    )
+                }
             }
         }
     }
@@ -145,26 +147,29 @@ fun getOffsetY(location: Location, totalHeight: Int): Int {
 @Preview(showBackground = true, widthDp = 360)
 @Composable
 fun MapScreenPreview() {
+    val testData2 : List<LocationDiary> = listOf(
+        LocationDiary("", Location(LocationId(27), "동해", LocationId(10), LocationType.CITY_GROUP)),
+        LocationDiary("", Location(LocationId(24), "평창", LocationId(10), LocationType.CITY_GROUP)),
+        LocationDiary("", Location(LocationId(21), "철원", LocationId(10), LocationType.CITY_GROUP)),
+        LocationDiary("", Location(LocationId(22), "춘천", LocationId(10), LocationType.CITY_GROUP)),
+    )
+
     TravelDiaryTheme {
         Surface(
             modifier = Modifier
                 .width(400.dp)
                 .height(500.dp)
         ) {
-            Box(Modifier.fillMaxSize()
-                .padding(16.dp)
-                .border(width = 1.dp, color = MaterialTheme.colors.onSurface)
-                .padding(16.dp)) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .border(width = 1.dp, color = MaterialTheme.colors.onSurface)
+                    .padding(16.dp)) {
                 TrailyMap(
                     modifier = Modifier.fillMaxSize(),
-                    locationId = null,
-                    locationDiaryList = listOf(
-                        LocationDiary("", Location(LocationId(2), "부산", LocationId(2))),
-                        LocationDiary("", Location(LocationId(8), "세종", LocationId(8))),
-                        LocationDiary("", Location(LocationId(1), "서울", LocationId(1))),
-                        LocationDiary("", Location(LocationId(5), "대전", LocationId(5))),
-                        LocationDiary("", Location(LocationId(3), "울산", LocationId(3))),
-                    ),
+                    locationId = 10,
+                    locationDiaryList = testData2,
                     onClickDiary = {})
             }
 
