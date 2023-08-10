@@ -1,6 +1,7 @@
 package com.strayalphaca.data.diary.data_source
 
 import com.strayalphaca.data.all.model.DiaryDto
+import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.FileDto
 import com.strayalphaca.domain.model.BaseResponse
 import kotlinx.coroutines.delay
@@ -17,5 +18,16 @@ class DiaryTestDataSource @Inject constructor() : DiaryDataSource {
             ))
 
         return BaseResponse.Success(diary)
+    }
+
+    override suspend fun getDiaryList(cityId: Int, perPage: Int, offset: Int): List<DiaryItemDto> {
+        delay(1000L)
+        val result = mutableListOf<DiaryItemDto>()
+
+        for (i in 0 until perPage) {
+            result.add(DiaryItemDto("${offset * perPage + i}", null, 1))
+        }
+
+        return result
     }
 }
