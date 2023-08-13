@@ -50,5 +50,12 @@ object Intro : RootDestinations {
 
 object Lock : RootDestinations {
     override val route: String = "lock"
+}
 
+object DiaryList : RootDestinations {
+    override val route: String = "diary_list"
+    const val cityGroupId = "city_group_id"
+    val routeWithArgs = "${route}/{${cityGroupId}}"
+    val arguments = listOf(navArgument(cityGroupId){type = NavType.IntType})
+    val deepLinks = listOf(navDeepLink { uriPattern = "traily://${route}/{${cityGroupId}}" })
 }

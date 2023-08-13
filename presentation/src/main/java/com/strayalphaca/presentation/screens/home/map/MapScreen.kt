@@ -29,7 +29,7 @@ import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    onDiaryClick: (String) -> Unit = {},
+    goToDiaryList : (Int) -> Unit = {},
     viewModel : MapViewModel
 ) {
 
@@ -99,7 +99,7 @@ fun MapScreen(
                     locationDiaryList = state.dataList,
                     onClickDiary = { id ->
                         if (viewModel.isLeafLocation()) {
-
+                            goToDiaryList(id)
                         } else {
                             viewModel.loadLocationDiaryList(id)
                         }

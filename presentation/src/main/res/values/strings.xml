@@ -60,5 +60,7 @@
     <string name="notification_text">오늘 하루에 대한 기록을 남겨보세요</string>
     <string name="notification_channel_name">작성 알림</string>
 
+    <string name="select_location">지역 선택</string>
+
     <string name="map_empty">아직 일기에 기록된 위치정보가 없어요 :(</string>
 </resources>

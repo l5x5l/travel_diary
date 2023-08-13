@@ -16,6 +16,8 @@ import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailContainer
 import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailViewModel
 import com.strayalphaca.presentation.screens.diary.write.DiaryWriteContainer
 import com.strayalphaca.presentation.screens.diary.write.DiaryWriteViewModel
+import com.strayalphaca.presentation.screens.diary_list.DiaryListScreenContainer
+import com.strayalphaca.presentation.screens.diary_list.DiaryListViewModel
 import com.strayalphaca.presentation.screens.home.HomeScreen
 import com.strayalphaca.presentation.screens.intro.IntroScreen
 import com.strayalphaca.presentation.screens.lock.LockScreen
@@ -56,7 +58,8 @@ fun RootNavHost(
             HomeScreen(
                 goToDiary = { navController.navigateToDiaryDetail(it) },
                 goToDiaryWrite = { navController.navigateToDiaryWrite(it) },
-                goToSettings = { navController.navigate(SettingsGraph.route) }
+                goToSettings = { navController.navigate(SettingsGraph.route) },
+                goToDiaryList = { navController.navigateToDiaryList(it) }
             )
         }
 
@@ -136,6 +139,23 @@ fun RootNavHost(
                 }
             )
         }
+
+        composable(
+            route = DiaryList.routeWithArgs,
+            arguments = DiaryList.arguments,
+            deepLinks = DiaryList.deepLinks
+        ) { navBackStackEntry ->
+            val viewModel = hiltViewModel<DiaryListViewModel>()
+            DiaryListScreenContainer(
+                moveToDiary = {
+                    navController.navigateToDiaryDetail(it)
+                },
+                onBackPress = { navController.popBackStack() },
+                initCityGroupId = navBackStackEntry.arguments?.getInt(DiaryList.cityGroupId) ?: -1,
+                viewModel = viewModel
+            )
+        }
+
     }
 }
 
@@ -153,4 +173,8 @@ private fun NavHostController.navigateToDiaryDetail(diaryId : String) =
 
 private fun NavHostController.navigateToDiaryWrite(diaryId : String?) {
     this.navigateSingleTopTo("${DiaryWrite.route}/${diaryId}")
+}
+
+private fun NavHostController.navigateToDiaryList(cityGroupId : Int) {
+    this.navigateSingleTopTo("${DiaryList.route}/${cityGroupId}")
 }
