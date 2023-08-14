@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -159,22 +158,22 @@ fun RootNavHost(
     }
 }
 
-fun NavHostController.navigateSingleTopTo(route : String) =
-    this.navigate(route){
-        popUpTo(this@navigateSingleTopTo.graph.findStartDestination().id){
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
-    }
+//fun NavHostController.navigateSingleTopTo(route : String) =
+//    this.navigate(route){
+//        popUpTo(this@navigateSingleTopTo.graph.findStartDestination().id){
+//            saveState = true
+//        }
+//        launchSingleTop = true
+//        restoreState = true
+//    }
 
 private fun NavHostController.navigateToDiaryDetail(diaryId : String) =
-    this.navigateSingleTopTo("${DiaryDetail.route}/${diaryId}")
+    this.navigate("${DiaryDetail.route}/${diaryId}")
 
 private fun NavHostController.navigateToDiaryWrite(diaryId : String?) {
-    this.navigateSingleTopTo("${DiaryWrite.route}/${diaryId}")
+    this.navigate("${DiaryWrite.route}/${diaryId}")
 }
 
 private fun NavHostController.navigateToDiaryList(cityGroupId : Int) {
-    this.navigateSingleTopTo("${DiaryList.route}/${cityGroupId}")
+    this.navigate("${DiaryList.route}/${cityGroupId}")
 }
