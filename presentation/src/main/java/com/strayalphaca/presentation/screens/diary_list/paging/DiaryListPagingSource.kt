@@ -3,12 +3,12 @@ package com.strayalphaca.presentation.screens.diary_list.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.strayalphaca.domain.diary.model.DiaryItem
-import com.strayalphaca.domain.diary.use_case.UseCaseGetDiaryList
+import kotlin.reflect.KSuspendFunction3
 
 class DiaryListPagingSource(
-    private val useCaseGetDiaryList: UseCaseGetDiaryList,
-    private val perPage : Int,
-    private val cityId : Int
+    private val getDiaryList: KSuspendFunction3<Int, Int, Int, List<DiaryItem>>,
+    private val perPage: Int,
+    private val targetId: Int
 ) : PagingSource<Int, DiaryItem>() {
     override fun getRefreshKey(state: PagingState<Int, DiaryItem>): Int {
         return ((state.anchorPosition ?: 0) - state.config.initialLoadSize / 2)
@@ -18,7 +18,7 @@ class DiaryListPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DiaryItem> {
         return try {
             val nextKey = params.key ?: 0
-            val response = useCaseGetDiaryList(cityId, perPage, nextKey)
+            val response = getDiaryList(targetId, perPage, nextKey)
             LoadResult.Page(
                 data = response,
                 prevKey = null,

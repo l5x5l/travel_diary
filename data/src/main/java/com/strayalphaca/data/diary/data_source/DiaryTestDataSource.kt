@@ -30,4 +30,19 @@ class DiaryTestDataSource @Inject constructor() : DiaryDataSource {
 
         return result
     }
+
+    override suspend fun getDiaryListByCityGroup(
+        cityGroupId: Int,
+        perPage: Int,
+        offset: Int
+    ): List<DiaryItemDto> {
+        delay(1000L)
+        val result = mutableListOf<DiaryItemDto>()
+
+        for (i in 0 until perPage) {
+            result.add(DiaryItemDto("${offset * perPage + i}", null, 1))
+        }
+
+        return result
+    }
 }

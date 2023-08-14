@@ -28,4 +28,19 @@ class DiaryRepositoryImpl @Inject constructor(
             )
         }
     }
+
+    override suspend fun getDiaryListByCityGroup(
+        cityGroupId: Int,
+        perPage: Int,
+        offset: Int
+    ): List<DiaryItem> {
+        val data = dataSource.getDiaryListByCityGroup(cityGroupId, perPage, offset)
+        return data.map { diaryItemDto ->
+            DiaryItem(
+                id = diaryItemDto.id,
+                imageUrl = diaryItemDto.image?.shortLink,
+                cityName = "groupId $cityGroupId"
+            )
+        }
+    }
 }

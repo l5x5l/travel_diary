@@ -7,4 +7,5 @@ import com.strayalphaca.domain.model.BaseResponse
 interface DiaryRepository {
     suspend fun getDiaryDetail(id : String) : BaseResponse<DiaryDetail>
     suspend fun getDiaryList(cityId : Int, perPage : Int, offset : Int) : List<DiaryItem>
+    suspend fun getDiaryListByCityGroup(cityGroupId : Int, perPage : Int, offset : Int) : List<DiaryItem>
 }

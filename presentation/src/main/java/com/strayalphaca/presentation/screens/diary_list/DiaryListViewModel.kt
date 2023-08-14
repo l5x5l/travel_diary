@@ -36,7 +36,6 @@ class DiaryListViewModel @Inject constructor(
         setCity(null)
     }
 
-    // todo groupId 로 기록 리스트 조회 api 요청하기
     fun setCity(cityId : Int?) {
         selectedCityId = cityId
         if (cityId == null) {
@@ -46,10 +45,13 @@ class DiaryListViewModel @Inject constructor(
                     .joinToString(separator = ",") { city ->
                         city.name
                     }
+            diaryPager = Pager(PagingConfig(pageSize = 10)) {
+                DiaryListPagingSource(useCaseGetDiaryList::getByCityGroupId, 10, cityGroupId)
+            }.flow
         } else {
             _locationTitle.value = City.findCity(cityId).name
             diaryPager = Pager(PagingConfig(pageSize = 10)) {
-                DiaryListPagingSource(useCaseGetDiaryList, 10, cityId)
+                DiaryListPagingSource(useCaseGetDiaryList::invoke, 10, cityId)
             }.flow
         }
     }
