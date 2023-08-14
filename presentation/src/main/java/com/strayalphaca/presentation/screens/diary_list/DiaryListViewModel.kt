@@ -1,9 +1,11 @@
 package com.strayalphaca.presentation.screens.diary_list
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.strayalphaca.domain.diary.model.DiaryItem
 import com.strayalphaca.domain.diary.use_case.UseCaseGetDiaryList
 import com.strayalphaca.presentation.screens.diary_list.paging.DiaryListPagingSource
@@ -32,6 +34,8 @@ class DiaryListViewModel @Inject constructor(
     val locationTitle = _locationTitle.asStateFlow()
 
     fun setCityGroup(cityGroupId : Int) {
+        if (this.cityGroupId == cityGroupId) return
+
         this.cityGroupId = cityGroupId
         setCity(null)
     }
@@ -47,12 +51,12 @@ class DiaryListViewModel @Inject constructor(
                     }
             diaryPager = Pager(PagingConfig(pageSize = 10)) {
                 DiaryListPagingSource(useCaseGetDiaryList::getByCityGroupId, 10, cityGroupId)
-            }.flow
+            }.flow.cachedIn(viewModelScope)
         } else {
             _locationTitle.value = City.findCity(cityId).name
             diaryPager = Pager(PagingConfig(pageSize = 10)) {
                 DiaryListPagingSource(useCaseGetDiaryList::invoke, 10, cityId)
-            }.flow
+            }.flow.cachedIn(viewModelScope)
         }
     }
 }
