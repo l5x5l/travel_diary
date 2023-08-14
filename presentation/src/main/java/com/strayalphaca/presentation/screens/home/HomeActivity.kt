@@ -31,7 +31,8 @@ private fun NavHostController.navigateToHome(route : String) =
 fun HomeScreen(
     goToDiary : (String) -> Unit = {},
     goToDiaryWrite : (String?) -> Unit = {},
-    goToSettings : () -> Unit = {}
+    goToSettings : () -> Unit = {},
+    goToDiaryList: (Int) -> Unit
 ) {
     TravelDiaryTheme {
         val navController = rememberNavController()
@@ -44,6 +45,7 @@ fun HomeScreen(
                 navHostController = navController,
                 goToDiary = goToDiary,
                 goToDiaryWrite = goToDiaryWrite,
+                goToDiaryList = goToDiaryList,
                 modifier = Modifier.weight(1f)
             )
 
@@ -79,7 +81,8 @@ fun HomeNavHost(
     navHostController: NavHostController,
     modifier : Modifier = Modifier,
     goToDiary : (String) -> Unit,
-    goToDiaryWrite : (String?) -> Unit
+    goToDiaryWrite : (String?) -> Unit,
+    goToDiaryList : (Int) -> Unit
 ) {
     NavHost(
         navController = navHostController,
@@ -102,7 +105,7 @@ fun HomeNavHost(
         ) {
             val mapViewModel = hiltViewModel<MapViewModel>()
             MapScreen(
-                onDiaryClick = goToDiary,
+                goToDiaryList = goToDiaryList,
                 viewModel = mapViewModel
             )
         }

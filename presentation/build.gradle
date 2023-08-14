@@ -81,6 +81,10 @@ dependencies {
 
     // gson
     implementation libs.gson
+
+    // paging3
+    implementation libs.paging3
+    implementation libs.paging3Compose
 }
 
 kapt {

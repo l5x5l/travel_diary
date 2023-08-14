@@ -23,3 +23,15 @@ data class DiaryDto(
     val updatedAt : String = "",
     val status : String = ""
 )
+
+data class DiaryItemDto(
+    val id : String,
+    val image : ImageDto?,
+    val cityId : Int
+)
+
+data class ImageDto(
+    val originalName : String,
+    val uploadedLink : String,
+    val shortLink : String?
+)

@@ -20,6 +20,8 @@ exoplayer = "1.0.1"
 coil = "2.4.0"
 gson = "2.8.5"
 datastore = "1.0.0"
+paging = "3.1.1"
+paging_compose = "3.2.0"
 
 [libraries]
 android-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -69,6 +71,9 @@ datastore = { group = "androidx.datastore", name = "datastore-preferences", vers
 datastore_core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore"}
 
 kotlin_reflection = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version = "1.8.0" }
+
+paging3 = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+paging3Compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging_compose" }
 
 [bundles]
 okhttp3 = ["okhttp3-okhttp", "okhttp3-logging-interceptor"]

@@ -165,7 +165,7 @@ value class LocationId(val id : Int) {
             43 -> { // 장성/영광/함평
                 Position(x = 0.179f, y = getYPositionRatioByLocalImage(0.32f, jeonnam))
             }
-            44 -> { // 전담양/곡성/구례
+            44 -> { // 담양/곡성/구례
                 Position(x = 0.714f, y = getYPositionRatioByLocalImage(0.34f, jeonnam))
             }
             45 -> { // 신안/무안/목포
@@ -219,7 +219,7 @@ value class LocationId(val id : Int) {
             61 -> { // 함안/창원/김해/양산
                 Position(x = 0.561f, y = getYPositionRatioByLocalImage(0.534f, gyeongnam))
             }
-            62 -> { // 고성/거제
+            62 -> { // 고성/거제/통영
                 Position(x = 0.382f, y = getYPositionRatioByLocalImage(0.64f, gyeongnam))
             }
             63 -> { // 제주

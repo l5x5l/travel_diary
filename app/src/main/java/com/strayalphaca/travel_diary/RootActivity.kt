@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,6 +15,8 @@ import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailContainer
 import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailViewModel
 import com.strayalphaca.presentation.screens.diary.write.DiaryWriteContainer
 import com.strayalphaca.presentation.screens.diary.write.DiaryWriteViewModel
+import com.strayalphaca.presentation.screens.diary_list.DiaryListScreenContainer
+import com.strayalphaca.presentation.screens.diary_list.DiaryListViewModel
 import com.strayalphaca.presentation.screens.home.HomeScreen
 import com.strayalphaca.presentation.screens.intro.IntroScreen
 import com.strayalphaca.presentation.screens.lock.LockScreen
@@ -56,7 +57,8 @@ fun RootNavHost(
             HomeScreen(
                 goToDiary = { navController.navigateToDiaryDetail(it) },
                 goToDiaryWrite = { navController.navigateToDiaryWrite(it) },
-                goToSettings = { navController.navigate(SettingsGraph.route) }
+                goToSettings = { navController.navigate(SettingsGraph.route) },
+                goToDiaryList = { navController.navigateToDiaryList(it) }
             )
         }
 
@@ -136,21 +138,42 @@ fun RootNavHost(
                 }
             )
         }
+
+        composable(
+            route = DiaryList.routeWithArgs,
+            arguments = DiaryList.arguments,
+            deepLinks = DiaryList.deepLinks
+        ) { navBackStackEntry ->
+            val viewModel = hiltViewModel<DiaryListViewModel>()
+            DiaryListScreenContainer(
+                moveToDiary = {
+                    navController.navigateToDiaryDetail(it)
+                },
+                onBackPress = { navController.popBackStack() },
+                initCityGroupId = navBackStackEntry.arguments?.getInt(DiaryList.cityGroupId) ?: -1,
+                viewModel = viewModel
+            )
+        }
+
     }
 }
 
-fun NavHostController.navigateSingleTopTo(route : String) =
-    this.navigate(route){
-        popUpTo(this@navigateSingleTopTo.graph.findStartDestination().id){
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
-    }
+//fun NavHostController.navigateSingleTopTo(route : String) =
+//    this.navigate(route){
+//        popUpTo(this@navigateSingleTopTo.graph.findStartDestination().id){
+//            saveState = true
+//        }
+//        launchSingleTop = true
+//        restoreState = true
+//    }
 
 private fun NavHostController.navigateToDiaryDetail(diaryId : String) =
-    this.navigateSingleTopTo("${DiaryDetail.route}/${diaryId}")
+    this.navigate("${DiaryDetail.route}/${diaryId}")
 
 private fun NavHostController.navigateToDiaryWrite(diaryId : String?) {
-    this.navigateSingleTopTo("${DiaryWrite.route}/${diaryId}")
+    this.navigate("${DiaryWrite.route}/${diaryId}")
+}
+
+private fun NavHostController.navigateToDiaryList(cityGroupId : Int) {
+    this.navigate("${DiaryList.route}/${cityGroupId}")
 }
