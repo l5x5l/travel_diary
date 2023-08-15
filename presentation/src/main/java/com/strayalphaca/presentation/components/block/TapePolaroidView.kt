@@ -17,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -29,9 +30,11 @@ import com.strayalphaca.presentation.components.template.dialog.TapeSize
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
 @Composable
-fun MapEmptyView(
+fun TapePolaroidView(
     modifier: Modifier,
-    tapeSize: TapeSize = TapeSize.Normal
+    tapeSize: TapeSize = TapeSize.Normal,
+    textResourceId : Int = R.string.map_empty,
+    imageResourceId : Int = R.drawable.ic_logo
 ) {
     Box(modifier = modifier
         .background(Color.Transparent)) {
@@ -47,7 +50,7 @@ fun MapEmptyView(
 
         Surface(
             color = MaterialTheme.colors.surface,
-            modifier = Modifier.padding(top = 12.dp)
+            modifier = Modifier.padding(top = 12.dp).shadow(4.dp)
         ) {
             Column(modifier = Modifier.padding(12.dp)) {
                 Image(
@@ -57,12 +60,12 @@ fun MapEmptyView(
                         .background(MaterialTheme.colors.surface),
                     contentDescription = "diary image",
                     contentScale = ContentScale.Fit,
-                    painter = painterResource(id = R.drawable.ic_logo),
+                    painter = painterResource(id = imageResourceId),
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text(text = stringResource(id = R.string.map_empty), style = MaterialTheme.typography.caption, color = MaterialTheme.colors.onSurface)
+                Text(text = stringResource(id = textResourceId), style = MaterialTheme.typography.caption, color = MaterialTheme.colors.onSurface)
             }
         }
     }
@@ -77,7 +80,7 @@ fun MapEmptyViewPreview() {
             color = Color.Magenta
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                MapEmptyView(
+                TapePolaroidView(
                     modifier = Modifier.fillMaxWidth(0.5f)
                 )
             }

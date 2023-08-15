@@ -1,6 +1,7 @@
 package com.strayalphaca.presentation.screens.diary_list
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -27,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -35,7 +38,9 @@ import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.LoadState
 import com.strayalphaca.presentation.components.block.DiaryItemView
+import com.strayalphaca.presentation.components.block.TapePolaroidView
 import com.strayalphaca.presentation.components.template.dialog.CityPickerDialog
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -123,27 +128,61 @@ fun DiaryListScreen(
                 thickness = 1.dp
             )
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
-                content = {
-                    items(
-                        count = diaryList.itemCount,
-                        key = { diaryList[it]?.id ?: "empty_$it" }
-                    ) {
-                        DiaryItemView(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = { id ->
-                                moveToDiary(id)
-                            },
-                            imageUrl = diaryList[it]?.imageUrl,
-                            id = diaryList[it]?.id ?: "",
-                            leftText = diaryList[it]?.cityName ?: ""
+            Box(modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()) {
+
+                when (diaryList.loadState.refresh) {
+                    LoadState.Loading -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center),
+                            color = MaterialTheme.colors.onSurface,
+                            strokeWidth = 2.dp
                         )
                     }
-
+                    is LoadState.Error -> {
+                        TapePolaroidView(
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f)
+                                .align(Alignment.Center)
+                                .zIndex(4f),
+                            textResourceId = R.string.location_error
+                        )
+                    }
+                    else -> {
+                        if (diaryList.itemCount > 0) {
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(2),
+                                contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
+                                content = {
+                                    items(
+                                        count = diaryList.itemCount,
+                                        key = { diaryList[it]?.id ?: "empty_$it" }
+                                    ) {
+                                        DiaryItemView(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            onClick = { id ->
+                                                moveToDiary(id)
+                                            },
+                                            imageUrl = diaryList[it]?.imageUrl,
+                                            id = diaryList[it]?.id ?: "",
+                                            leftText = diaryList[it]?.cityName ?: ""
+                                        )
+                                    }
+                                }
+                            )
+                        } else {
+                            TapePolaroidView(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.5f)
+                                    .align(Alignment.Center),
+                                textResourceId = R.string.location_empty
+                            )
+                        }
+                    }
                 }
-            )
+
+            }
 
             
         }

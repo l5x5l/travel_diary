@@ -17,7 +17,7 @@
     <string name="input_auth_code">인증번호 입력</string>
     <string name="change_email">이메일 변경</string>
     <string name="request_again">재요청</string>
-    <string name="move_to_next_step">다음 단계로 이동하기</string>간
+    <string name="move_to_next_step">다음 단계로 이동하기</string>
     <string name="remain_time">남은 시간</string>
 
     <string name="placeholder_input_email">이메일을 입력해주세요</string>
@@ -61,6 +61,8 @@
     <string name="notification_channel_name">작성 알림</string>
 
     <string name="select_location">지역 선택</string>
+    <string name="location_empty">아직 이 지역에 대한 일기가 없어요</string>
+    <string name="location_error">데이터를 불러오던 중 에러가 발생했어요</string>
 
-    <string name="map_empty">아직 일기에 기록된 위치정보가 없어요 :(</string>
+    <string name="map_empty">아직 일기에 기록된 위치정보가 없어요</string>
 </resources>
