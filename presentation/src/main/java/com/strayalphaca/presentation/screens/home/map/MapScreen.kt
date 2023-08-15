@@ -22,7 +22,7 @@ import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
 import com.strayalphaca.presentation.components.atom.gradient_box.GradientBox
 import com.strayalphaca.presentation.components.atom.gradient_box.GradientDirection
-import com.strayalphaca.presentation.components.block.MapEmptyView
+import com.strayalphaca.presentation.components.block.TapePolaroidView
 import com.strayalphaca.presentation.components.template.traily_map.TrailyMap
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
@@ -113,7 +113,7 @@ fun MapScreen(
                         .fillMaxSize()
                         .background(MaterialTheme.colors.surface.copy(alpha = 0.8f))
                 ) {
-                    MapEmptyView(
+                    TapePolaroidView(
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .align(Alignment.Center)
