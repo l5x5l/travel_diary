@@ -12,8 +12,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/data/file" />
             <option value="$PROJECT_DIR$/data/map" />
             <option value="$PROJECT_DIR$/domain" />
+            <option value="$PROJECT_DIR$/domain/file" />
             <option value="$PROJECT_DIR$/domain/map" />
             <option value="$PROJECT_DIR$/presentation" />
           </set>

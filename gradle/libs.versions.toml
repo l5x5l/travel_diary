@@ -75,6 +75,8 @@ kotlin_reflection = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", v
 paging3 = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging3Compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging_compose" }
 
+coroutine = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.7.3"}
+
 [bundles]
 okhttp3 = ["okhttp3-okhttp", "okhttp3-logging-interceptor"]
 retrofit2 = ["retrofit2-retrofit", "retrofit2-converter-gson"]
