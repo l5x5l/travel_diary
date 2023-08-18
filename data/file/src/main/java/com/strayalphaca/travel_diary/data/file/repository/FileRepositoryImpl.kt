@@ -9,7 +9,8 @@ class FileRepositoryImpl @Inject constructor(
 
 ) : FileRepository {
     override suspend fun uploadFile(fileInfo: FileInfo): BaseResponse<String> {
-        TODO("Not yet implemented")
+        // TODO not yet implemented
+        return BaseResponse.Success<String>(data = "string")
     }
 
 }
