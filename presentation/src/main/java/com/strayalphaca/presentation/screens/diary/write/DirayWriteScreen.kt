@@ -79,7 +79,8 @@ fun DiaryWriteContainer(
         changeMusicProgress = viewModel::dragMusicProgressByUser,
         showSelectView = viewModel::showSelectView,
         setWeather = viewModel::setWeather,
-        setFeeling = viewModel::setFeeling
+        setFeeling = viewModel::setFeeling,
+        uploadDiary = viewModel::uploadDiary
     )
 }
 
@@ -103,7 +104,8 @@ fun DiaryWriteScreen(
     changeMusicProgress: (Float) -> Unit = {},
     showSelectView: (CurrentShowSelectView) -> Unit = {},
     setWeather: (Weather) -> Unit = {},
-    setFeeling: (Feeling) -> Unit = {}
+    setFeeling: (Feeling) -> Unit = {},
+    uploadDiary : () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -161,7 +163,8 @@ fun DiaryWriteScreen(
 
                 TextButton(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    text = stringResource(id = R.string.register)
+                    text = stringResource(id = R.string.register),
+                    onClick = uploadDiary
                 )
             }
 
@@ -295,8 +298,8 @@ fun DiaryWriteScreen(
 
                 if (state.imageFiles.isNotEmpty()) {
                     HorizontalPager(pageCount = state.imageFiles.size) {
-                        val isVideo = !checkUriIsVideo(state.imageFiles[it], context)
-                        PolaroidView(fileUri = state.imageFiles[it], isVideo = isVideo)
+                        val isVideo = checkUriIsVideo(state.imageFiles[it], context)
+                        PolaroidView(fileUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo)
                     }
                     Spacer(modifier = Modifier.height(24.dp))
                 }
@@ -391,7 +394,7 @@ fun DiaryWriteScreen(
 )
 @Preview(showBackground = true, widthDp = 360)
 fun DiaryWriteScreenPreview() {
-    TravelDiaryTheme() {
+    TravelDiaryTheme {
         DiaryWriteScreen("null")
     }
 }

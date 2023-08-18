@@ -10,8 +10,11 @@ import com.strayalphaca.domain.diary.use_case.UseCaseGetDiaryDetail
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
+import com.strayalphaca.presentation.utils.UriHandler
+import com.strayalphaca.travel_diary.domain.file.usecase.UseCaseUploadFiles
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -21,7 +24,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryWriteViewModel @Inject constructor(
     private val useCaseGetDiaryDetail: UseCaseGetDiaryDetail,
-    private val musicPlayer: MusicPlayer
+    private val useCaseUploadFiles: UseCaseUploadFiles,
+    private val musicPlayer: MusicPlayer,
+    private val uriHandler: UriHandler
 ) : ViewModel() {
     private val events = Channel<DiaryWriteEvent>()
     val state: StateFlow<DiaryWriteState> = events.receiveAsFlow()
@@ -147,6 +152,27 @@ class DiaryWriteViewModel @Inject constructor(
         pauseMusic()
         musicPlayer.setPosition(progress)
         _musicProgress.value = progress
+    }
+
+    fun uploadDiary() {
+        viewModelScope.launch {
+            val voiceFile = state.value.voiceFile?.let { uriHandler.uriToFile(it) }
+            val mediaFileList = state.value.imageFiles.map { uriHandler.uriToFile(it) }
+
+            val voiceFileUploadJob = voiceFile?.let {
+                async {
+                    useCaseUploadFiles(listOf(it))
+                }
+            }
+            val mediaFileListUploadJob = async {
+                useCaseUploadFiles(mediaFileList)
+            }
+
+            val voiceFileLink = voiceFileUploadJob?.await()
+            val mediaFileLinkList = mediaFileListUploadJob.await()
+
+            // voiceFileLink, mediaFileLinkList 사용해서 api 호출
+        }
     }
 
     private fun reduce(state: DiaryWriteState, events: DiaryWriteEvent): DiaryWriteState {
