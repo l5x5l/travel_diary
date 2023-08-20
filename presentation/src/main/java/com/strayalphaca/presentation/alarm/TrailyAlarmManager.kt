@@ -29,13 +29,9 @@ class TrailyAlarmManager @Inject constructor(
 
         val alarmManager = getAlarmManager()
         val pendingIntent = getAlarmPendingIntent(intent)
+        val nextAlarmTime = getNextAlarmTimeMilli(hour, minute)
 
-        val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, hour)
-            set(Calendar.MINUTE, minute)
-            set(Calendar.SECOND, 0)
-        }
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, nextAlarmTime, AlarmManager.INTERVAL_DAY, pendingIntent)
     }
 
     private fun getAlarmManager() = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -45,5 +41,20 @@ class TrailyAlarmManager @Inject constructor(
         return PendingIntent.getBroadcast(
             context, NOTIFICATION_ID, intent, flags
         )
+    }
+
+    private fun getNextAlarmTimeMilli(hour : Int, minute : Int) : Long {
+        val alarmTime = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
+        }.timeInMillis
+        val currentTime = Calendar.getInstance().timeInMillis
+
+        return if (alarmTime < currentTime) {
+            alarmTime + AlarmManager.INTERVAL_DAY
+        } else {
+            alarmTime
+        }
     }
 }
