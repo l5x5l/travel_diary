@@ -34,8 +34,8 @@ class NotificationManager {
             setSmallIcon(iconResourceId)
             setContentTitle(title)
             setContentText(text)
-            deepLink?.let {
-                setContentIntent(createPendingIntent(context, target, deepLink))
+            deepLink?.let { link ->
+                setContentIntent(createPendingIntent(context, target, link))
             }
             setAutoCancel(true)
         }.build()
