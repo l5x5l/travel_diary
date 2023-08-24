@@ -13,8 +13,8 @@ class DiaryTestDataSource @Inject constructor() : DiaryDataSource {
 
         val diary = DiaryDto(
             id = "1", date = "2023/03.01",
-            files = listOf<FileDto>(
-                FileDto(id = "1", shortLink = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", type = "video")
+            medias = listOf<FileDto>(
+                FileDto(originName = "1", shortLink = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", type = "video")
             ))
 
         return BaseResponse.Success(diary)

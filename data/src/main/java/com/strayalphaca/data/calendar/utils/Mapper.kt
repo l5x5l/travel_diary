@@ -10,7 +10,7 @@ fun diaryDtoToDiaryInCalendar(diaryDto: DiaryDto) : DiaryInCalendar {
     return DiaryInCalendar(
         id = diaryDto.id,
         day = day ?: 1,
-        thumbnailUrl = diaryDto.files[0].shortLink,
+        thumbnailUrl = diaryDto.medias[0].shortLink,
     )
 }
 

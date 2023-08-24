@@ -12,11 +12,10 @@ fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {
         weather = weatherStringToEnum(diaryDto.weather),
         feeling = feelingStringToEnum(diaryDto.feeling),
         content = diaryDto.content,
-        files = diaryDto.files.map { fileDtoToFile(it) },
+        files = diaryDto.medias.map { fileDtoToFile(it) },
         createdAt = diaryDto.createdAt,
-        updatedAt = diaryDto.updatedAt,
-        status = DiaryStatus.NORMAL,
-        voiceFile = diaryDto.voice?.let { fileDtoToFile(it) }
+        voiceFile = diaryDto.voice?.let { fileDtoToFile(it) },
+        cityId = diaryDto.cityId
     )
 }
 
@@ -47,12 +46,12 @@ internal fun weatherStringToEnum(weather : String?) : Weather? {
 
 fun fileDtoToFile(fileDto: FileDto) : File {
     return File(
-        id = fileDto.id,
-        shortLink = fileDto.shortLink,
-        originalLink = fileDto.originalLink,
+        id = fileDto.originName,
+        shortLink = fileDto.shortLink ?: fileDto.uploadedLink,
+        originalLink = fileDto.uploadedLink,
         type = when (fileDto.type) {
-            "video" -> FileType.VIDEO
-            "voice" -> FileType.VOICE
+            "video", "VIDEO" -> FileType.VIDEO
+            "voice", "VOICE" -> FileType.VOICE
             else -> FileType.IMAGE
         }
     )

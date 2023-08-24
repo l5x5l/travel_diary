@@ -8,7 +8,7 @@ data class DiaryDetail(
     val content : String,
     val files : List<File>,
     val createdAt : String,
-    val updatedAt : String,
-    val status : DiaryStatus,
-    val voiceFile : File?
+    val voiceFile : File?,
+    val cityId : Int = -1,
+    val cityName : String ?= null
 )

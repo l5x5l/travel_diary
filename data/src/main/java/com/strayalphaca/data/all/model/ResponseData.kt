@@ -1,13 +1,12 @@
 package com.strayalphaca.data.all.model
 
 data class FileDto(
-    val id : String,
+    val originName : String,
     val type : String = "",
-    val shortLink : String = "",
-    val originalLink : String = "",
-    val createdAt : String = "",
-    val updatedAt : String = "",
-    val status : String = ""
+    val uploadedLink : String = "",
+    val shortLink : String? = null,
+    val thumbnailLink : String ?= null,
+    val thumbnailShortLink : String ?= null
 )
 
 
@@ -17,11 +16,10 @@ data class DiaryDto(
     val feeling : String = "",
     val weather : String? = null,
     val content : String = "",
-    val files : List<FileDto> = listOf(),
+    val medias : List<FileDto> = listOf(),
     val voice : FileDto? = null,
     val createdAt : String = "",
-    val updatedAt : String = "",
-    val status : String = ""
+    val cityId : Int = 1
 )
 
 data class DiaryItemDto(

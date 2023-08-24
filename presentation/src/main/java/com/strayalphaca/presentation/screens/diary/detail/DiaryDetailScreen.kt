@@ -31,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.core.net.toUri
 import com.strayalphaca.domain.diary.model.DiaryDetail
-import com.strayalphaca.domain.diary.model.DiaryStatus
 import com.strayalphaca.domain.diary.model.Feeling
 import com.strayalphaca.domain.diary.model.File
 import com.strayalphaca.domain.diary.model.FileType
@@ -183,8 +182,6 @@ fun DiaryDetailScreenPreview() {
                     content = "리펙토링 중, 뭐가 바뀌기만 하면 preview가 안된다. 미치겄네,",
                     files = listOf(File(id = "", type = FileType.VIDEO, shortLink = "", originalLink = "")),
                     createdAt = "2023/03/03",
-                    updatedAt = "2023/03/03",
-                    status = DiaryStatus.NORMAL,
                     voiceFile = File(id = "", type = FileType.VOICE, shortLink = "", originalLink = "")
                 )
             )
