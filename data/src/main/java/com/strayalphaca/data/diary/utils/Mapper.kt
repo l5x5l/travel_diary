@@ -1,8 +1,10 @@
 package com.strayalphaca.data.diary.utils
 
 import com.strayalphaca.data.all.model.DiaryDto
+import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.FileDto
 import com.strayalphaca.domain.diary.model.*
+import com.strayalphaca.travel_diary.map.model.City
 
 fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {
     val dateString = diaryDto.date
@@ -16,6 +18,14 @@ fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {
         createdAt = diaryDto.createdAt,
         voiceFile = diaryDto.voice?.let { fileDtoToFile(it) },
         cityId = diaryDto.cityId
+    )
+}
+
+fun diaryListDtoToDiaryItem(diaryItemDto: DiaryItemDto) : DiaryItem {
+    return DiaryItem(
+        id = diaryItemDto.id,
+        imageUrl = diaryItemDto.image?.shortLink ?: diaryItemDto.image?.uploadedLink,
+        cityName = City.findCity(diaryItemDto.cityId).name
     )
 }
 
