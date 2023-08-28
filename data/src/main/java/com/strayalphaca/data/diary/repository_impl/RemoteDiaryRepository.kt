@@ -1,11 +1,17 @@
 package com.strayalphaca.data.diary.repository_impl
 
+import com.strayalphaca.data.all.utils.responseToBaseResponse
 import com.strayalphaca.data.all.utils.responseToBaseResponseWithMapping
+import com.strayalphaca.data.all.utils.voidResponseToBaseResponse
 import com.strayalphaca.data.diary.api.DiaryApi
+import com.strayalphaca.data.diary.model.ModifyDiaryRequestBody
+import com.strayalphaca.data.diary.model.UploadDiaryRequestBody
 import com.strayalphaca.data.diary.utils.diaryDtoToDiaryDetail
 import com.strayalphaca.data.diary.utils.diaryListDtoToDiaryItem
 import com.strayalphaca.domain.diary.model.DiaryDetail
 import com.strayalphaca.domain.diary.model.DiaryItem
+import com.strayalphaca.domain.diary.model.DiaryModifyData
+import com.strayalphaca.domain.diary.model.DiaryWriteData
 import com.strayalphaca.domain.diary.repository.DiaryRepository
 import com.strayalphaca.domain.model.BaseResponse
 import retrofit2.Retrofit
@@ -44,6 +50,19 @@ class RemoteDiaryRepository @Inject constructor(
         } else {
             throw Exception("error occur when load diaryList : $cityGroupId, $perPage, $offset")
         }
+    }
+
+    override suspend fun uploadDiary(diaryWriteData: DiaryWriteData): BaseResponse<String> {
+        val response = diaryRetrofit.uploadDiary(params = UploadDiaryRequestBody.fromDiaryWriteData(diaryWriteData))
+        return responseToBaseResponse(response)
+    }
+
+    override suspend fun modifyDiary(diaryModifyData: DiaryModifyData): BaseResponse<Nothing> {
+        val response = diaryRetrofit.modifyDiary(
+            recordId = diaryModifyData.id,
+            params = ModifyDiaryRequestBody.fromDiaryModifyData(diaryModifyData)
+        )
+        return voidResponseToBaseResponse(response)
     }
 
 }
