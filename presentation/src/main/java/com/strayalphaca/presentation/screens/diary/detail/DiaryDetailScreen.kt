@@ -124,7 +124,7 @@ fun DiaryDetailScreen(
                     if (state.diaryDetail.files.isNotEmpty()) {
                         HorizontalPager(pageCount = state.diaryDetail.files.size) {
                             PolaroidView(
-                                fileUri = Uri.parse(state.diaryDetail.files[it].shortLink),
+                                fileUri = Uri.parse(state.diaryDetail.files[it].fileLink),
                                 isVideo = state.diaryDetail.files[it].type == FileType.VIDEO,
                                 onClick = goToVideo
                             )
@@ -144,7 +144,7 @@ fun DiaryDetailScreen(
                     // voice 파일 유무에 따라 변경 필요
                     state.diaryDetail.voiceFile?.let { file ->
                         SoundView(
-                            file = file.shortLink.toUri(),
+                            file = file.fileLink.toUri(),
                             playing = state.musicPlaying,
                             play = playMusic,
                             pause = pauseMusic,
@@ -180,9 +180,9 @@ fun DiaryDetailScreenPreview() {
                     weather = null,
                     feeling = Feeling.HAPPY,
                     content = "리펙토링 중, 뭐가 바뀌기만 하면 preview가 안된다. 미치겄네,",
-                    files = listOf(File(id = "", type = FileType.VIDEO, shortLink = "", originalLink = "")),
+                    files = listOf(File(id = "", type = FileType.VIDEO, fileLink = "")),
                     createdAt = "2023/03/03",
-                    voiceFile = File(id = "", type = FileType.VOICE, shortLink = "", originalLink = "")
+                    voiceFile = File(id = "", type = FileType.VOICE, fileLink = "")
                 )
             )
         )

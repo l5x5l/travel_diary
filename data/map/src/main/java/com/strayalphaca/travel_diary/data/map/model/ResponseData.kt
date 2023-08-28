@@ -8,7 +8,7 @@ import com.strayalphaca.travel_diary.map.model.Province
 
 data class MapAllLocationResponseBody(
     val id : String,
-    val image : ImageDto,
+    val image : ImageFileInfoDto,
     val provinceId : Int
 ) {
     fun toLocationDiary() : LocationDiary =
@@ -25,7 +25,7 @@ data class MapAllLocationResponseBody(
 
 data class MapProvinceResponseBody(
     val id : String,
-    val image : ImageDto,
+    val image : ImageFileInfoDto,
     val groupId : Int
 ) {
     fun toLocationDiary(provinceId : Int) : LocationDiary =
@@ -40,7 +40,7 @@ data class MapProvinceResponseBody(
 
 }
 
-data class ImageDto(
+data class ImageFileInfoDto(
     val originName : String,
     val uploadedLink : String,
     val shortLink : String? = null

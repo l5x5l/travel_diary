@@ -2,7 +2,7 @@ package com.strayalphaca.data.diary.utils
 
 import com.strayalphaca.data.all.model.DiaryDto
 import com.strayalphaca.data.all.model.DiaryItemDto
-import com.strayalphaca.data.all.model.FileDto
+import com.strayalphaca.data.all.model.MediaFileInfoDto
 import com.strayalphaca.domain.diary.model.*
 import com.strayalphaca.travel_diary.map.model.City
 
@@ -14,9 +14,9 @@ fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {
         weather = weatherStringToEnum(diaryDto.weather),
         feeling = feelingStringToEnum(diaryDto.feeling),
         content = diaryDto.content,
-        files = diaryDto.medias.map { fileDtoToFile(it) },
+        files = diaryDto.medias.map { mediaFileInfoDtoToFile(it) },
         createdAt = diaryDto.createdAt,
-        voiceFile = diaryDto.voice?.let { fileDtoToFile(it) },
+        voiceFile = diaryDto.voice?.let { mediaFileInfoDtoToFile(it) },
         cityId = diaryDto.cityId
     )
 }
@@ -54,15 +54,15 @@ internal fun weatherStringToEnum(weather : String?) : Weather? {
     }
 }
 
-fun fileDtoToFile(fileDto: FileDto) : File {
+fun mediaFileInfoDtoToFile(fileDto: MediaFileInfoDto) : File {
     return File(
         id = fileDto.originName,
-        shortLink = fileDto.shortLink ?: fileDto.uploadedLink,
-        originalLink = fileDto.uploadedLink,
+        fileLink = fileDto.shortLink ?: fileDto.uploadedLink,
         type = when (fileDto.type) {
             "video", "VIDEO" -> FileType.VIDEO
             "voice", "VOICE" -> FileType.VOICE
             else -> FileType.IMAGE
-        }
+        },
+        thumbnailLink = fileDto.thumbnailShortLink ?: fileDto.thumbnailLink
     )
 }

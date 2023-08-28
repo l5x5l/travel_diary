@@ -1,6 +1,6 @@
 package com.strayalphaca.data.all.model
 
-data class FileDto(
+data class MediaFileInfoDto(
     val originName : String,
     val type : String = "",
     val uploadedLink : String = "",
@@ -16,8 +16,8 @@ data class DiaryDto(
     val feeling : String = "",
     val weather : String? = null,
     val content : String = "",
-    val medias : List<FileDto> = listOf(),
-    val voice : FileDto? = null,
+    val medias : List<MediaFileInfoDto> = listOf(),
+    val voice : MediaFileInfoDto? = null,
     val createdAt : String = "",
     val cityId : Int = 1
 )
