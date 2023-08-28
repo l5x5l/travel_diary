@@ -60,6 +60,12 @@ fun DiaryWriteContainer(
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
+    val goBackNavigationEvent by viewModel.goBackNavigationEvent.collectAsState(initial = false)
+
+    LaunchedEffect(goBackNavigationEvent) {
+        if (goBackNavigationEvent)
+            goBack()
+    }
 
     DiaryWriteScreen(
         id = id,

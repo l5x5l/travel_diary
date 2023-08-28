@@ -5,6 +5,8 @@ import com.strayalphaca.data.diary.data_source.DiaryDataSource
 import com.strayalphaca.data.diary.utils.diaryDtoToDiaryDetail
 import com.strayalphaca.domain.diary.model.DiaryDetail
 import com.strayalphaca.domain.diary.model.DiaryItem
+import com.strayalphaca.domain.diary.model.DiaryModifyData
+import com.strayalphaca.domain.diary.model.DiaryWriteData
 import com.strayalphaca.domain.diary.repository.DiaryRepository
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.map.model.City
@@ -42,5 +44,13 @@ class DiaryRepositoryImpl @Inject constructor(
                 cityName = "groupId $cityGroupId"
             )
         }
+    }
+
+    override suspend fun uploadDiary(diaryWriteData: DiaryWriteData): BaseResponse<String> {
+        return BaseResponse.Success(data = "1")
+    }
+
+    override suspend fun modifyDiary(diaryModifyData: DiaryModifyData): BaseResponse<Nothing> {
+        return BaseResponse.EmptySuccess
     }
 }
