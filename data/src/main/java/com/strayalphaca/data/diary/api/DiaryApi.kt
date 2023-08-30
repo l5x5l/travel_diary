@@ -2,6 +2,7 @@ package com.strayalphaca.data.diary.api
 
 import com.strayalphaca.data.all.model.DiaryDto
 import com.strayalphaca.data.all.model.DiaryItemDto
+import com.strayalphaca.data.all.model.ListResponseData
 import com.strayalphaca.data.diary.model.ModifyDiaryRequestBody
 import com.strayalphaca.data.diary.model.UploadDiaryRequestBody
 import retrofit2.Response
@@ -27,8 +28,8 @@ interface DiaryApi {
     suspend fun modifyDiary(@Path("recordId") recordId : String, @Body params : ModifyDiaryRequestBody) : Response<Unit>
 
     @GET("map")
-    suspend fun loadDiaryList(@Query("cityId") cityId : Int, @Query("page") page : Int, @Query("offset") offset : Int) : Response<List<DiaryItemDto>>
+    suspend fun loadDiaryList(@Query("cityId") cityId : Int, @Query("page") page : Int, @Query("offset") offset : Int) : Response<ListResponseData<DiaryItemDto>>
 
     @GET("map")
-    suspend fun loadDiaryListByCityGroup(@Query("cityGroupId") cityGroupId : Int, @Query("page") page : Int, @Query("offset") offset : Int) : Response<List<DiaryItemDto>>
+    suspend fun loadDiaryListByCityGroup(@Query("cityGroupId") cityGroupId : Int, @Query("page") page : Int, @Query("offset") offset : Int) : Response<ListResponseData<DiaryItemDto>>
 }

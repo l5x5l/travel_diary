@@ -17,7 +17,7 @@ class RemoteMapRepository @Inject constructor(
         val response = mapRetrofit.getAllLocationDiary()
         return responseToBaseResponseWithMapping(
             response = response,
-            mappingFunction = { it.map { responseData -> responseData.toLocationDiary() }}
+            mappingFunction = { it.data.map { responseData -> responseData.toLocationDiary() }}
         )
     }
 
@@ -25,7 +25,7 @@ class RemoteMapRepository @Inject constructor(
         val response = mapRetrofit.getProvinceDiary(provinceId)
         return responseToBaseResponseWithMapping(
             response = response,
-            mappingFunction = { it.map { responseData -> responseData.toLocationDiary(provinceId) }}
+            mappingFunction = { it.data.map { responseData -> responseData.toLocationDiary(provinceId) }}
         )
     }
 
