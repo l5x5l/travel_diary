@@ -19,7 +19,8 @@ data class DiaryDto(
     val medias : List<MediaFileInfoDto> = listOf(),
     val voice : MediaFileInfoDto? = null,
     val createdAt : String = "",
-    val cityId : Int = 1
+    val cityId : Int ?= null,
+    val place : String ?= null
 )
 
 data class DiaryItemDto(

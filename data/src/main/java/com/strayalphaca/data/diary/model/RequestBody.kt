@@ -10,7 +10,8 @@ data class UploadDiaryRequestBody(
     val content : String,
     val medias : List<String> ?= null,
     val voice : String ?= null,
-    val cityId : Int ?= null
+    val cityId : Int ?= null,
+    val place : String ?= null
 ) {
     companion object {
         fun fromDiaryWriteData(diaryWriteData: DiaryWriteData) : UploadDiaryRequestBody {
@@ -35,7 +36,8 @@ data class ModifyDiaryRequestBody(
     val content : String ?= null,
     val medias : List<String> ?= null,
     val voice : String ?= null,
-    val cityId : Int ?= null
+    val cityId : Int ?= null,
+    val place : String ?= null
 ) {
     companion object {
         fun fromDiaryModifyData(diaryModifyData: DiaryModifyData) : ModifyDiaryRequestBody {

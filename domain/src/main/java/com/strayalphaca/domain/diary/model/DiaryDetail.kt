@@ -9,7 +9,7 @@ data class DiaryDetail(
     val files : List<File>,
     val createdAt : String,
     val voiceFile : File?,
-    val cityId : Int = -1,
+    val cityId : Int ?= null,
     val cityName : String ?= null
 )
 

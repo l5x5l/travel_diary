@@ -17,7 +17,8 @@ fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {
         files = diaryDto.medias.map { mediaFileInfoDtoToFile(it) },
         createdAt = diaryDto.createdAt,
         voiceFile = diaryDto.voice?.let { mediaFileInfoDtoToFile(it) },
-        cityId = diaryDto.cityId
+        cityId = diaryDto.cityId,
+        cityName = diaryDto.place ?: diaryDto.cityId?.let { City.findCity(it).name }
     )
 }
 
