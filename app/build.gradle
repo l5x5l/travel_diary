@@ -43,7 +43,6 @@ android {
 
 dependencies {
     implementation project(":presentation")
-    implementation project(":core:network")
     implementation project(":domain")
     implementation project(":domain:map")
     implementation project(":domain:file")
@@ -78,6 +77,12 @@ dependencies {
 
     // data store
     implementation libs.datastore
+
+    // retrofit
+    implementation libs.bundles.retrofit2
+
+    // okhttp
+    implementation libs.bundles.okhttp3
 }
 
 kapt {
