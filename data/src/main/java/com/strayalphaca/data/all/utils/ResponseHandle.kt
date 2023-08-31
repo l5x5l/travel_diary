@@ -32,7 +32,7 @@ fun<T> responseToBaseResponse(
     }
 }
 
-fun voidResponseToBaseResponse(response : Response<Unit>) : BaseResponse<Nothing> {
+fun voidResponseToBaseResponse(response : Response<*>) : BaseResponse<Nothing> {
     return if (response.isSuccessful) {
         BaseResponse.EmptySuccess
     } else {
