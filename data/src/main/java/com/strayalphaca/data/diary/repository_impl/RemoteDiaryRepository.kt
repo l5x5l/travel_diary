@@ -65,4 +65,9 @@ class RemoteDiaryRepository @Inject constructor(
         return voidResponseToBaseResponse(response)
     }
 
+    override suspend fun deleteDiary(diaryId: String): BaseResponse<Nothing> {
+        val response = diaryRetrofit.deleteDiary(diaryId)
+        return voidResponseToBaseResponse(response)
+    }
+
 }

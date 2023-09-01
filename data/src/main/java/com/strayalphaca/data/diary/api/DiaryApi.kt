@@ -22,7 +22,7 @@ interface DiaryApi {
     suspend fun loadDetailDiary(@Path("record") record : String) : Response<DiaryDto>
 
     @DELETE("records/{recordId}")
-    suspend fun deleteDiary(@Path("recordId") recordId : String)
+    suspend fun deleteDiary(@Path("recordId") recordId : String) : Response<Unit>
 
     @PATCH("records/{recordId}")
     suspend fun modifyDiary(@Path("recordId") recordId : String, @Body params : ModifyDiaryRequestBody) : Response<Unit>

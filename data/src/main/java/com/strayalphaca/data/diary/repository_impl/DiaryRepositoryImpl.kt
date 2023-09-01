@@ -53,4 +53,8 @@ class DiaryRepositoryImpl @Inject constructor(
     override suspend fun modifyDiary(diaryModifyData: DiaryModifyData): BaseResponse<Nothing> {
         return BaseResponse.EmptySuccess
     }
+
+    override suspend fun deleteDiary(diaryId: String): BaseResponse<Nothing> {
+        return BaseResponse.EmptySuccess
+    }
 }
