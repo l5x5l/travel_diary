@@ -16,7 +16,16 @@ class AuthRepositoryImpl @Inject constructor(
         val response = authRetrofit.reissueToken(
             mapOf("Authorization" to "Bearer ${getAccessToken()}", "RefreshToken" to "${getRefreshToken()}")
         )
-        return voidResponseToBaseResponse(response)
+        val body = response.body()
+        return if (response.isSuccessful && body != null) {
+            voidResponseToBaseResponse(response)
+        } else {
+            BaseResponse.Failure(
+                errorMessage = response.message(),
+                errorCode = response.code()
+            )
+        }
+
     }
 
     override fun getAccessToken(): String? {
