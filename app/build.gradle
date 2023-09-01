@@ -77,6 +77,12 @@ dependencies {
 
     // data store
     implementation libs.datastore
+
+    // retrofit
+    implementation libs.bundles.retrofit2
+
+    // okhttp
+    implementation libs.bundles.okhttp3
 }
 
 kapt {

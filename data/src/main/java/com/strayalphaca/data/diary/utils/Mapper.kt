@@ -1,8 +1,11 @@
 package com.strayalphaca.data.diary.utils
 
 import com.strayalphaca.data.all.model.DiaryDto
-import com.strayalphaca.data.all.model.FileDto
+import com.strayalphaca.data.all.model.DiaryItemDto
+import com.strayalphaca.data.all.model.MediaFileInfoDto
+import com.strayalphaca.data.all.model.VoiceFileInDiaryDto
 import com.strayalphaca.domain.diary.model.*
+import com.strayalphaca.travel_diary.map.model.City
 
 fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {
     val dateString = diaryDto.date
@@ -12,11 +15,19 @@ fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {
         weather = weatherStringToEnum(diaryDto.weather),
         feeling = feelingStringToEnum(diaryDto.feeling),
         content = diaryDto.content,
-        files = diaryDto.files.map { fileDtoToFile(it) },
+        files = diaryDto.medias.map { mediaFileInfoDtoToFile(it) },
         createdAt = diaryDto.createdAt,
-        updatedAt = diaryDto.updatedAt,
-        status = DiaryStatus.NORMAL,
-        voiceFile = diaryDto.voice?.let { fileDtoToFile(it) }
+        voiceFile = diaryDto.voice?.let { voiceFileInFileDtoToFile(it) },
+        cityId = diaryDto.cityId,
+        cityName = diaryDto.place ?: diaryDto.cityId?.let { City.findCity(it).name }
+    )
+}
+
+fun diaryListDtoToDiaryItem(diaryItemDto: DiaryItemDto) : DiaryItem {
+    return DiaryItem(
+        id = diaryItemDto.id,
+        imageUrl = diaryItemDto.image?.shortLink ?: diaryItemDto.image?.uploadedLink,
+        cityName = City.findCity(diaryItemDto.cityId).name
     )
 }
 
@@ -45,15 +56,24 @@ internal fun weatherStringToEnum(weather : String?) : Weather? {
     }
 }
 
-fun fileDtoToFile(fileDto: FileDto) : File {
+fun mediaFileInfoDtoToFile(fileDto: MediaFileInfoDto) : File {
     return File(
-        id = fileDto.id,
-        shortLink = fileDto.shortLink,
-        originalLink = fileDto.originalLink,
+        id = fileDto.originName,
+        fileLink = fileDto.shortLink ?: fileDto.uploadedLink,
         type = when (fileDto.type) {
-            "video" -> FileType.VIDEO
-            "voice" -> FileType.VOICE
+            "video", "VIDEO" -> FileType.VIDEO
+            "voice", "VOICE" -> FileType.VOICE
             else -> FileType.IMAGE
-        }
+        },
+        thumbnailLink = fileDto.thumbnailShortLink ?: fileDto.thumbnailLink
+    )
+}
+
+fun voiceFileInFileDtoToFile(voiceFileInDiaryDto: VoiceFileInDiaryDto) : File {
+    return File(
+        id = voiceFileInDiaryDto.originName,
+        fileLink = voiceFileInDiaryDto.uploadedLink,
+        type = FileType.VOICE,
+        thumbnailLink = null
     )
 }

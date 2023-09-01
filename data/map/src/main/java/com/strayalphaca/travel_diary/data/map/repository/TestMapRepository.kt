@@ -1,5 +1,6 @@
 package com.strayalphaca.travel_diary.data.map.repository
 
+import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.map.model.Location
 import com.strayalphaca.travel_diary.map.model.LocationDiary
 import com.strayalphaca.travel_diary.map.model.LocationId
@@ -9,18 +10,19 @@ import javax.inject.Inject
 
 // only for testing
 class TestMapRepository @Inject constructor() : MapRepository {
-    override suspend fun getNationWideData(): List<LocationDiary> {
-        return listOf(
+    override suspend fun getNationWideData(): BaseResponse<List<LocationDiary>> {
+        val data = listOf(
             LocationDiary("", Location(LocationId(2), "부산", LocationId(2))),
             LocationDiary("", Location(LocationId(8), "세종", LocationId(8))),
             LocationDiary("", Location(LocationId(1), "서울", LocationId(1))),
             LocationDiary("", Location(LocationId(5), "대전", LocationId(5))),
             LocationDiary("", Location(LocationId(3), "울산", LocationId(3))),
         )
+        return BaseResponse.Success(data)
     }
 
-    override suspend fun getProvinceData(provinceId : Int): List<LocationDiary> {
-        return when(provinceId) {
+    override suspend fun getProvinceData(provinceId : Int): BaseResponse<List<LocationDiary>> {
+        val data = when(provinceId) {
             1, 4, 9 -> { // 경기도
                 listOf(
                     LocationDiary("", Location(LocationId(1), "서울", LocationId(provinceId), LocationType.CITY_GROUP)),
@@ -112,6 +114,7 @@ class TestMapRepository @Inject constructor() : MapRepository {
                 )
             }
         }
+        return BaseResponse.Success(data)
     }
 
 }

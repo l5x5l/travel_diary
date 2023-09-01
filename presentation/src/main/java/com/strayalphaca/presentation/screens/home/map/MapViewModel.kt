@@ -2,8 +2,10 @@ package com.strayalphaca.presentation.screens.home.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.home.map.model.MapScreenEvent
 import com.strayalphaca.presentation.screens.home.map.model.MapScreenState
+import com.strayalphaca.travel_diary.map.model.LocationDiary
 import com.strayalphaca.travel_diary.map.usecase.UseCaseGetMapDiaryList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -48,10 +50,18 @@ class MapViewModel @Inject constructor(
             try {
                 if (provinceId == null) {
                     val response = useCaseGetMapDiaryList.getNationWideDataList()
-                    event.send(MapScreenEvent.DataLoadingSuccess(response, null))
+                    if (response is BaseResponse.Success<List<LocationDiary>>) {
+                        event.send(MapScreenEvent.DataLoadingSuccess(response.data, null))
+                    } else {
+                        event.send(MapScreenEvent.DataLoadingFailure)
+                    }
                 } else {
                     val response = useCaseGetMapDiaryList.getProvinceDataList(provinceId)
-                    event.send(MapScreenEvent.DataLoadingSuccess(response, provinceId))
+                    if (response is BaseResponse.Success<List<LocationDiary>>) {
+                        event.send(MapScreenEvent.DataLoadingSuccess(response.data, provinceId))
+                    } else {
+                        event.send(MapScreenEvent.DataLoadingFailure)
+                    }
                 }
             } catch (e: Exception) {
                 event.send(MapScreenEvent.DataLoadingFailure)

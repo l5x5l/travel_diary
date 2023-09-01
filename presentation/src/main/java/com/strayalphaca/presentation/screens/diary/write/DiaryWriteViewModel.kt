@@ -4,9 +4,13 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.domain.diary.model.DiaryDetail
+import com.strayalphaca.domain.diary.model.DiaryModifyData
+import com.strayalphaca.domain.diary.model.DiaryWriteData
 import com.strayalphaca.domain.diary.model.Feeling
 import com.strayalphaca.domain.diary.model.Weather
 import com.strayalphaca.domain.diary.use_case.UseCaseGetDiaryDetail
+import com.strayalphaca.domain.diary.use_case.UseCaseModifyDiary
+import com.strayalphaca.domain.diary.use_case.UseCaseUploadDiary
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
@@ -25,6 +29,8 @@ import javax.inject.Inject
 class DiaryWriteViewModel @Inject constructor(
     private val useCaseGetDiaryDetail: UseCaseGetDiaryDetail,
     private val useCaseUploadFiles: UseCaseUploadFiles,
+    private val useCaseUploadDiary: UseCaseUploadDiary,
+    private val useCaseModifyDiary: UseCaseModifyDiary,
     private val musicPlayer: MusicPlayer,
     private val uriHandler: UriHandler
 ) : ViewModel() {
@@ -36,10 +42,15 @@ class DiaryWriteViewModel @Inject constructor(
     private val _writingContent = MutableStateFlow("")
     val writingContent = _writingContent.asStateFlow()
 
+    private val _goBackNavigationEvent = MutableSharedFlow<Boolean>()
+    val goBackNavigationEvent = _goBackNavigationEvent.asSharedFlow()
+
     private val _musicProgress = MutableStateFlow(0f)
     val musicProgress = _musicProgress.asStateFlow()
 
     private var musicPlayerJob : Job? = null
+
+    private var diaryId: String? = null
 
     init {
         musicPlayer.setCompleteCallback {
@@ -50,6 +61,7 @@ class DiaryWriteViewModel @Inject constructor(
     }
 
     fun tryLoadDetail(id : String) {
+        diaryId = id
         viewModelScope.launch {
             events.send(DiaryWriteEvent.DiaryLoading)
 
@@ -156,6 +168,8 @@ class DiaryWriteViewModel @Inject constructor(
 
     fun uploadDiary() {
         viewModelScope.launch {
+            events.send(DiaryWriteEvent.DiaryWriteLoading)
+
             val voiceFile = state.value.voiceFile?.let { uriHandler.uriToFile(it) }
             val mediaFileList = state.value.imageFiles.map { uriHandler.uriToFile(it) }
 
@@ -171,7 +185,57 @@ class DiaryWriteViewModel @Inject constructor(
             val voiceFileLink = voiceFileUploadJob?.await()
             val mediaFileLinkList = mediaFileListUploadJob.await()
 
-            // voiceFileLink, mediaFileLinkList 사용해서 api 호출
+            if (
+                !((voiceFileLink == null || voiceFileLink is BaseResponse.Success) && mediaFileLinkList is BaseResponse.Success)
+            ) {
+                events.send(DiaryWriteEvent.DiaryWriteFail)
+                return@launch
+            }
+
+            val mediaFileIdList = mediaFileLinkList.data
+            val voiceFileId = voiceFileLink?.let { response ->
+                (response as BaseResponse.Success)
+                if (response.data.isNotEmpty()) response.data[0] else null
+            }
+
+            val response = if (diaryId == null) {
+                useCaseUploadDiary(
+                    DiaryWriteData(
+                        feeling = state.value.feeling,
+                        weather = state.value.weather,
+                        content = writingContent.value,
+                        medias = mediaFileIdList,
+                        voice = voiceFileId,
+                        cityId = null,
+                        recordDate = ""
+                    )
+                )
+            } else {
+                useCaseModifyDiary(
+                    DiaryModifyData(
+                        id = diaryId!!,
+                        feeling = state.value.feeling,
+                        weather = state.value.weather,
+                        content = writingContent.value,
+                        medias = mediaFileIdList,
+                        voice = voiceFileId,
+                        cityId = null,
+                        date = ""
+                    )
+                )
+            }
+
+            if (response is BaseResponse.EmptySuccess) {
+                events.send(DiaryWriteEvent.DiaryWriteSuccess)
+            } else {
+                events.send(DiaryWriteEvent.DiaryWriteFail)
+            }
+        }
+    }
+
+    private fun callGoBackNavigationEvent() {
+        viewModelScope.launch {
+            _goBackNavigationEvent.emit(true)
         }
     }
 
@@ -184,7 +248,12 @@ class DiaryWriteViewModel @Inject constructor(
                 state.copy(buttonActive = true, showLoadingError = true)
             }
             is DiaryWriteEvent.DiaryLoadingSuccess -> {
-                state.copy(buttonActive = true, showLoadingError = false, feeling = events.diaryDetail.feeling, weather = events.diaryDetail.weather)
+                state.copy(
+                    buttonActive = true,
+                    showLoadingError = false,
+                    feeling = events.diaryDetail.feeling,
+                    weather = events.diaryDetail.weather
+                )
             }
             DiaryWriteEvent.DiaryWriteLoading -> {
                 state.copy(buttonActive = false)
@@ -193,6 +262,7 @@ class DiaryWriteViewModel @Inject constructor(
                 state.copy(buttonActive = true)
             }
             DiaryWriteEvent.DiaryWriteSuccess -> {
+                callGoBackNavigationEvent()
                 state.copy(buttonActive = true)
             }
             is DiaryWriteEvent.AddVoiceFile -> {

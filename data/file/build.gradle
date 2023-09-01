@@ -34,6 +34,7 @@ dependencies {
 
     implementation project(":domain")
     implementation project(":domain:file")
+    implementation project(":data")
 
     implementation libs.android.ktx
     implementation libs.android.appcompat
@@ -43,4 +44,10 @@ dependencies {
 
     // https://mvnrepository.com/artifact/javax.inject/javax.inject/1
     implementation libs.javax.inject
+
+    // okHttp3 https://github.com/square/okhttp
+    implementation libs.bundles.okhttp3
+
+    // retrofit2 https://github.com/square/retrofit
+    implementation libs.bundles.retrofit2
 }

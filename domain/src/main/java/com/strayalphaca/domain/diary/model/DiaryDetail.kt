@@ -8,7 +8,29 @@ data class DiaryDetail(
     val content : String,
     val files : List<File>,
     val createdAt : String,
-    val updatedAt : String,
-    val status : DiaryStatus,
-    val voiceFile : File?
+    val voiceFile : File?,
+    val cityId : Int ?= null,
+    val cityName : String ?= null
+)
+
+data class DiaryWriteData(
+    val recordDate : String,
+    val feeling: Feeling,
+    val weather: Weather?,
+    val content: String,
+    val medias : List<String>?,
+    val voice : String?,
+    val cityId : Int?
+)
+
+data class DiaryModifyData(
+    val id : String,
+    val date : String?,
+    val feeling: Feeling?,
+    val weather : Weather?,
+    val content : String?,
+    val medias : List<String>?,
+    val voice : String?,
+    val cityId : Int?,
+    val cityName : String ?= null
 )
