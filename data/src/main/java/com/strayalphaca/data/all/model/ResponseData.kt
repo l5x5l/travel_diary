@@ -17,10 +17,16 @@ data class DiaryDto(
     val weather : String? = null,
     val content : String = "",
     val medias : List<MediaFileInfoDto> = listOf(),
-    val voice : MediaFileInfoDto? = null,
+    val voice : VoiceFileInDiaryDto? = null,
     val createdAt : String = "",
     val cityId : Int ?= null,
     val place : String ?= null
+)
+
+data class VoiceFileInDiaryDto(
+    val originName : String,
+    val uploadedLink : String = "",
+    val shortLink : String? = null
 )
 
 data class DiaryItemDto(

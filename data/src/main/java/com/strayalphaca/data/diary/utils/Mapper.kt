@@ -3,6 +3,7 @@ package com.strayalphaca.data.diary.utils
 import com.strayalphaca.data.all.model.DiaryDto
 import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.MediaFileInfoDto
+import com.strayalphaca.data.all.model.VoiceFileInDiaryDto
 import com.strayalphaca.domain.diary.model.*
 import com.strayalphaca.travel_diary.map.model.City
 
@@ -16,7 +17,7 @@ fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {
         content = diaryDto.content,
         files = diaryDto.medias.map { mediaFileInfoDtoToFile(it) },
         createdAt = diaryDto.createdAt,
-        voiceFile = diaryDto.voice?.let { mediaFileInfoDtoToFile(it) },
+        voiceFile = diaryDto.voice?.let { voiceFileInFileDtoToFile(it) },
         cityId = diaryDto.cityId,
         cityName = diaryDto.place ?: diaryDto.cityId?.let { City.findCity(it).name }
     )
@@ -65,5 +66,14 @@ fun mediaFileInfoDtoToFile(fileDto: MediaFileInfoDto) : File {
             else -> FileType.IMAGE
         },
         thumbnailLink = fileDto.thumbnailShortLink ?: fileDto.thumbnailLink
+    )
+}
+
+fun voiceFileInFileDtoToFile(voiceFileInDiaryDto: VoiceFileInDiaryDto) : File {
+    return File(
+        id = voiceFileInDiaryDto.originName,
+        fileLink = voiceFileInDiaryDto.uploadedLink,
+        type = FileType.VOICE,
+        thumbnailLink = null
     )
 }
