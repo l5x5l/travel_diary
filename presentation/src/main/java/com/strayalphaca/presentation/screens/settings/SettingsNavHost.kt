@@ -1,5 +1,6 @@
 package com.strayalphaca.presentation.screens.settings
 
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,7 +50,7 @@ fun SettingsNavHost(
         }
 
         composable(WithdrawalScreenDestination.route) {
-            WithdrawalScreen()
+            WithdrawalScreen(modifier = Modifier.fillMaxHeight())
         }
 
     }
