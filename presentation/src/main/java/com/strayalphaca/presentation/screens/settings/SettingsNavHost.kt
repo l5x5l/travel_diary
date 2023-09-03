@@ -13,6 +13,7 @@ import com.strayalphaca.presentation.screens.settings.push_alarm.PushAlarmScreen
 import com.strayalphaca.presentation.screens.settings.push_alarm.PushAlarmViewModel
 import com.strayalphaca.presentation.screens.settings.screen_lock.ScreenLockScreen
 import com.strayalphaca.presentation.screens.settings.withdrawal.WithdrawalScreen
+import com.strayalphaca.presentation.screens.settings.withdrawal.WithdrawalViewModel
 
 @Composable
 fun SettingsNavHost(
@@ -50,7 +51,8 @@ fun SettingsNavHost(
         }
 
         composable(WithdrawalScreenDestination.route) {
-            WithdrawalScreen(modifier = Modifier.fillMaxHeight())
+            val viewModel = hiltViewModel<WithdrawalViewModel>()
+            WithdrawalScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel)
         }
 
     }
