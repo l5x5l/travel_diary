@@ -43,7 +43,11 @@ fun SettingsBaseScreen(
                 }
             )
 
-            SettingsNavHost(navController = navController, navigateToLogin = goToLogin)
+            SettingsNavHost(
+                navController = navController,
+                modifier = Modifier.weight(1f),
+                navigateToLogin = goToLogin
+            )
         }
     }
 }

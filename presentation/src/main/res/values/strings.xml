@@ -65,4 +65,10 @@
     <string name="location_error">데이터를 불러오던 중 에러가 발생했어요</string>
 
     <string name="map_empty">아직 일기에 기록된 위치정보가 없어요</string>
+    
+    <string name="caution">주의사항</string>
+    <string name="withdrawal_caution_message">회원탈퇴를 할 경우, 동일한 아이디로는 24시간 이내 재 회원가입이 불가능하며, 지금까지 작성한 기록들은 동일한 계정으로 다시 회원가입하도라도 복구되지 않습니다.</string>
+    <string name="current_login">현재 로그인 계정</string>
+    <string name="my_diaries">나의 기록들</string>
+    <string name="total_count_format">총 %d개</string>
 </resources>

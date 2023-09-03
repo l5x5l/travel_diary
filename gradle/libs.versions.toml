@@ -45,6 +45,7 @@ androidx-compose-foundation = { group = "androidx.compose.foundation", name = "f
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref="activity_compose" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref="nav" }
 androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle_runtime" }
+androidx-lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle_runtime" }
 
 androidx-activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidx_activity" }
 andoridx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx_activity" }
