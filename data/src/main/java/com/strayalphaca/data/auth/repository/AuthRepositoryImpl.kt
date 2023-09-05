@@ -2,13 +2,15 @@ package com.strayalphaca.data.auth.repository
 
 import com.strayalphaca.data.all.utils.voidResponseToBaseResponse
 import com.strayalphaca.data.auth.api.AuthApi
+import com.strayalphaca.data.auth.datastore.AuthDataStore
 import com.strayalphaca.domain.auth.repository.AuthRepository
 import com.strayalphaca.domain.model.BaseResponse
 import retrofit2.Retrofit
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    retrofit: Retrofit
+    retrofit: Retrofit,
+    private val authDataStore: AuthDataStore
 ) : AuthRepository {
     private val authRetrofit = retrofit.create(AuthApi::class.java)
 
@@ -18,6 +20,8 @@ class AuthRepositoryImpl @Inject constructor(
         )
         val body = response.body()
         return if (response.isSuccessful && body != null) {
+            authDataStore.setAccessToken(body.accessToken)
+            authDataStore.setRefreshToken(body.refreshToken)
             voidResponseToBaseResponse(response)
         } else {
             BaseResponse.Failure(
@@ -29,11 +33,11 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun getAccessToken(): String? {
-        TODO("Not yet implemented")
+        return authDataStore.getAccessToken()
     }
 
     override fun getRefreshToken(): String? {
-        TODO("Not yet implemented")
+        return authDataStore.getRefreshToken()
     }
 
 }
