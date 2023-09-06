@@ -33,6 +33,9 @@ class WithdrawalViewModel @Inject constructor(
     private val _withdrawalSuccess = MutableSharedFlow<Boolean>()
     val withdrawalSuccess = _withdrawalSuccess.asSharedFlow()
 
+    private val _showCheckDialog = MutableStateFlow(false)
+    val showCheckDialog = _showCheckDialog.asStateFlow()
+
     fun initDataLoading() {
         _initDataLoading.value = true
         viewModelScope.launch {
@@ -54,5 +57,13 @@ class WithdrawalViewModel @Inject constructor(
                 _toastMessage.emit(errorMessage)
             }
         }
+    }
+
+    fun showDialog() {
+        _showCheckDialog.value = true
+    }
+
+    fun closeDialog() {
+        _showCheckDialog.value = false
     }
 }

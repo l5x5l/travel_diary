@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_button.BaseButton
+import com.strayalphaca.presentation.components.template.dialog.CheckByInputTextDialog
 import com.strayalphaca.presentation.utils.collectAsEffect
 import com.strayalphaca.presentation.utils.restartApplication
 
@@ -33,6 +34,7 @@ fun WithdrawalScreen(
     val diaryCount by viewModel.totalDiaryCount.collectAsStateWithLifecycle()
     val initLoading by viewModel.initDataLoading.collectAsStateWithLifecycle()
     val deleteLoading by viewModel.deleteLoading.collectAsStateWithLifecycle()
+    val showCheckDialog by viewModel.showCheckDialog.collectAsStateWithLifecycle()
     
     viewModel.toastMessage.collectAsEffect(block = { message ->
         Toast.makeText(localContext, message, Toast.LENGTH_SHORT).show()
@@ -43,6 +45,18 @@ fun WithdrawalScreen(
             restartApplication(localContext)
         }
     })
+
+    if (showCheckDialog) {
+        CheckByInputTextDialog(
+            title = stringResource(
+                id = R.string.withdrawal_check_dialog_title,
+                stringResource(id = R.string.withdrawal_check_dialog_target_text)
+            ),
+            targetText = stringResource(id = R.string.withdrawal_check_dialog_target_text),
+            onDismissRequest = viewModel::closeDialog,
+            onSelectConfirm = viewModel::withdrawal
+        )
+    }
 
     if (initLoading) {
         Box(
@@ -101,7 +115,7 @@ fun WithdrawalScreen(
                     .height(48.dp),
                 text = stringResource(id = R.string.withdrawal),
                 onClick = {
-                    viewModel.withdrawal()
+                    viewModel.showDialog()
                 },
                 isLoading = deleteLoading
             )
