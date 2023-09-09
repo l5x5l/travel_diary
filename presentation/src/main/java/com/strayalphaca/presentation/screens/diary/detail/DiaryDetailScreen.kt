@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -153,8 +154,19 @@ fun DiaryDetailScreen(
                         )
                     }
                 }
+            } else if (!state.showError) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colors.onSurface,
+                        modifier = Modifier.size(40.dp),
+                        strokeWidth = 4.dp
+                    )
+                }
             } else {
-                // todo empty View 및 에러 view 생성
+                // todo 일지 상세 로딩 중 에러 view 디자인 시 구현
             }
 
         }
