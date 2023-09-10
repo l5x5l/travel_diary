@@ -242,17 +242,18 @@ class DiaryWriteViewModel @Inject constructor(
     private fun reduce(state: DiaryWriteState, events: DiaryWriteEvent): DiaryWriteState {
         return when (events) {
             DiaryWriteEvent.DiaryLoading -> {
-                state.copy(buttonActive = false, showLoadingError = false)
+                state.copy(buttonActive = false, showLoadingError = false, showInitLoading = true)
             }
             DiaryWriteEvent.DiaryLoadingFail -> {
-                state.copy(buttonActive = true, showLoadingError = true)
+                state.copy(buttonActive = true, showLoadingError = true, showInitLoading = false)
             }
             is DiaryWriteEvent.DiaryLoadingSuccess -> {
                 state.copy(
                     buttonActive = true,
                     showLoadingError = false,
                     feeling = events.diaryDetail.feeling,
-                    weather = events.diaryDetail.weather
+                    weather = events.diaryDetail.weather,
+                    showInitLoading = false
                 )
             }
             DiaryWriteEvent.DiaryWriteLoading -> {
@@ -329,5 +330,6 @@ data class DiaryWriteState(
     val feeling: Feeling = Feeling.HAPPY,
     val weather: Weather? = null,
     val currentShowSelectView: CurrentShowSelectView ?= null,
-    val musicPlaying : Boolean = false
+    val musicPlaying : Boolean = false,
+    val showInitLoading : Boolean = false
 )

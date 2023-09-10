@@ -14,6 +14,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -138,7 +139,7 @@ fun DiaryWriteScreen(
     }
 
     LaunchedEffect(id) {
-        if (id != null) loadDiary(id)
+        if (id != null && id != "null") loadDiary(id)
     }
 
     DisposableEffect(key1 = lifecycleOwner) {
@@ -181,170 +182,183 @@ fun DiaryWriteScreen(
                     .background(Gray2)
             )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(16.dp)
-                    .verticalScroll(scrollState)
-            ) {
-                Text(text = "")
+            if (!state.showInitLoading) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(16.dp)
+                        .verticalScroll(scrollState)
+                ) {
+                    Text(text = "")
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(id = R.string.location),
-                        style = MaterialTheme.typography.body2,
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .padding(end = 10.dp)
-                    )
-
-                    Text(
-                        text = stringResource(id = R.string.placeholder_location),
-                        style = MaterialTheme.typography.body2,
-                        color = Gray2,
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .weight(1f)
-                            .padding(end = 10.dp)
-                    )
-
-                    ContentIconImage(
-                        iconId = R.drawable.ic_location,
-                        descriptionText = state.feeling.name,
-                        onClick = {
-
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    ContentIconImage(
-                        iconId = R.drawable.ic_gps,
-                        descriptionText = state.feeling.name,
-                        onClick = {
-
-                        }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .align(Alignment.CenterVertically)
-                    ) {
+                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = stringResource(id = R.string.today_feeling),
+                            text = stringResource(id = R.string.location),
                             style = MaterialTheme.typography.body2,
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
                                 .padding(end = 10.dp)
                         )
+
+                        Text(
+                            text = stringResource(id = R.string.placeholder_location),
+                            style = MaterialTheme.typography.body2,
+                            color = Gray2,
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .weight(1f)
+                                .padding(end = 10.dp)
+                        )
+
                         ContentIconImage(
-                            iconId = getFeelingIconId(state.feeling),
+                            iconId = R.drawable.ic_location,
                             descriptionText = state.feeling.name,
                             onClick = {
-                                showSelectView(CurrentShowSelectView.FEELING)
+
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        ContentIconImage(
+                            iconId = R.drawable.ic_gps,
+                            descriptionText = state.feeling.name,
+                            onClick = {
+
                             }
                         )
                     }
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .align(Alignment.CenterVertically)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.weather),
-                            style = MaterialTheme.typography.body2,
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Row(
                             modifier = Modifier
+                                .weight(1f)
                                 .align(Alignment.CenterVertically)
-                                .padding(end = 10.dp)
-                        )
-                        ContentIconImage(
-                            iconId = state.weather?.let { getWeatherIconId(it) }
-                                ?: R.drawable.ic_weather_sunny,
-                            descriptionText = state.weather?.toString(),
-                            onClick = {
-                                showSelectView(CurrentShowSelectView.WEATHER)
-                            }
-                        )
-                    }
-                }
-
-                AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.WEATHER) {
-                    ContentSelectView(contentList = Weather.values().toList()) {
-                        ContentIconImage(
-                            iconId = getWeatherIconId(it),
-                            descriptionText = it.name,
-                            onClick = {
-                                setWeather(it)
-                            }
-                        )
-                    }
-                }
-
-                AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.FEELING) {
-                    ContentSelectView(contentList = Feeling.values().toList()) {
-                        ContentIconImage(
-                            iconId = getFeelingIconId(it),
-                            descriptionText = it.name,
-                            onClick = {
-                                setFeeling(it)
-                            }
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                if (state.imageFiles.isNotEmpty()) {
-                    HorizontalPager(pageCount = state.imageFiles.size) {
-                        val isVideo = checkUriIsVideo(state.imageFiles[it], context)
-                        PolaroidView(fileUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo)
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-
-                BasicTextField(
-                    value = content,
-                    onValueChange = changeContent,
-                    modifier = Modifier
-                        .border(1.dp, MaterialTheme.colors.onBackground)
-                        .defaultMinSize(minHeight = 250.dp),
-                    textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
-                    decorationBox = { innerTextField ->
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
                         ) {
-                            innerTextField()
-
                             Text(
-                                text = "${content.length}/300",
-                                modifier = Modifier.align(Alignment.End),
-                                style = MaterialTheme.typography.caption
+                                text = stringResource(id = R.string.today_feeling),
+                                style = MaterialTheme.typography.body2,
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(end = 10.dp)
+                            )
+                            ContentIconImage(
+                                iconId = getFeelingIconId(state.feeling),
+                                descriptionText = state.feeling.name,
+                                onClick = {
+                                    showSelectView(CurrentShowSelectView.FEELING)
+                                }
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .weight(1f)
+                                .align(Alignment.CenterVertically)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.weather),
+                                style = MaterialTheme.typography.body2,
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(end = 10.dp)
+                            )
+                            ContentIconImage(
+                                iconId = state.weather?.let { getWeatherIconId(it) }
+                                    ?: R.drawable.ic_weather_sunny,
+                                descriptionText = state.weather?.toString(),
+                                onClick = {
+                                    showSelectView(CurrentShowSelectView.WEATHER)
+                                }
                             )
                         }
                     }
-                )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.WEATHER) {
+                        ContentSelectView(contentList = Weather.values().toList()) {
+                            ContentIconImage(
+                                iconId = getWeatherIconId(it),
+                                descriptionText = it.name,
+                                onClick = {
+                                    setWeather(it)
+                                }
+                            )
+                        }
+                    }
 
-                state.voiceFile?.let { uri ->
-                    SoundView(
-                        file = uri,
-                        playing = state.musicPlaying,
-                        play = playMusic,
-                        pause = pauseMusic,
-                        remove = removeVoiceFile,
-                        soundProgressChange = changeMusicProgress,
-                        soundProgress = musicProgress
+                    AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.FEELING) {
+                        ContentSelectView(contentList = Feeling.values().toList()) {
+                            ContentIconImage(
+                                iconId = getFeelingIconId(it),
+                                descriptionText = it.name,
+                                onClick = {
+                                    setFeeling(it)
+                                }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    if (state.imageFiles.isNotEmpty()) {
+                        HorizontalPager(pageCount = state.imageFiles.size) {
+                            val isVideo = checkUriIsVideo(state.imageFiles[it], context)
+                            PolaroidView(fileUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo)
+                        }
+                        Spacer(modifier = Modifier.height(24.dp))
+                    }
+
+                    BasicTextField(
+                        value = content,
+                        onValueChange = changeContent,
+                        modifier = Modifier
+                            .border(1.dp, MaterialTheme.colors.onBackground)
+                            .defaultMinSize(minHeight = 250.dp),
+                        textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
+                        decorationBox = { innerTextField ->
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                innerTextField()
+
+                                Text(
+                                    text = "${content.length}/300",
+                                    modifier = Modifier.align(Alignment.End),
+                                    style = MaterialTheme.typography.caption
+                                )
+                            }
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    state.voiceFile?.let { uri ->
+                        SoundView(
+                            file = uri,
+                            playing = state.musicPlaying,
+                            play = playMusic,
+                            pause = pauseMusic,
+                            remove = removeVoiceFile,
+                            soundProgressChange = changeMusicProgress,
+                            soundProgress = musicProgress
+                        )
+                    }
+                }
+            } else {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colors.onSurface,
+                        modifier = Modifier.size(40.dp),
+                        strokeWidth = 4.dp
                     )
                 }
             }
