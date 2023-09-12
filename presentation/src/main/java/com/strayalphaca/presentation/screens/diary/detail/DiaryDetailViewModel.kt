@@ -1,5 +1,6 @@
 package com.strayalphaca.presentation.screens.diary.detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.domain.diary.model.DiaryDetail
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val useCaseGetDiaryDetail: UseCaseGetDiaryDetail,
     private val musicPlayer: MusicPlayer
 ) : ViewModel() {
@@ -29,6 +31,21 @@ class DiaryDetailViewModel @Inject constructor(
 
     private val _musicProgress = MutableStateFlow(0f)
     val musicProgress = _musicProgress.asStateFlow()
+
+    private val id = savedStateHandle.getStateFlow("diary_id", "")
+
+    fun tryRefresh() {
+        viewModelScope.launch {
+            event.send(DiaryDetailEvent.DiaryLoading)
+
+            val response = useCaseGetDiaryDetail(id.value)
+            if (response is BaseResponse.Success) {
+                event.send(DiaryDetailEvent.DiaryLoadingSuccess(response.data))
+            } else {
+                event.send(DiaryDetailEvent.DiaryLoadingFail)
+            }
+        }
+    }
 
     fun tryLoadDetail(id : String) {
         if (state.value.diaryDetail != null) return

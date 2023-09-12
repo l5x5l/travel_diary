@@ -56,7 +56,8 @@ fun DiaryWriteContainer(
     id: String?,
     viewModel: DiaryWriteViewModel = viewModel(),
     goBack: () -> Unit = {},
-    goToVideo  : (Uri) -> Unit = {}
+    goToVideo  : (Uri) -> Unit = {},
+    goBackWithModifySuccessResult : () -> Unit = {}
 ) {
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
@@ -65,7 +66,7 @@ fun DiaryWriteContainer(
 
     LaunchedEffect(goBackNavigationEvent) {
         if (goBackNavigationEvent)
-            goBack()
+            goBackWithModifySuccessResult()
     }
 
     DiaryWriteScreen(

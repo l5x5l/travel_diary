@@ -48,9 +48,15 @@ fun DiaryDetailContainer(
     goBack: () -> Unit = {},
     goToVideo  : (Uri) -> Unit = {},
     goToDiaryModify : (String?) -> Unit = {},
+    needRefresh : Boolean = false
 ) {
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
+
+    LaunchedEffect(needRefresh) {
+        if (needRefresh)
+            viewModel.tryRefresh()
+    }
 
     DiaryDetailScreen(
         id = id,
