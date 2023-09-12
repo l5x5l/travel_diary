@@ -5,7 +5,11 @@ data class File(
     val type : FileType,
     val fileLink : String,
     val thumbnailLink : String?= null
-)
+) {
+    fun getThumbnail() : String {
+        return thumbnailLink ?: fileLink
+    }
+}
 
 enum class FileType {
     IMAGE, VIDEO, VOICE

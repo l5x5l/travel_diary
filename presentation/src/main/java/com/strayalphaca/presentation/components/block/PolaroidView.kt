@@ -22,10 +22,11 @@ import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 @Composable
 fun PolaroidView(
     fileUri: Uri = Uri.EMPTY,
+    thumbnailUri : Uri = Uri.EMPTY,
     isVideo: Boolean = false,
     dateString: String = "2023.02.10_18:34",
     positionString: String = "1/1",
-    onClick: (Uri) -> Unit = {}
+    onClick: (Uri) -> Unit = {},
 ) {
     val imageViewSize = remember { mutableStateOf(IntSize(0, 0)) }
 
@@ -45,8 +46,8 @@ fun PolaroidView(
                             .onGloballyPositioned { coordinates ->
                                 imageViewSize.value = coordinates.size
                             },
-                        videoUri = fileUri,
-                        onClick = { onClick(fileUri) }
+                        onClick = { onClick(fileUri) },
+                        thumbnailUri = thumbnailUri
                     )
                 } else {
                     AsyncImage(
@@ -92,7 +93,6 @@ fun PolaroidView(
 fun PolaroidViewPreview() {
     TravelDiaryTheme {
         Surface(modifier = Modifier.padding(16.dp)) {
-
             PolaroidView()
         }
     }

@@ -169,6 +169,7 @@ fun DiaryDetailScreen(
                         HorizontalPager(pageCount = state.diaryDetail.files.size) {
                             PolaroidView(
                                 fileUri = Uri.parse(state.diaryDetail.files[it].fileLink),
+                                thumbnailUri = Uri.parse(state.diaryDetail.files[it].getThumbnail()),
                                 isVideo = state.diaryDetail.files[it].type == FileType.VIDEO,
                                 onClick = goToVideo
                             )
