@@ -87,6 +87,9 @@ fun RootNavHost(
                 goBack = {navController.popBackStack()},
                 goToVideo = { uri ->
                     navController.navigate("${Video.route}?${uri}")
+                },
+                goToDiaryModify = { id ->
+                    navController.navigateToDiaryWrite(id)
                 }
             )
         }

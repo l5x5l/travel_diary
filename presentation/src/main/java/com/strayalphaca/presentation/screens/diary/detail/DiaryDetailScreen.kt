@@ -9,6 +9,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -28,6 +30,9 @@ import com.strayalphaca.presentation.ui.theme.Gray2
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.core.net.toUri
@@ -41,7 +46,8 @@ fun DiaryDetailContainer(
     viewModel: DiaryDetailViewModel = viewModel(),
     id : String,
     goBack: () -> Unit = {},
-    goToVideo  : (Uri) -> Unit = {}
+    goToVideo  : (Uri) -> Unit = {},
+    goToDiaryModify : (String?) -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
@@ -51,6 +57,7 @@ fun DiaryDetailContainer(
         state = state,
         goBack = goBack,
         goToVideo = goToVideo,
+        goToDiaryModify = goToDiaryModify,
         loadDiary = viewModel::tryLoadDetail,
         playMusic = viewModel::playMusic,
         pauseMusic = viewModel::pauseMusic,
@@ -66,6 +73,7 @@ fun DiaryDetailScreen(
     state : DiaryDetailState = DiaryDetailState(),
     goBack: () -> Unit = {},
     goToVideo  : (Uri) -> Unit = {},
+    goToDiaryModify : (String?) -> Unit = {},
     loadDiary : (String) -> Unit = {},
     playMusic : () -> Unit = {},
     pauseMusic : () -> Unit = {},
@@ -73,6 +81,7 @@ fun DiaryDetailScreen(
     musicProgress : Float = 0f
 ) {
     val scrollState = rememberScrollState()
+    var dropdownExpanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(id) {
         loadDiary(id)
@@ -80,10 +89,38 @@ fun DiaryDetailScreen(
     
     Surface {
         Column(modifier = Modifier.fillMaxSize()) {
-            BaseIconButton(
-                iconResourceId = R.drawable.ic_back,
-                onClick = { goBack() }
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                BaseIconButton(
+                    iconResourceId = R.drawable.ic_back,
+                    onClick = { goBack() }
+                )
+
+                if (state.diaryDetail != null) {
+                    Box {
+                        BaseIconButton(
+                            iconResourceId = R.drawable.ic_more,
+                            onClick = {
+                                dropdownExpanded = !dropdownExpanded
+                            }
+                        )
+
+                        DropdownMenu(
+                            expanded = dropdownExpanded,
+                            onDismissRequest = { dropdownExpanded = false}
+                        ) {
+                            DropdownMenuItem(onClick = { goToDiaryModify(id) }) {
+                                Text(text = stringResource(id = R.string.modify), style = MaterialTheme.typography.body2)
+                            }
+                        }
+                    }
+                }
+
+            }
+
             Box(modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp)
