@@ -40,8 +40,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.strayalphaca.domain.diary.model.Feeling
-import com.strayalphaca.domain.diary.model.Weather
+import com.strayalphaca.travel_diary.diary.model.Feeling
+import com.strayalphaca.travel_diary.diary.model.Weather
 import com.strayalphaca.presentation.screens.diary.component.ContentIconImage
 import com.strayalphaca.presentation.screens.diary.component.ContentSelectView
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView

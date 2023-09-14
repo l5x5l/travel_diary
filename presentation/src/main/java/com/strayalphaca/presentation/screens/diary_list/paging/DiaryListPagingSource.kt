@@ -2,7 +2,7 @@ package com.strayalphaca.presentation.screens.diary_list.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.strayalphaca.domain.diary.model.DiaryItem
+import com.strayalphaca.travel_diary.diary.model.DiaryItem
 import kotlin.reflect.KSuspendFunction3
 
 class DiaryListPagingSource(

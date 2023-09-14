@@ -1,4 +1,4 @@
-package com.strayalphaca.domain.diary.model
+package com.strayalphaca.travel_diary.diary.model
 
 data class File(
     val id : String,

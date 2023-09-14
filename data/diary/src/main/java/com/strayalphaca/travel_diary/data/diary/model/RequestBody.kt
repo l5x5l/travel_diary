@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.data.diary.model
 
-import com.strayalphaca.domain.diary.model.DiaryModifyData
-import com.strayalphaca.domain.diary.model.DiaryWriteData
+import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
+import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
 
 data class UploadDiaryRequestBody(
     val recordDate : String,

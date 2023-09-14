@@ -37,10 +37,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.core.net.toUri
-import com.strayalphaca.domain.diary.model.DiaryDetail
-import com.strayalphaca.domain.diary.model.Feeling
-import com.strayalphaca.domain.diary.model.File
-import com.strayalphaca.domain.diary.model.FileType
+import com.strayalphaca.travel_diary.diary.model.DiaryDetail
+import com.strayalphaca.travel_diary.diary.model.Feeling
+import com.strayalphaca.travel_diary.diary.model.File
+import com.strayalphaca.travel_diary.diary.model.FileType
 import com.strayalphaca.presentation.components.template.dialog.TwoButtonDialog
 
 @Composable
@@ -277,7 +277,7 @@ fun DiaryDetailScreen(
 )
 @Preview(showBackground = true, widthDp = 360)
 fun DiaryDetailScreenPreview() {
-    TravelDiaryTheme() {
+    TravelDiaryTheme {
         DiaryDetailScreen(
             id = "1",
             state = DiaryDetailState(

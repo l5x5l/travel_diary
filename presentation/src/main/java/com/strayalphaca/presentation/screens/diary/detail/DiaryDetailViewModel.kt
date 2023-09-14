@@ -3,9 +3,9 @@ package com.strayalphaca.presentation.screens.diary.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.strayalphaca.domain.diary.model.DiaryDetail
-import com.strayalphaca.domain.diary.use_case.UseCaseDeleteDiary
-import com.strayalphaca.domain.diary.use_case.UseCaseGetDiaryDetail
+import com.strayalphaca.travel_diary.diary.model.DiaryDetail
+import com.strayalphaca.travel_diary.diary.use_case.UseCaseDeleteDiary
+import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryDetail
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import dagger.hilt.android.lifecycle.HiltViewModel

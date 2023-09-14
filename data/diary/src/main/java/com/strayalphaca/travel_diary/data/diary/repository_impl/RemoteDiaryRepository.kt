@@ -8,11 +8,11 @@ import com.strayalphaca.travel_diary.data.diary.model.ModifyDiaryRequestBody
 import com.strayalphaca.travel_diary.data.diary.model.UploadDiaryRequestBody
 import com.strayalphaca.travel_diary.data.diary.utils.diaryDtoToDiaryDetail
 import com.strayalphaca.travel_diary.data.diary.utils.diaryListDtoToDiaryItem
-import com.strayalphaca.domain.diary.model.DiaryDetail
-import com.strayalphaca.domain.diary.model.DiaryItem
-import com.strayalphaca.domain.diary.model.DiaryModifyData
-import com.strayalphaca.domain.diary.model.DiaryWriteData
-import com.strayalphaca.domain.diary.repository.DiaryRepository
+import com.strayalphaca.travel_diary.diary.model.DiaryDetail
+import com.strayalphaca.travel_diary.diary.model.DiaryItem
+import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
+import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
+import com.strayalphaca.travel_diary.diary.repository.DiaryRepository
 import com.strayalphaca.domain.model.BaseResponse
 import retrofit2.Retrofit
 import javax.inject.Inject

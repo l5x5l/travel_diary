@@ -4,7 +4,12 @@ import com.strayalphaca.data.all.model.DiaryDto
 import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.MediaFileInfoDto
 import com.strayalphaca.data.all.model.VoiceFileInDiaryDto
-import com.strayalphaca.domain.diary.model.*
+import com.strayalphaca.travel_diary.diary.model.DiaryDetail
+import com.strayalphaca.travel_diary.diary.model.DiaryItem
+import com.strayalphaca.travel_diary.diary.model.Feeling
+import com.strayalphaca.travel_diary.diary.model.File
+import com.strayalphaca.travel_diary.diary.model.FileType
+import com.strayalphaca.travel_diary.diary.model.Weather
 import com.strayalphaca.travel_diary.map.model.City
 
 fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {

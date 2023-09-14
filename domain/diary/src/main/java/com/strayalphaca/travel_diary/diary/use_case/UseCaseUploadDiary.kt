@@ -1,7 +1,7 @@
-package com.strayalphaca.domain.diary.use_case
+package com.strayalphaca.travel_diary.diary.use_case
 
-import com.strayalphaca.domain.diary.model.DiaryWriteData
-import com.strayalphaca.domain.diary.repository.DiaryRepository
+import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
+import com.strayalphaca.travel_diary.diary.repository.DiaryRepository
 import com.strayalphaca.domain.model.BaseResponse
 import javax.inject.Inject
 

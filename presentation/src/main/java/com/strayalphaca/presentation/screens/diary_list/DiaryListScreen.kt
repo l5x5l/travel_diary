@@ -33,7 +33,7 @@ import androidx.compose.ui.zIndex
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.strayalphaca.domain.diary.model.DiaryItem
+import com.strayalphaca.travel_diary.diary.model.DiaryItem
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
