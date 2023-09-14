@@ -1,10 +1,10 @@
-package com.strayalphaca.data.diary.api
+package com.strayalphaca.travel_diary.data.diary.api
 
 import com.strayalphaca.data.all.model.DiaryDto
 import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.ListResponseData
-import com.strayalphaca.data.diary.model.ModifyDiaryRequestBody
-import com.strayalphaca.data.diary.model.UploadDiaryRequestBody
+import com.strayalphaca.travel_diary.data.diary.model.ModifyDiaryRequestBody
+import com.strayalphaca.travel_diary.data.diary.model.UploadDiaryRequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

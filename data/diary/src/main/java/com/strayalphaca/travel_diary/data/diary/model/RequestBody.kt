@@ -1,4 +1,4 @@
-package com.strayalphaca.data.diary.model
+package com.strayalphaca.travel_diary.data.diary.model
 
 import com.strayalphaca.domain.diary.model.DiaryModifyData
 import com.strayalphaca.domain.diary.model.DiaryWriteData

@@ -1,13 +1,13 @@
-package com.strayalphaca.data.diary.repository_impl
+package com.strayalphaca.travel_diary.data.diary.repository_impl
 
 import com.strayalphaca.data.all.utils.responseToBaseResponse
 import com.strayalphaca.data.all.utils.responseToBaseResponseWithMapping
 import com.strayalphaca.data.all.utils.voidResponseToBaseResponse
-import com.strayalphaca.data.diary.api.DiaryApi
-import com.strayalphaca.data.diary.model.ModifyDiaryRequestBody
-import com.strayalphaca.data.diary.model.UploadDiaryRequestBody
-import com.strayalphaca.data.diary.utils.diaryDtoToDiaryDetail
-import com.strayalphaca.data.diary.utils.diaryListDtoToDiaryItem
+import com.strayalphaca.travel_diary.data.diary.api.DiaryApi
+import com.strayalphaca.travel_diary.data.diary.model.ModifyDiaryRequestBody
+import com.strayalphaca.travel_diary.data.diary.model.UploadDiaryRequestBody
+import com.strayalphaca.travel_diary.data.diary.utils.diaryDtoToDiaryDetail
+import com.strayalphaca.travel_diary.data.diary.utils.diaryListDtoToDiaryItem
 import com.strayalphaca.domain.diary.model.DiaryDetail
 import com.strayalphaca.domain.diary.model.DiaryItem
 import com.strayalphaca.domain.diary.model.DiaryModifyData

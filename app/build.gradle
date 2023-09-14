@@ -49,6 +49,7 @@ dependencies {
     implementation project(":data")
     implementation project(":data:map")
     implementation project(":data:file")
+    implementation project(":data:diary")
 
     implementation libs.android.ktx
     implementation libs.android.appcompat

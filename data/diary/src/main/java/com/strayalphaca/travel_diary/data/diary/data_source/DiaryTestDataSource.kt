@@ -1,4 +1,4 @@
-package com.strayalphaca.data.diary.data_source
+package com.strayalphaca.travel_diary.data.diary.data_source
 
 import com.strayalphaca.data.all.model.DiaryDto
 import com.strayalphaca.data.all.model.DiaryItemDto

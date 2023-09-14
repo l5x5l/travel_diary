@@ -1,8 +1,8 @@
-package com.strayalphaca.data.diary.repository_impl
+package com.strayalphaca.travel_diary.data.diary.repository_impl
 
 import com.strayalphaca.data.all.utils.mapBaseResponse
-import com.strayalphaca.data.diary.data_source.DiaryDataSource
-import com.strayalphaca.data.diary.utils.diaryDtoToDiaryDetail
+import com.strayalphaca.travel_diary.data.diary.data_source.DiaryDataSource
+import com.strayalphaca.travel_diary.data.diary.utils.diaryDtoToDiaryDetail
 import com.strayalphaca.domain.diary.model.DiaryDetail
 import com.strayalphaca.domain.diary.model.DiaryItem
 import com.strayalphaca.domain.diary.model.DiaryModifyData
