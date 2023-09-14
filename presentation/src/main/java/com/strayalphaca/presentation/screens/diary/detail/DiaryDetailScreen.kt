@@ -2,6 +2,7 @@ package com.strayalphaca.presentation.screens.diary.detail
 
 import android.content.res.Configuration
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -40,23 +41,34 @@ import com.strayalphaca.domain.diary.model.DiaryDetail
 import com.strayalphaca.domain.diary.model.Feeling
 import com.strayalphaca.domain.diary.model.File
 import com.strayalphaca.domain.diary.model.FileType
+import com.strayalphaca.presentation.components.template.dialog.TwoButtonDialog
 
 @Composable
 fun DiaryDetailContainer(
     viewModel: DiaryDetailViewModel = viewModel(),
     id : String,
     goBack: () -> Unit = {},
+    goBackWithDeleteSuccess : () -> Unit = {},
     goToVideo  : (Uri) -> Unit = {},
     goToDiaryModify : (String?) -> Unit = {},
     needRefresh : Boolean = false
 ) {
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
+    val deleteSuccess by viewModel.goBackNavigationEvent.collectAsState(initial = false)
 
     LaunchedEffect(needRefresh) {
         if (needRefresh)
             viewModel.tryRefresh()
     }
+
+    LaunchedEffect(deleteSuccess) {
+        if (deleteSuccess)
+            goBackWithDeleteSuccess()
+
+    }
+
+    BackHandler(enabled = !state.showDeleteDialog) {}
 
     DiaryDetailScreen(
         id = id,
@@ -65,10 +77,13 @@ fun DiaryDetailContainer(
         goToVideo = goToVideo,
         goToDiaryModify = goToDiaryModify,
         loadDiary = viewModel::tryLoadDetail,
+        deleteDiary = viewModel::tryDeleteDiary,
         playMusic = viewModel::playMusic,
         pauseMusic = viewModel::pauseMusic,
         changeMusicProgress = viewModel::dragMusicProgressByUser,
         musicProgress = musicProgress,
+        showDeleteDialog = viewModel::showDeleteDialog,
+        hideDeleteDialog = viewModel::hideDeleteDialog
     )
 }
 
@@ -81,10 +96,13 @@ fun DiaryDetailScreen(
     goToVideo  : (Uri) -> Unit = {},
     goToDiaryModify : (String?) -> Unit = {},
     loadDiary : (String) -> Unit = {},
+    deleteDiary : () -> Unit = {},
     playMusic : () -> Unit = {},
     pauseMusic : () -> Unit = {},
     changeMusicProgress : (Float) -> Unit = {},
-    musicProgress : Float = 0f
+    musicProgress : Float = 0f,
+    showDeleteDialog : () -> Unit = {},
+    hideDeleteDialog : () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     var dropdownExpanded by remember { mutableStateOf(false) }
@@ -92,7 +110,19 @@ fun DiaryDetailScreen(
     LaunchedEffect(id) {
         loadDiary(id)
     }
-    
+
+    if (state.showDeleteDialog) {
+        TwoButtonDialog(
+            title = stringResource(id = R.string.remove_diary_title),
+            mainText = stringResource(id = R.string.remove_diary_text),
+            leftButtonText = stringResource(id = R.string.no),
+            leftButtonClick = hideDeleteDialog,
+            rightButtonText = stringResource(id = R.string.yes),
+            rightButtonClick = deleteDiary,
+            onDismissRequest = hideDeleteDialog
+        )
+    }
+
     Surface {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
@@ -102,7 +132,10 @@ fun DiaryDetailScreen(
             ) {
                 BaseIconButton(
                     iconResourceId = R.drawable.ic_back,
-                    onClick = { goBack() }
+                    onClick = {
+                        if (state.deleteLoading) return@BaseIconButton
+                        goBack()
+                    }
                 )
 
                 if (state.diaryDetail != null) {
@@ -110,6 +143,7 @@ fun DiaryDetailScreen(
                         BaseIconButton(
                             iconResourceId = R.drawable.ic_more,
                             onClick = {
+                                if (state.deleteLoading) return@BaseIconButton
                                 dropdownExpanded = !dropdownExpanded
                             }
                         )
@@ -118,8 +152,22 @@ fun DiaryDetailScreen(
                             expanded = dropdownExpanded,
                             onDismissRequest = { dropdownExpanded = false}
                         ) {
-                            DropdownMenuItem(onClick = { goToDiaryModify(id) }) {
+                            DropdownMenuItem(
+                                onClick = {
+                                    dropdownExpanded = false
+                                    goToDiaryModify(id)
+                                }
+                            ) {
                                 Text(text = stringResource(id = R.string.modify), style = MaterialTheme.typography.body2)
+                            }
+
+                            DropdownMenuItem(
+                                onClick = {
+                                    dropdownExpanded = false
+                                    showDeleteDialog()
+                                }
+                            ) {
+                                Text(text = stringResource(id = R.string.delete), style = MaterialTheme.typography.body2)
                             }
                         }
                     }
@@ -171,7 +219,10 @@ fun DiaryDetailScreen(
                                 fileUri = Uri.parse(state.diaryDetail.files[it].fileLink),
                                 thumbnailUri = Uri.parse(state.diaryDetail.files[it].getThumbnail()),
                                 isVideo = state.diaryDetail.files[it].type == FileType.VIDEO,
-                                onClick = goToVideo
+                                onClick = { uri ->
+                                    if (state.deleteLoading) return@PolaroidView
+                                    goToVideo(uri)
+                                }
                             )
                         }
                     }

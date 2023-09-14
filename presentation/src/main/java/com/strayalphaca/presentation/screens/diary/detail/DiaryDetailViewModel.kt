@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.domain.diary.model.DiaryDetail
+import com.strayalphaca.domain.diary.use_case.UseCaseDeleteDiary
 import com.strayalphaca.domain.diary.use_case.UseCaseGetDiaryDetail
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class DiaryDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val useCaseGetDiaryDetail: UseCaseGetDiaryDetail,
+    private val useCaseDeleteDiary : UseCaseDeleteDiary,
     private val musicPlayer: MusicPlayer
 ) : ViewModel() {
 
@@ -33,6 +35,9 @@ class DiaryDetailViewModel @Inject constructor(
     val musicProgress = _musicProgress.asStateFlow()
 
     private val id = savedStateHandle.getStateFlow("diary_id", "")
+
+    private val _goBackNavigationEvent = MutableSharedFlow<Boolean>()
+    val goBackNavigationEvent = _goBackNavigationEvent.asSharedFlow()
 
     fun tryRefresh() {
         viewModelScope.launch {
@@ -62,7 +67,22 @@ class DiaryDetailViewModel @Inject constructor(
         }
     }
 
+    fun tryDeleteDiary() {
+        if (state.value.diaryDetail == null) return
+
+        viewModelScope.launch {
+            event.send(DiaryDetailEvent.DeleteDiaryLoading)
+            val response = useCaseDeleteDiary(id.value)
+            if (response is BaseResponse.EmptySuccess) {
+                event.send(DiaryDetailEvent.DeleteDiarySuccess)
+            } else {
+                event.send(DiaryDetailEvent.DeleteDiaryFail)
+            }
+        }
+    }
+
     fun playMusic() {
+        if (state.value.deleteLoading) return
         viewModelScope.launch {
             musicPlayer.playMusic()
             event.send(DiaryDetailEvent.PlayingMusic)
@@ -94,6 +114,18 @@ class DiaryDetailViewModel @Inject constructor(
         _musicProgress.value = progress
     }
 
+    fun showDeleteDialog() {
+        viewModelScope.launch {
+            event.send(DiaryDetailEvent.SetShowDeleteDialog(visible = true))
+        }
+    }
+
+    fun hideDeleteDialog() {
+        viewModelScope.launch {
+            event.send(DiaryDetailEvent.SetShowDeleteDialog(visible = false))
+        }
+    }
+
     private fun reduce(state : DiaryDetailState, event : DiaryDetailEvent) : DiaryDetailState {
         return when(event) {
             DiaryDetailEvent.DiaryLoading -> {
@@ -113,6 +145,26 @@ class DiaryDetailViewModel @Inject constructor(
                 startMusicPlayerJob()
                 state.copy(musicPlaying = true)
             }
+            DiaryDetailEvent.DeleteDiaryLoading -> {
+                musicPlayerJob?.cancel()
+                state.copy(deleteLoading = true, musicPlaying = false, showDeleteDialog = false)
+            }
+            DiaryDetailEvent.DeleteDiaryFail -> {
+                state.copy(deleteLoading = false)
+            }
+            DiaryDetailEvent.DeleteDiarySuccess -> {
+                occurNavigationBack()
+                state.copy(deleteLoading = false)
+            }
+            is DiaryDetailEvent.SetShowDeleteDialog -> {
+                state.copy(showDeleteDialog = event.visible)
+            }
+        }
+    }
+
+    private fun occurNavigationBack() {
+        viewModelScope.launch {
+            _goBackNavigationEvent.emit(true)
         }
     }
 }
@@ -123,10 +175,16 @@ sealed class DiaryDetailEvent {
     class DiaryLoadingSuccess(val diaryDetail: DiaryDetail) : DiaryDetailEvent()
     object PlayingMusic : DiaryDetailEvent()
     object PauseMusic : DiaryDetailEvent()
+    object DeleteDiaryLoading : DiaryDetailEvent()
+    object DeleteDiaryFail : DiaryDetailEvent()
+    object DeleteDiarySuccess : DiaryDetailEvent()
+    class SetShowDeleteDialog(val visible : Boolean) : DiaryDetailEvent()
 }
 
 data class DiaryDetailState (
     val diaryDetail: DiaryDetail ?= null,
     val showError : Boolean = false,
-    val musicPlaying : Boolean = false
+    val musicPlaying : Boolean = false,
+    val deleteLoading : Boolean = false,
+    val showDeleteDialog : Boolean = false
 )

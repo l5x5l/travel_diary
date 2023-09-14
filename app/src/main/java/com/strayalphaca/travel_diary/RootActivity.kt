@@ -86,6 +86,10 @@ fun RootNavHost(
                 id = diaryId ?: "",
                 viewModel = viewModel,
                 goBack = {navController.popBackStack()},
+                goBackWithDeleteSuccess = {
+                    navController.previousBackStackEntry?.savedStateHandle?.set("delete_diary_id", diaryId)
+                    navController.popBackStack()
+                },
                 goToVideo = { uri ->
                     navController.navigate("${Video.route}?${uri}")
                 },
