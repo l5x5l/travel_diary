@@ -42,6 +42,7 @@ import com.strayalphaca.travel_diary.diary.model.Feeling
 import com.strayalphaca.travel_diary.diary.model.File
 import com.strayalphaca.travel_diary.diary.model.FileType
 import com.strayalphaca.presentation.components.template.dialog.TwoButtonDialog
+import com.strayalphaca.presentation.components.template.error_view.ErrorView
 
 @Composable
 fun DiaryDetailContainer(
@@ -274,7 +275,7 @@ fun DiaryDetailScreen(
                         )
                     }
                 }
-            } else if (!state.showError) {
+            } else if (!state.showError) { // 데이터 로딩중
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -285,8 +286,8 @@ fun DiaryDetailScreen(
                         strokeWidth = 4.dp
                     )
                 }
-            } else {
-                // todo 일지 상세 로딩 중 에러 view 디자인 시 구현
+            } else { // 데이터 로딩 실패
+                ErrorView(modifier = Modifier.fillMaxSize())
             }
 
         }

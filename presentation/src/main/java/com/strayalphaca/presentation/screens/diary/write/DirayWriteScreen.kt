@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.strayalphaca.presentation.components.template.error_view.ErrorView
 import com.strayalphaca.travel_diary.diary.model.Feeling
 import com.strayalphaca.travel_diary.diary.model.Weather
 import com.strayalphaca.presentation.screens.diary.component.ContentIconImage
@@ -183,7 +184,7 @@ fun DiaryWriteScreen(
                     .background(Gray2)
             )
 
-            if (!state.showInitLoading) {
+            if (!state.showInitLoading && !state.showLoadingError) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -351,7 +352,7 @@ fun DiaryWriteScreen(
                         )
                     }
                 }
-            } else {
+            } else if (state.showInitLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -362,9 +363,9 @@ fun DiaryWriteScreen(
                         strokeWidth = 4.dp
                     )
                 }
+            } else {
+                ErrorView(modifier = Modifier.fillMaxSize())
             }
-
-
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Box(
