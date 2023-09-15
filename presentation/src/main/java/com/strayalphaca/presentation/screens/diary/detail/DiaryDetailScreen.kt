@@ -190,6 +190,31 @@ fun DiaryDetailScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    if (state.diaryDetail.cityName != null) {
+                        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(id = R.string.location),
+                                style = MaterialTheme.typography.body2,
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(end = 16.dp)
+                            )
+
+                            Text(
+                                text = state.diaryDetail.cityName ?: stringResource(id = R.string.placeholder_location),
+                                style = MaterialTheme.typography.body2,
+                                color = Gray2,
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .weight(1f)
+                                    .padding(end = 10.dp)
+                            )
+                        }
+                    }
+
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                             Text(text = stringResource(id = R.string.today_feeling), style = MaterialTheme.typography.body2)
