@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.strayalphaca.presentation.components.template.dialog.DiaryLocationPickerDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
 import com.strayalphaca.travel_diary.diary.model.Feeling
 import com.strayalphaca.travel_diary.diary.model.Weather
@@ -89,7 +90,10 @@ fun DiaryWriteContainer(
         showSelectView = viewModel::showSelectView,
         setWeather = viewModel::setWeather,
         setFeeling = viewModel::setFeeling,
-        uploadDiary = viewModel::uploadDiary
+        uploadDiary = viewModel::uploadDiary,
+        showLocationPickerDialog = viewModel::showLocationPickerDialog,
+        hideLocationPickerDialog = viewModel::hideLocationPickerDialog,
+        selectCityById = viewModel::selectCityById
     )
 }
 
@@ -114,7 +118,10 @@ fun DiaryWriteScreen(
     showSelectView: (CurrentShowSelectView) -> Unit = {},
     setWeather: (Weather) -> Unit = {},
     setFeeling: (Feeling) -> Unit = {},
-    uploadDiary : () -> Unit = {}
+    uploadDiary : () -> Unit = {},
+    showLocationPickerDialog : () -> Unit = {},
+    hideLocationPickerDialog : () -> Unit = {},
+    selectCityById : (Int) -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -156,6 +163,15 @@ fun DiaryWriteScreen(
             lifecycleOwner.lifecycle.removeObserver(observer)
             releaseMusicPlayer()
         }
+    }
+
+    if (state.showLocationPickerDialog) {
+        DiaryLocationPickerDialog(
+            title = stringResource(id = R.string.select_location),
+            message = stringResource(id = R.string.select_location_message),
+            onDismissRequest = hideLocationPickerDialog,
+            onCitySelect = selectCityById
+        )
     }
 
     Surface {
@@ -206,7 +222,7 @@ fun DiaryWriteScreen(
                         )
 
                         Text(
-                            text = stringResource(id = R.string.placeholder_location),
+                            text = state.cityName ?: stringResource(id = R.string.placeholder_location),
                             style = MaterialTheme.typography.body2,
                             color = Gray2,
                             modifier = Modifier
@@ -218,9 +234,7 @@ fun DiaryWriteScreen(
                         ContentIconImage(
                             iconId = R.drawable.ic_location,
                             descriptionText = state.feeling.name,
-                            onClick = {
-
-                            }
+                            onClick = showLocationPickerDialog
                         )
 
                         Spacer(modifier = Modifier.width(12.dp))

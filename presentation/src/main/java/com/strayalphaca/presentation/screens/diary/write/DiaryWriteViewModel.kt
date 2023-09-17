@@ -16,6 +16,8 @@ import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import com.strayalphaca.presentation.utils.UriHandler
 import com.strayalphaca.travel_diary.domain.file.usecase.UseCaseUploadFiles
+import com.strayalphaca.travel_diary.map.model.City
+import com.strayalphaca.travel_diary.map.model.Province
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -233,6 +235,24 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
+    fun showLocationPickerDialog() {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.SetShowLocationPickerDialog(true))
+        }
+    }
+
+    fun hideLocationPickerDialog() {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.SetShowLocationPickerDialog(false))
+        }
+    }
+
+    fun selectCityById(cityId : Int) {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.SelectLocationById(cityId))
+        }
+    }
+
     private fun callGoBackNavigationEvent() {
         viewModelScope.launch {
             _goBackNavigationEvent.emit(true)
@@ -298,6 +318,14 @@ class DiaryWriteViewModel @Inject constructor(
                 musicPlayerJob?.cancel()
                 state.copy(musicPlaying = false)
             }
+            is DiaryWriteEvent.SetShowLocationPickerDialog -> {
+                state.copy(showLocationPickerDialog = events.show)
+            }
+            is DiaryWriteEvent.SelectLocationById -> {
+                val city = City.findCity(events.cityId)
+                val province = Province.findProvince(city.provinceId)
+                state.copy(cityName = "${province.name} ${city.name}", cityId = city.id)
+            }
         }
     }
 
@@ -320,6 +348,8 @@ sealed class DiaryWriteEvent {
     object HideSelectView : DiaryWriteEvent()
     object PlayingMusic : DiaryWriteEvent()
     object PauseMusic : DiaryWriteEvent()
+    class SetShowLocationPickerDialog(val show : Boolean) : DiaryWriteEvent()
+    class SelectLocationById(val cityId : Int) : DiaryWriteEvent()
 }
 
 data class DiaryWriteState(
@@ -331,5 +361,8 @@ data class DiaryWriteState(
     val weather: Weather? = null,
     val currentShowSelectView: CurrentShowSelectView ?= null,
     val musicPlaying : Boolean = false,
-    val showInitLoading : Boolean = false
+    val showInitLoading : Boolean = false,
+    val showLocationPickerDialog : Boolean = false,
+    val cityName : String ?= null,
+    val cityId : Int ?= null
 )
