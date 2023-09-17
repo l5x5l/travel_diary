@@ -20,7 +20,7 @@ sealed class Province(val id: Int, val name: String, val group : Int = id) {
     object Jeju : Province(17, "제주특별자치도")
 
     companion object {
-        fun listOfProvince() = Province::class.sealedSubclasses.toSet()
+        private fun listOfProvince() = Province::class.sealedSubclasses.toSet()
 
         fun findProvince(provinceId : Int) : Province {
             return listOfProvince().find { it.objectInstance?.id == provinceId }?.objectInstance
@@ -29,6 +29,10 @@ sealed class Province(val id: Int, val name: String, val group : Int = id) {
 
         fun getSameGroupProvinceList(groupId : Int) : List<Province> {
             return listOfProvince().filter { it.objectInstance?.group == groupId }.mapNotNull { it.objectInstance }
+        }
+
+        fun getTotalProvinceList() : List<Province> {
+            return listOfProvince().mapNotNull { it.objectInstance }
         }
     }
 }
