@@ -232,19 +232,9 @@ fun DiaryWriteScreen(
                         )
 
                         ContentIconImage(
-                            iconId = R.drawable.ic_location,
-                            descriptionText = state.feeling.name,
-                            onClick = showLocationPickerDialog
-                        )
-
-                        Spacer(modifier = Modifier.width(12.dp))
-
-                        ContentIconImage(
                             iconId = R.drawable.ic_gps,
                             descriptionText = state.feeling.name,
-                            onClick = {
-
-                            }
+                            onClick = showLocationPickerDialog
                         )
                     }
 
