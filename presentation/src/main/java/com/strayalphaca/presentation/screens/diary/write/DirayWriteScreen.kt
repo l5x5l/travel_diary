@@ -14,6 +14,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -39,8 +40,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.strayalphaca.domain.diary.model.Feeling
-import com.strayalphaca.domain.diary.model.Weather
+import com.strayalphaca.presentation.components.template.dialog.DiaryLocationPickerDialog
+import com.strayalphaca.presentation.components.template.error_view.ErrorView
+import com.strayalphaca.travel_diary.diary.model.Feeling
+import com.strayalphaca.travel_diary.diary.model.Weather
 import com.strayalphaca.presentation.screens.diary.component.ContentIconImage
 import com.strayalphaca.presentation.screens.diary.component.ContentSelectView
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
@@ -55,7 +58,8 @@ fun DiaryWriteContainer(
     id: String?,
     viewModel: DiaryWriteViewModel = viewModel(),
     goBack: () -> Unit = {},
-    goToVideo  : (Uri) -> Unit = {}
+    goToVideo  : (Uri) -> Unit = {},
+    goBackWithModifySuccessResult : () -> Unit = {}
 ) {
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
@@ -64,7 +68,7 @@ fun DiaryWriteContainer(
 
     LaunchedEffect(goBackNavigationEvent) {
         if (goBackNavigationEvent)
-            goBack()
+            goBackWithModifySuccessResult()
     }
 
     DiaryWriteScreen(
@@ -86,7 +90,10 @@ fun DiaryWriteContainer(
         showSelectView = viewModel::showSelectView,
         setWeather = viewModel::setWeather,
         setFeeling = viewModel::setFeeling,
-        uploadDiary = viewModel::uploadDiary
+        uploadDiary = viewModel::uploadDiary,
+        showLocationPickerDialog = viewModel::showLocationPickerDialog,
+        hideLocationPickerDialog = viewModel::hideLocationPickerDialog,
+        selectCityById = viewModel::selectCityById
     )
 }
 
@@ -111,7 +118,10 @@ fun DiaryWriteScreen(
     showSelectView: (CurrentShowSelectView) -> Unit = {},
     setWeather: (Weather) -> Unit = {},
     setFeeling: (Feeling) -> Unit = {},
-    uploadDiary : () -> Unit = {}
+    uploadDiary : () -> Unit = {},
+    showLocationPickerDialog : () -> Unit = {},
+    hideLocationPickerDialog : () -> Unit = {},
+    selectCityById : (Int) -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -138,7 +148,7 @@ fun DiaryWriteScreen(
     }
 
     LaunchedEffect(id) {
-        if (id != null) loadDiary(id)
+        if (id != null && id != "null") loadDiary(id)
     }
 
     DisposableEffect(key1 = lifecycleOwner) {
@@ -153,6 +163,15 @@ fun DiaryWriteScreen(
             lifecycleOwner.lifecycle.removeObserver(observer)
             releaseMusicPlayer()
         }
+    }
+
+    if (state.showLocationPickerDialog) {
+        DiaryLocationPickerDialog(
+            title = stringResource(id = R.string.select_location),
+            message = stringResource(id = R.string.select_location_message),
+            onDismissRequest = hideLocationPickerDialog,
+            onCitySelect = selectCityById
+        )
     }
 
     Surface {
@@ -181,175 +200,176 @@ fun DiaryWriteScreen(
                     .background(Gray2)
             )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(16.dp)
-                    .verticalScroll(scrollState)
-            ) {
-                Text(text = "")
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(id = R.string.location),
-                        style = MaterialTheme.typography.body2,
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .padding(end = 10.dp)
-                    )
-
-                    Text(
-                        text = stringResource(id = R.string.placeholder_location),
-                        style = MaterialTheme.typography.body2,
-                        color = Gray2,
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .weight(1f)
-                            .padding(end = 10.dp)
-                    )
-
-                    ContentIconImage(
-                        iconId = R.drawable.ic_location,
-                        descriptionText = state.feeling.name,
-                        onClick = {
-
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    ContentIconImage(
-                        iconId = R.drawable.ic_gps,
-                        descriptionText = state.feeling.name,
-                        onClick = {
-
-                        }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .align(Alignment.CenterVertically)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.today_feeling),
-                            style = MaterialTheme.typography.body2,
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .padding(end = 10.dp)
-                        )
-                        ContentIconImage(
-                            iconId = getFeelingIconId(state.feeling),
-                            descriptionText = state.feeling.name,
-                            onClick = {
-                                showSelectView(CurrentShowSelectView.FEELING)
-                            }
-                        )
-                    }
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .align(Alignment.CenterVertically)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.weather),
-                            style = MaterialTheme.typography.body2,
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .padding(end = 10.dp)
-                        )
-                        ContentIconImage(
-                            iconId = state.weather?.let { getWeatherIconId(it) }
-                                ?: R.drawable.ic_weather_sunny,
-                            descriptionText = state.weather?.toString(),
-                            onClick = {
-                                showSelectView(CurrentShowSelectView.WEATHER)
-                            }
-                        )
-                    }
-                }
-
-                AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.WEATHER) {
-                    ContentSelectView(contentList = Weather.values().toList()) {
-                        ContentIconImage(
-                            iconId = getWeatherIconId(it),
-                            descriptionText = it.name,
-                            onClick = {
-                                setWeather(it)
-                            }
-                        )
-                    }
-                }
-
-                AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.FEELING) {
-                    ContentSelectView(contentList = Feeling.values().toList()) {
-                        ContentIconImage(
-                            iconId = getFeelingIconId(it),
-                            descriptionText = it.name,
-                            onClick = {
-                                setFeeling(it)
-                            }
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                if (state.imageFiles.isNotEmpty()) {
-                    HorizontalPager(pageCount = state.imageFiles.size) {
-                        val isVideo = checkUriIsVideo(state.imageFiles[it], context)
-                        PolaroidView(fileUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo)
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-
-                BasicTextField(
-                    value = content,
-                    onValueChange = changeContent,
+            if (!state.showInitLoading && !state.showLoadingError) {
+                Column(
                     modifier = Modifier
-                        .border(1.dp, MaterialTheme.colors.onBackground)
-                        .defaultMinSize(minHeight = 250.dp),
-                    textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
-                    decorationBox = { innerTextField ->
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            innerTextField()
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(16.dp)
+                        .verticalScroll(scrollState)
+                ) {
+                    Text(text = "")
 
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = stringResource(id = R.string.location),
+                            style = MaterialTheme.typography.body2,
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .padding(end = 10.dp)
+                        )
+
+                        Text(
+                            text = state.cityName ?: stringResource(id = R.string.placeholder_location),
+                            style = MaterialTheme.typography.body2,
+                            color = Gray2,
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .weight(1f)
+                                .padding(end = 10.dp)
+                        )
+
+                        ContentIconImage(
+                            iconId = R.drawable.ic_gps,
+                            descriptionText = state.feeling.name,
+                            onClick = showLocationPickerDialog
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            modifier = Modifier
+                                .weight(1f)
+                                .align(Alignment.CenterVertically)
+                        ) {
                             Text(
-                                text = "${content.length}/300",
-                                modifier = Modifier.align(Alignment.End),
-                                style = MaterialTheme.typography.caption
+                                text = stringResource(id = R.string.today_feeling),
+                                style = MaterialTheme.typography.body2,
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(end = 10.dp)
+                            )
+                            ContentIconImage(
+                                iconId = getFeelingIconId(state.feeling),
+                                descriptionText = state.feeling.name,
+                                onClick = {
+                                    showSelectView(CurrentShowSelectView.FEELING)
+                                }
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .weight(1f)
+                                .align(Alignment.CenterVertically)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.weather),
+                                style = MaterialTheme.typography.body2,
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(end = 10.dp)
+                            )
+                            ContentIconImage(
+                                iconId = state.weather?.let { getWeatherIconId(it) }
+                                    ?: R.drawable.ic_weather_sunny,
+                                descriptionText = state.weather?.toString(),
+                                onClick = {
+                                    showSelectView(CurrentShowSelectView.WEATHER)
+                                }
                             )
                         }
                     }
-                )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.WEATHER) {
+                        ContentSelectView(contentList = Weather.values().toList()) {
+                            ContentIconImage(
+                                iconId = getWeatherIconId(it),
+                                descriptionText = it.name,
+                                onClick = {
+                                    setWeather(it)
+                                }
+                            )
+                        }
+                    }
 
-                state.voiceFile?.let { uri ->
-                    SoundView(
-                        file = uri,
-                        playing = state.musicPlaying,
-                        play = playMusic,
-                        pause = pauseMusic,
-                        remove = removeVoiceFile,
-                        soundProgressChange = changeMusicProgress,
-                        soundProgress = musicProgress
+                    AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.FEELING) {
+                        ContentSelectView(contentList = Feeling.values().toList()) {
+                            ContentIconImage(
+                                iconId = getFeelingIconId(it),
+                                descriptionText = it.name,
+                                onClick = {
+                                    setFeeling(it)
+                                }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    if (state.imageFiles.isNotEmpty()) {
+                        HorizontalPager(pageCount = state.imageFiles.size) {
+                            val isVideo = checkUriIsVideo(state.imageFiles[it], context)
+                            PolaroidView(fileUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo)
+                        }
+                        Spacer(modifier = Modifier.height(24.dp))
+                    }
+
+                    BasicTextField(
+                        value = content,
+                        onValueChange = changeContent,
+                        modifier = Modifier
+                            .border(1.dp, MaterialTheme.colors.onBackground)
+                            .defaultMinSize(minHeight = 250.dp),
+                        textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
+                        decorationBox = { innerTextField ->
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                innerTextField()
+
+                                Text(
+                                    text = "${content.length}/300",
+                                    modifier = Modifier.align(Alignment.End),
+                                    style = MaterialTheme.typography.caption
+                                )
+                            }
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    state.voiceFile?.let { uri ->
+                        SoundView(
+                            file = uri,
+                            playing = state.musicPlaying,
+                            play = playMusic,
+                            pause = pauseMusic,
+                            remove = removeVoiceFile,
+                            soundProgressChange = changeMusicProgress,
+                            soundProgress = musicProgress
+                        )
+                    }
+                }
+            } else if (state.showInitLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colors.onSurface,
+                        modifier = Modifier.size(40.dp),
+                        strokeWidth = 4.dp
                     )
                 }
+            } else {
+                ErrorView(modifier = Modifier.fillMaxSize())
             }
-
-
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Box(

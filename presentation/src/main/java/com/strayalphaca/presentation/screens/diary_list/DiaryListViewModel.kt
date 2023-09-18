@@ -6,8 +6,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.strayalphaca.domain.diary.model.DiaryItem
-import com.strayalphaca.domain.diary.use_case.UseCaseGetDiaryList
+import com.strayalphaca.travel_diary.diary.model.DiaryItem
+import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryList
 import com.strayalphaca.presentation.screens.diary_list.paging.DiaryListPagingSource
 import com.strayalphaca.travel_diary.map.model.City
 import dagger.hilt.android.lifecycle.HiltViewModel

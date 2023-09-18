@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.strayalphaca.travel_diary.data.diary'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 33
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation project(":domain")
+    implementation project(":domain:map")
+    implementation project(":domain:diary")
+    implementation project(":data")
+
+    implementation libs.android.ktx
+    implementation libs.android.appcompat
+    implementation libs.android.material
+    testImplementation libs.junit
+    androidTestImplementation libs.test.junit
+    androidTestImplementation libs.test.espresso
+
+    // okHttp3 https://github.com/square/okhttp
+    implementation libs.bundles.okhttp3
+
+    // retrofit2 https://github.com/square/retrofit
+    implementation libs.bundles.retrofit2
+
+    // https://mvnrepository.com/artifact/javax.inject/javax.inject/1
+    implementation libs.javax.inject
+}

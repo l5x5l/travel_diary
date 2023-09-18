@@ -81,13 +81,22 @@ fun RootNavHost(
         ) { navBackStackEntry ->
             val viewModel = hiltViewModel<DiaryDetailViewModel>()
             val diaryId = navBackStackEntry.arguments?.getString(DiaryDetail.diaryId)
+            val refresh = navBackStackEntry.savedStateHandle.get<Boolean>("modify_success") ?: false
             DiaryDetailContainer(
                 id = diaryId ?: "",
                 viewModel = viewModel,
                 goBack = {navController.popBackStack()},
+                goBackWithDeleteSuccess = {
+                    navController.previousBackStackEntry?.savedStateHandle?.set("delete_diary_id", diaryId)
+                    navController.popBackStack()
+                },
                 goToVideo = { uri ->
                     navController.navigate("${Video.route}?${uri}")
-                }
+                },
+                goToDiaryModify = { id ->
+                    navController.navigateToDiaryWrite(id)
+                },
+                needRefresh = refresh
             )
         }
 
@@ -104,6 +113,10 @@ fun RootNavHost(
                 goBack = {navController.popBackStack()},
                 goToVideo = { uri ->
                     navController.navigate("${Video.route}?${uri}")
+                },
+                goBackWithModifySuccessResult = {
+                    navController.previousBackStackEntry?.savedStateHandle?.set("modify_success", true)
+                    navController.popBackStack()
                 }
             )
         }

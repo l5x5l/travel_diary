@@ -259,7 +259,7 @@ sealed class City(val id : Int, val name : String, val provinceId : Int, val gro
     object NamJejiGun : City(238, "남제주군", 17, 64)
 
     companion object {
-        fun listOfCity() = City::class.sealedSubclasses.toSet()
+        private fun listOfCity() = City::class.sealedSubclasses.toSet()
 
         fun getSameGroupCityList(group : Int) : List<City> {
             return listOfCity().filter { it.objectInstance?.group == group }.mapNotNull { it.objectInstance }
@@ -268,6 +268,10 @@ sealed class City(val id : Int, val name : String, val provinceId : Int, val gro
         fun findCity(cityId : Int) : City {
             return listOfCity().find { it.objectInstance?.id == cityId }?.objectInstance
                 ?: throw IllegalArgumentException("Cannot found city which id is : $cityId")
+        }
+
+        fun getCityListInProvince(provinceId : Int) : List<City> {
+            return listOfCity().mapNotNull { it.objectInstance }.toList().filter { it.provinceId == provinceId }
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.strayalphaca.presentation.screens.diary.util
 
-import com.strayalphaca.domain.diary.model.Feeling
-import com.strayalphaca.domain.diary.model.Weather
+import com.strayalphaca.travel_diary.diary.model.Feeling
+import com.strayalphaca.travel_diary.diary.model.Weather
 import com.strayalphaca.presentation.R
 
 fun getWeatherIconId(weather: Weather) : Int {

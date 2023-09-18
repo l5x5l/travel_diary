@@ -3,19 +3,21 @@ package com.strayalphaca.presentation.screens.diary.write
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.strayalphaca.domain.diary.model.DiaryDetail
-import com.strayalphaca.domain.diary.model.DiaryModifyData
-import com.strayalphaca.domain.diary.model.DiaryWriteData
-import com.strayalphaca.domain.diary.model.Feeling
-import com.strayalphaca.domain.diary.model.Weather
-import com.strayalphaca.domain.diary.use_case.UseCaseGetDiaryDetail
-import com.strayalphaca.domain.diary.use_case.UseCaseModifyDiary
-import com.strayalphaca.domain.diary.use_case.UseCaseUploadDiary
+import com.strayalphaca.travel_diary.diary.model.DiaryDetail
+import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
+import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
+import com.strayalphaca.travel_diary.diary.model.Feeling
+import com.strayalphaca.travel_diary.diary.model.Weather
+import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryDetail
+import com.strayalphaca.travel_diary.diary.use_case.UseCaseModifyDiary
+import com.strayalphaca.travel_diary.diary.use_case.UseCaseUploadDiary
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import com.strayalphaca.presentation.utils.UriHandler
 import com.strayalphaca.travel_diary.domain.file.usecase.UseCaseUploadFiles
+import com.strayalphaca.travel_diary.map.model.City
+import com.strayalphaca.travel_diary.map.model.Province
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -233,6 +235,24 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
+    fun showLocationPickerDialog() {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.SetShowLocationPickerDialog(true))
+        }
+    }
+
+    fun hideLocationPickerDialog() {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.SetShowLocationPickerDialog(false))
+        }
+    }
+
+    fun selectCityById(cityId : Int) {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.SelectLocationById(cityId))
+        }
+    }
+
     private fun callGoBackNavigationEvent() {
         viewModelScope.launch {
             _goBackNavigationEvent.emit(true)
@@ -242,17 +262,18 @@ class DiaryWriteViewModel @Inject constructor(
     private fun reduce(state: DiaryWriteState, events: DiaryWriteEvent): DiaryWriteState {
         return when (events) {
             DiaryWriteEvent.DiaryLoading -> {
-                state.copy(buttonActive = false, showLoadingError = false)
+                state.copy(buttonActive = false, showLoadingError = false, showInitLoading = true)
             }
             DiaryWriteEvent.DiaryLoadingFail -> {
-                state.copy(buttonActive = true, showLoadingError = true)
+                state.copy(buttonActive = true, showLoadingError = true, showInitLoading = false)
             }
             is DiaryWriteEvent.DiaryLoadingSuccess -> {
                 state.copy(
                     buttonActive = true,
                     showLoadingError = false,
                     feeling = events.diaryDetail.feeling,
-                    weather = events.diaryDetail.weather
+                    weather = events.diaryDetail.weather,
+                    showInitLoading = false
                 )
             }
             DiaryWriteEvent.DiaryWriteLoading -> {
@@ -297,6 +318,14 @@ class DiaryWriteViewModel @Inject constructor(
                 musicPlayerJob?.cancel()
                 state.copy(musicPlaying = false)
             }
+            is DiaryWriteEvent.SetShowLocationPickerDialog -> {
+                state.copy(showLocationPickerDialog = events.show)
+            }
+            is DiaryWriteEvent.SelectLocationById -> {
+                val city = City.findCity(events.cityId)
+                val province = Province.findProvince(city.provinceId)
+                state.copy(cityName = "${province.name} ${city.name}", cityId = city.id)
+            }
         }
     }
 
@@ -319,6 +348,8 @@ sealed class DiaryWriteEvent {
     object HideSelectView : DiaryWriteEvent()
     object PlayingMusic : DiaryWriteEvent()
     object PauseMusic : DiaryWriteEvent()
+    class SetShowLocationPickerDialog(val show : Boolean) : DiaryWriteEvent()
+    class SelectLocationById(val cityId : Int) : DiaryWriteEvent()
 }
 
 data class DiaryWriteState(
@@ -329,5 +360,9 @@ data class DiaryWriteState(
     val feeling: Feeling = Feeling.HAPPY,
     val weather: Weather? = null,
     val currentShowSelectView: CurrentShowSelectView ?= null,
-    val musicPlaying : Boolean = false
+    val musicPlaying : Boolean = false,
+    val showInitLoading : Boolean = false,
+    val showLocationPickerDialog : Boolean = false,
+    val cityName : String ?= null,
+    val cityId : Int ?= null
 )
