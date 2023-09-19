@@ -11,5 +11,14 @@ sealed class Route(val uri : String?, val screenNameId : Int) {
         val pushAlarmTargetList = listOf(
             Calendar, Map, DiaryWrite, Null
         )
+
+        fun getInstanceByUriString(uriString : String?) : Route {
+            return when (uriString) {
+                "calendar" -> Calendar
+                "map" -> Map
+                "diary_write" -> DiaryWrite
+                else -> Null
+            }
+        }
     }
 }
