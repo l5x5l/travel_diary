@@ -9,12 +9,28 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.strayalphaca.presentation.models.NotificationChannelInfo
 import kotlin.reflect.KClass
 
 class NotificationManager {
+
+    fun initNotificationChannel(context : Context, notificationChannelInfo: NotificationChannelInfo) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                notificationChannelInfo.id,
+                context.getString(notificationChannelInfo.nameResourceId),
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationChannelInfo.description?.let { channel.description = it }
+
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
     fun createNotification(
-        context : Context, channelName : String,
-        channelDescription : String ?= null,
+        context : Context,
         channelId : String, iconResourceId : Int,
         title : String, text : String,
         notificationId : Int,
@@ -22,13 +38,6 @@ class NotificationManager {
         deepLink : String ?= null
     ) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT)
-            channelDescription?.let { channel.description = it }
-
-            notificationManager.createNotificationChannel(channel)
-        }
 
         val builder = NotificationCompat.Builder(context, channelId).apply {
             setSmallIcon(iconResourceId)

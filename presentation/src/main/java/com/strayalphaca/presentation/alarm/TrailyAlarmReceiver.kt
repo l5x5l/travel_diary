@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.strayalphaca.presentation.R
+import com.strayalphaca.presentation.models.NotificationChannelInfo
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -18,9 +19,7 @@ class TrailyAlarmReceiver : BroadcastReceiver() {
         if (context != null && intent?.action == CALL_NOTIFICATION) {
             notificationManager.createNotification(
                 context = context,
-                channelName = context.getString(R.string.notification_channel_name),
-                channelId = CHANNEL_ID,
-                channelDescription = null,
+                channelId = NotificationChannelInfo.DailyNotification.id,
                 iconResourceId = R.drawable.ic_logo,
                 title = context.getString(R.string.notification_title),
                 text = context.getString(R.string.notification_text),
@@ -33,7 +32,6 @@ class TrailyAlarmReceiver : BroadcastReceiver() {
 
     companion object {
         const val CALL_NOTIFICATION = "traily-call-notification"
-        const val CHANNEL_ID = "201"
         const val NOTIFICATION_ID = 201
     }
 }
