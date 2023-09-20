@@ -45,7 +45,7 @@ class PushAlarmViewModel @Inject constructor(
         if (use) {
             applyPushAlarm()
         } else {
-            alarmManager.setAlarmOff()
+            alarmManager.cancelAlarm()
             setAlarmInfo()
         }
     }

@@ -13,7 +13,7 @@ import javax.inject.Inject
 class TrailyAlarmManager @Inject constructor(
     @ApplicationContext private val context : Context
 ) {
-    fun setAlarmOff() {
+    fun cancelAlarm() {
         val intent = Intent(context, TrailyAlarmReceiver::class.java)
         intent.action = CALL_NOTIFICATION
         val alarmManager = getAlarmManager()
@@ -22,7 +22,7 @@ class TrailyAlarmManager @Inject constructor(
     }
 
     fun setAlarm(hour: Int, minute: Int, screenDeepLink: String?) {
-        setAlarmOff()
+        cancelAlarm()
         val intent = Intent(context, TrailyAlarmReceiver::class.java)
         intent.action = CALL_NOTIFICATION
         intent.putExtra("deepLink", screenDeepLink)
@@ -31,7 +31,7 @@ class TrailyAlarmManager @Inject constructor(
         val pendingIntent = getAlarmPendingIntent(intent)
         val nextAlarmTime = getNextAlarmTimeMilli(hour, minute)
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, nextAlarmTime, AlarmManager.INTERVAL_DAY, pendingIntent)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextAlarmTime, pendingIntent)
     }
 
     private fun getAlarmManager() = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -49,7 +49,10 @@ class TrailyAlarmManager @Inject constructor(
             set(Calendar.MINUTE, minute)
             set(Calendar.SECOND, 0)
         }.timeInMillis
-        val currentTime = Calendar.getInstance().timeInMillis
+
+        // 10분 전에 설정한 경우, 그날은 알람이 발생하지 않음
+        val graceTimeMilli = 1000 * 60 * 10
+        val currentTime = Calendar.getInstance().timeInMillis + graceTimeMilli
 
         return if (alarmTime < currentTime) {
             alarmTime + AlarmManager.INTERVAL_DAY
