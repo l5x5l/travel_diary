@@ -64,6 +64,12 @@
     <string name="yes">네</string>
     <string name="no">아니요</string>
 
+    <string name="deny_permission">권한 거부됨</string>
+    <string name="permission_description_post_notification">알람 권한을 허용하지 않으면, 알람 표시기능을 사용할 수 없습니다.</string>
+    <string name="go_to_app_setting">앱 설정 화면으로 이동하기 >></string>
+    <string name="check">확인</string>
+    <string name="request_permission_again">다시 권한 요청하기 >></string>
+
     <string name="notification_title">오늘 하루는 어떠셨나요?</string>
     <string name="notification_text">오늘 하루에 대한 기록을 남겨보세요</string>
     <string name="notification_channel_name">작성 알림</string>
