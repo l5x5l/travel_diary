@@ -1,6 +1,10 @@
 package com.strayalphaca.presentation.screens.settings.push_alarm
 
+import android.Manifest
 import android.app.TimePickerDialog
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -20,9 +24,12 @@ import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_button.BaseButton
 import com.strayalphaca.presentation.components.atom.base_button.BaseButtonState
 import com.strayalphaca.presentation.components.block.TextWithSwitch
+import com.strayalphaca.presentation.components.template.dialog.PermissionRequestDialog
 import com.strayalphaca.presentation.models.Route
 import com.strayalphaca.presentation.ui.theme.Gray4
+import com.strayalphaca.presentation.utils.findActivity
 import com.strayalphaca.presentation.utils.minuteIn24HourToHour12
+import com.strayalphaca.presentation.utils.openAppSettings
 
 @Composable
 fun PushAlarmScreen(
@@ -33,6 +40,7 @@ fun PushAlarmScreen(
     val usePushAlarm by viewModel.usePushAlarm.collectAsState()
     val pushAlarmMinute by viewModel.pushAlarmMinute.collectAsState()
     val targetUrl by viewModel.clickTarget.collectAsState()
+    val isShowPermissionRequestDialog by viewModel.isShowPermissionRequestDialog.collectAsState()
 
     val timePickerDialog = TimePickerDialog(
         context,
@@ -44,6 +52,30 @@ fun PushAlarmScreen(
         false
     )
 
+    val launcher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted ->
+                if (isGranted) {
+                    viewModel.setUsePushAlarm(true)
+                } else {
+                    viewModel.showPermissionRequestDialog()
+                }
+            }
+        )
+
+    if (isShowPermissionRequestDialog && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        PermissionRequestDialog(
+            title = stringResource(id = R.string.deny_permission),
+            message = stringResource(id = R.string.permission_description_post_notification),
+            isPermanentlyDeclined = context.findActivity()?.let {
+                !it.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+            } ?: true,
+            onDismissRequest = viewModel::dismissPermissionRequestDialog,
+            goToSettingClick = { context.findActivity()?.openAppSettings() }
+        )
+    }
+
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 32.dp, vertical = 12.dp)
@@ -52,7 +84,16 @@ fun PushAlarmScreen(
             text = stringResource(id = R.string.use_push_alarm),
             subText = stringResource(id = R.string.sub_message_push_alarm),
             checked = usePushAlarm,
-            onCheckedChange = viewModel::setUsePushAlarm
+            onCheckedChange = { useAlarm ->
+                if (useAlarm) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                        launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    else
+                        viewModel.setUsePushAlarm(true)
+                } else {
+                    viewModel.setUsePushAlarm(false)
+                }
+            }
         )
         
         Row(
