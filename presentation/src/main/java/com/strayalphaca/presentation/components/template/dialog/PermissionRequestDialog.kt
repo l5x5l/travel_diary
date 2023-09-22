@@ -22,7 +22,6 @@ fun PermissionRequestDialog(
     message : String,
     isPermanentlyDeclined : Boolean,
     onDismissRequest : () -> Unit = {},
-    onRequestPermissionClick : () -> Unit = {},
     goToSettingClick : () -> Unit = {}
 ) {
     TapeDialog(onDismissRequest = onDismissRequest) {
@@ -47,22 +46,15 @@ fun PermissionRequestDialog(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextButton(
-                text = if (isPermanentlyDeclined) {
-                    stringResource(id = R.string.go_to_app_setting)
-                } else {
-                    stringResource(id = R.string.request_permission_again)
-                },
-                onClick = {
-                    if (isPermanentlyDeclined) {
+            if (isPermanentlyDeclined) {
+                TextButton(
+                    text = stringResource(id = R.string.go_to_app_setting),
+                    onClick = {
                         goToSettingClick()
-                    } else {
-                        onRequestPermissionClick()
+                        onDismissRequest()
                     }
-                    onDismissRequest()
-                }
-
-            )
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
