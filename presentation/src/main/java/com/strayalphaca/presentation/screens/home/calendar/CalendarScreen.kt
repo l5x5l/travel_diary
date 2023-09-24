@@ -24,13 +24,14 @@ import com.strayalphaca.presentation.components.template.calendar_view.CalendarV
 import com.strayalphaca.presentation.components.template.dialog.MonthPickerDialog
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
+import com.strayalphaca.presentation.screens.diary.model.DiaryDate
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     onDiaryClick: (String) -> Unit = {},
-    onEmptyDiaryClick: (String?) -> Unit = {},
+    onEmptyDiaryClick: (String?, String?) -> Unit = { _, _ -> },
     viewModel: CalendarViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -92,7 +93,13 @@ fun CalendarScreen(
                     },
                     emptyView = { day, isToday ->
                         CalendarItemEmptyView(day = day, isToday = isToday,
-                            modifier = Modifier.clickable { onEmptyDiaryClick(null) })
+                            modifier = Modifier.clickable {
+                                onEmptyDiaryClick(
+                                    null,
+                                    DiaryDate(year = state.year, month = state.month, day = day).toString()
+                                )
+                            }
+                        )
                     },
                     outRangeView = { day ->
                         CalendarItemEmptyView(day = day, isToday = false, isCurrentMonth = false)
