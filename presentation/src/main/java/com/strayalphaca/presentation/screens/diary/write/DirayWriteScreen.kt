@@ -208,7 +208,7 @@ fun DiaryWriteScreen(
                         .padding(16.dp)
                         .verticalScroll(scrollState)
                 ) {
-                    Text(text = "")
+                    Text(text = state.diaryDate.toString())
 
                     Spacer(modifier = Modifier.height(16.dp))
 
