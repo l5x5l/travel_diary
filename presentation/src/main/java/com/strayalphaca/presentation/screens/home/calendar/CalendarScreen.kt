@@ -30,8 +30,8 @@ import com.strayalphaca.presentation.screens.diary.model.DiaryDate
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
-    onDiaryClick: (String) -> Unit = {},
-    onEmptyDiaryClick: (String?, String?) -> Unit = { _, _ -> },
+    goToDiaryDetail: (String) -> Unit = {},
+    goToDiaryWrite: (String?, String?) -> Unit = { _, _ -> },
     viewModel: CalendarViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -70,8 +70,18 @@ fun CalendarScreen(
                 }
 
                 BaseIconButton(
+                    iconResourceId = R.drawable.ic_write,
+                    onClick = {
+                        goToDiaryWrite(null, DiaryDate.getInstanceFromCalendar().toString())
+                    }
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                BaseIconButton(
                     iconResourceId = R.drawable.ic_calendar,
-                    onClick = { datePickerDialogShow = true })
+                    onClick = { datePickerDialogShow = true }
+                )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -89,12 +99,12 @@ fun CalendarScreen(
                     calendarData = state.diaryData,
                     contentView = { data, day, isToday ->
                         CalendarItemView(item = data, day = day, isToday = isToday,
-                            modifier = Modifier.clickable { onDiaryClick(data.id) })
+                            modifier = Modifier.clickable { goToDiaryDetail(data.id) })
                     },
                     emptyView = { day, isToday ->
                         CalendarItemEmptyView(day = day, isToday = isToday,
                             modifier = Modifier.clickable {
-                                onEmptyDiaryClick(
+                                goToDiaryWrite(
                                     null,
                                     DiaryDate(year = state.year, month = state.month, day = day).toString()
                                 )
@@ -106,6 +116,8 @@ fun CalendarScreen(
                     }
                 )
             }
+
+
         }
     }
 }

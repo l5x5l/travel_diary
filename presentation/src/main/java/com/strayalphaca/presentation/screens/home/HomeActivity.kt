@@ -94,8 +94,8 @@ fun HomeNavHost(
         ) {
             val calendarViewModel = hiltViewModel<CalendarViewModel>()
             CalendarScreen(
-                onDiaryClick = goToDiary,
-                onEmptyDiaryClick = goToDiaryWrite,
+                goToDiaryDetail = goToDiary,
+                goToDiaryWrite = goToDiaryWrite,
                 viewModel = calendarViewModel
             )
         }
