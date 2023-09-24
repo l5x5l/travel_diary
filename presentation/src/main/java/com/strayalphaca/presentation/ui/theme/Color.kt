@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 val BlackBackground = Color(0xFF111111)
 val BlackSurface = Color(0xFF2A2B2C)
 val Tape = Color(0xFFD8C686)
+val TapeVariant = Color(0xFFB9A461)
 val errorRed = Color(0xFFF15555)
 
 val Gray2 = Color(0xFFEEEEEE)
