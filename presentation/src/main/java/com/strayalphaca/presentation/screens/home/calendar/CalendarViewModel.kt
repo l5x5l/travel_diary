@@ -3,9 +3,9 @@ package com.strayalphaca.presentation.screens.home.calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.domain.calendar.model.DiaryInCalendar
+import com.strayalphaca.domain.calendar.use_case.UseCaseCheckWrittenOnToday
 import com.strayalphaca.domain.calendar.use_case.UseCaseGetCalendarDiary
 import com.strayalphaca.domain.model.BaseResponse
-import com.strayalphaca.travel_diary.diary.use_case.UseCaseCheckWrittenOn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
     private val useCaseGetCalendarDiary: UseCaseGetCalendarDiary,
-    private val useCaseCheckWrittenOn: UseCaseCheckWrittenOn
+    private val useCaseCheckWrittenOnToday: UseCaseCheckWrittenOnToday
 ) : ViewModel() {
     private val events = Channel<CalendarViewEvent>()
     val state : StateFlow<CalendarScreenState> = events.receiveAsFlow()
@@ -51,12 +51,7 @@ class CalendarViewModel @Inject constructor(
     fun checkTodayWrite() {
         viewModelScope.launch {
             events.send(CalendarViewEvent.CheckingTodayWritten)
-            val calendar = Calendar.getInstance()
-            val response = useCaseCheckWrittenOn(
-                year = calendar.get(Calendar.YEAR),
-                month = calendar.get(Calendar.MONTH) + 1,
-                day = calendar.get(Calendar.DAY_OF_MONTH)
-            )
+            val response = useCaseCheckWrittenOnToday()
             if (response is BaseResponse.Success<Boolean>) {
                 events.send(CalendarViewEvent.SuccessCheckingTodayWritten(response.data))
             } else {

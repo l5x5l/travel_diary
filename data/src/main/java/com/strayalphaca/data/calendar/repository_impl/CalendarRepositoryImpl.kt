@@ -15,4 +15,8 @@ class CalendarRepositoryImpl @Inject constructor(
         val data = calendarDataSource.getDiaryData(year, month)
         return mapBaseResponse(data, ::diaryDtoListToDiaryInCalendarList)
     }
+
+    override suspend fun checkWrittenOnToday(): BaseResponse<Boolean> {
+        return calendarDataSource.checkWrittenOnToday()
+    }
 }

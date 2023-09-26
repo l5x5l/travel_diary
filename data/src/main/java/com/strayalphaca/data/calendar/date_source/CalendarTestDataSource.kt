@@ -19,4 +19,8 @@ class CalendarTestDataSource @Inject constructor(): CalendarDataSource {
 
         return BaseResponse.Success(data = diaryData)
     }
+
+    override suspend fun checkWrittenOnToday(): BaseResponse<Boolean> {
+        return BaseResponse.Success(data = false)
+    }
 }

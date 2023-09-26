@@ -57,8 +57,4 @@ class DiaryRepositoryImpl @Inject constructor(
     override suspend fun deleteDiary(diaryId: String): BaseResponse<Nothing> {
         return BaseResponse.EmptySuccess
     }
-
-    override suspend fun checkWrittenOn(year: Int, month: Int, day: Int): BaseResponse<Boolean> {
-        return BaseResponse.Success(data = false)
-    }
 }
