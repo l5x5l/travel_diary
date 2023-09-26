@@ -70,4 +70,8 @@ class RemoteDiaryRepository @Inject constructor(
         return voidResponseToBaseResponse(response)
     }
 
+    override suspend fun checkWrittenOn(year: Int, month: Int, day: Int): BaseResponse<Boolean> {
+        TODO("Not yet implemented")
+    }
+
 }
