@@ -66,10 +66,11 @@ fun DiaryDetailContainer(
     LaunchedEffect(deleteSuccess) {
         if (deleteSuccess)
             goBackWithDeleteSuccess()
-
     }
 
-    BackHandler(enabled = !state.showDeleteDialog) {}
+    BackHandler(enabled = !state.showDeleteDialog) {
+        goBack()
+    }
 
     DiaryDetailScreen(
         id = id,
