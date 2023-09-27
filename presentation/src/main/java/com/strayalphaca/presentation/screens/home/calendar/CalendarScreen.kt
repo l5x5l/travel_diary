@@ -10,11 +10,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
@@ -27,7 +29,7 @@ import com.strayalphaca.presentation.components.template.dialog.MonthPickerDialo
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
 import com.strayalphaca.presentation.screens.diary.model.DiaryDate
-import com.strayalphaca.presentation.utils.observeWithLifecycle
+import com.strayalphaca.presentation.utils.collectLatestInScope
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -41,15 +43,19 @@ fun CalendarScreen(
     var datePickerDialogShow by remember { mutableStateOf(false) }
     val pagerState = rememberPagerState(Int.MAX_VALUE / 2)
     val context = LocalContext.current
+    val composeScope = rememberCoroutineScope()
 
-    viewModel.toastMessage.observeWithLifecycle { toastMessage ->
-        Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+    LaunchedEffect(Unit) {
+        viewModel.goDiaryWriteNavigationEvent.collectLatestInScope(composeScope) { goDiaryWriteNavigationEvent ->
+            if (goDiaryWriteNavigationEvent)
+                goToDiaryWrite(null, DiaryDate.getInstanceFromCalendar().toString())
+        }
+
+        viewModel.toastMessage.collectLatestInScope(composeScope) { toastMessage ->
+            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 
-    viewModel.goDiaryWriteNavigationEvent.observeWithLifecycle {goDiaryWriteNavigationEvent ->
-        if (goDiaryWriteNavigationEvent)
-            goToDiaryWrite(null, DiaryDate.getInstanceFromCalendar().toString())
-    }
 
     if (datePickerDialogShow) {
         MonthPickerDialog(
