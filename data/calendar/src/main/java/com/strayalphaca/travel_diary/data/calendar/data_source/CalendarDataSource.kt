@@ -1,4 +1,4 @@
-package com.strayalphaca.data.calendar.date_source
+package com.strayalphaca.travel_diary.data.calendar.data_source
 
 import com.strayalphaca.data.all.model.DiaryDto
 import com.strayalphaca.domain.model.BaseResponse

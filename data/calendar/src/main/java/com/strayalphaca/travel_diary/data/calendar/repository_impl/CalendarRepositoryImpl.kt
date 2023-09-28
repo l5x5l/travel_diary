@@ -1,7 +1,7 @@
-package com.strayalphaca.data.calendar.repository_impl
+package com.strayalphaca.travel_diary.data.calendar.repository_impl
 
-import com.strayalphaca.data.calendar.date_source.CalendarDataSource
-import com.strayalphaca.data.calendar.utils.diaryDtoListToDiaryInCalendarList
+import com.strayalphaca.travel_diary.data.calendar.utils.diaryDtoListToDiaryInCalendarList
+import com.strayalphaca.travel_diary.data.calendar.data_source.CalendarDataSource
 import com.strayalphaca.data.all.utils.mapBaseResponse
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository

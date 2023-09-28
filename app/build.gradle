@@ -50,6 +50,7 @@ dependencies {
     implementation project(":domain:diary")
     implementation project(":domain:calendar")
     implementation project(":data")
+    implementation project(":data:calendar")
     implementation project(":data:alarm")
     implementation project(":data:map")
     implementation project(":data:file")
