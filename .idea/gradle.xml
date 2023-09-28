@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/data/map" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/alarm" />
+            <option value="$PROJECT_DIR$/domain/calendar" />
             <option value="$PROJECT_DIR$/domain/diary" />
             <option value="$PROJECT_DIR$/domain/file" />
             <option value="$PROJECT_DIR$/domain/map" />
