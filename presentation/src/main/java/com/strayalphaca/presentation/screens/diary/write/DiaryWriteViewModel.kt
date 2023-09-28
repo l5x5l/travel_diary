@@ -1,6 +1,7 @@
 package com.strayalphaca.presentation.screens.diary.write
 
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
@@ -13,6 +14,7 @@ import com.strayalphaca.travel_diary.diary.use_case.UseCaseModifyDiary
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseUploadDiary
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
+import com.strayalphaca.presentation.screens.diary.model.DiaryDate
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import com.strayalphaca.presentation.utils.UriHandler
 import com.strayalphaca.travel_diary.domain.file.usecase.UseCaseUploadFiles
@@ -29,6 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryWriteViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val useCaseGetDiaryDetail: UseCaseGetDiaryDetail,
     private val useCaseUploadFiles: UseCaseUploadFiles,
     private val useCaseUploadDiary: UseCaseUploadDiary,
@@ -58,6 +61,12 @@ class DiaryWriteViewModel @Inject constructor(
         musicPlayer.setCompleteCallback {
             viewModelScope.launch {
                 events.send(DiaryWriteEvent.PauseMusic)
+            }
+        }
+
+        savedStateHandle.get<String>("diary_date")?.let { dateString ->
+            viewModelScope.launch {
+                events.send(DiaryWriteEvent.SetDiaryDate(DiaryDate.getInstanceFromDateString(dateString)))
             }
         }
     }
@@ -326,6 +335,11 @@ class DiaryWriteViewModel @Inject constructor(
                 val province = Province.findProvince(city.provinceId)
                 state.copy(cityName = "${province.name} ${city.name}", cityId = city.id)
             }
+            is DiaryWriteEvent.SetDiaryDate -> {
+                state.copy(
+                    diaryDate = events.diaryDate
+                )
+            }
         }
     }
 
@@ -350,6 +364,7 @@ sealed class DiaryWriteEvent {
     object PauseMusic : DiaryWriteEvent()
     class SetShowLocationPickerDialog(val show : Boolean) : DiaryWriteEvent()
     class SelectLocationById(val cityId : Int) : DiaryWriteEvent()
+    class SetDiaryDate(val diaryDate: DiaryDate) : DiaryWriteEvent()
 }
 
 data class DiaryWriteState(
@@ -364,5 +379,6 @@ data class DiaryWriteState(
     val showInitLoading : Boolean = false,
     val showLocationPickerDialog : Boolean = false,
     val cityName : String ?= null,
-    val cityId : Int ?= null
+    val cityId : Int ?= null,
+    val diaryDate: DiaryDate = DiaryDate.getInstanceFromCalendar()
 )

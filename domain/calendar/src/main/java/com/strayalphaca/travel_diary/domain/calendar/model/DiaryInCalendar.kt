@@ -1,4 +1,4 @@
-package com.strayalphaca.domain.calendar.model
+package com.strayalphaca.travel_diary.domain.calendar.model
 
 data class DiaryInCalendar(
     val id : String,

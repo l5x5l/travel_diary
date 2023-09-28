@@ -12,13 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.strayalphaca.domain.calendar.model.DiaryInCalendar
+import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.presentation.ui.theme.Gray4
 import com.strayalphaca.presentation.ui.theme.Tape
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
 @Composable
-fun CalendarItemView( modifier: Modifier = Modifier, item: DiaryInCalendar, day : Int, isToday : Boolean = false) {
+fun CalendarItemView(modifier: Modifier = Modifier, item: DiaryInCalendar, day : Int, isToday : Boolean = false) {
     Surface(
         modifier = modifier
             .padding(2.dp)

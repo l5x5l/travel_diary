@@ -8,7 +8,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -25,6 +27,17 @@ inline fun <reified T> Flow<T>.observeWithLifecycle(
     LaunchedEffect(key1 = Unit) {
         lifecycleOwner.lifecycleScope.launch {
             flowWithLifecycle(lifecycleOwner.lifecycle, minActiveState).collect(action)
+        }
+    }
+}
+
+inline fun <reified T> Flow<T>.collectLatestInScope(
+    scope : CoroutineScope,
+    noinline action : suspend (T) -> Unit
+) {
+    scope.launch {
+        this@collectLatestInScope.collectLatest {
+            action(it)
         }
     }
 }

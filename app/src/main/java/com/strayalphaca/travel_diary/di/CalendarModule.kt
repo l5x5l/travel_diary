@@ -1,9 +1,9 @@
 package com.strayalphaca.travel_diary.di
 
-import com.strayalphaca.data.calendar.date_source.CalendarDataSource
-import com.strayalphaca.data.calendar.date_source.CalendarTestDataSource
-import com.strayalphaca.data.calendar.repository_impl.CalendarRepositoryImpl
-import com.strayalphaca.domain.calendar.repository.CalendarRepository
+import com.strayalphaca.travel_diary.data.calendar.data_source.CalendarDataSource
+import com.strayalphaca.travel_diary.data.calendar.data_source.CalendarTestDataSource
+import com.strayalphaca.travel_diary.data.calendar.repository_impl.CalendarRepositoryImpl
+import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

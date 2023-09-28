@@ -31,9 +31,13 @@ object DiaryDetail : RootDestinations {
 object DiaryWrite : RootDestinations {
     override val route: String = "diary_write"
     const val diaryId = "diary_id"
-    val routeWithArgs = "${route}/{${diaryId}}"
-    val arguments = listOf(navArgument(diaryId){type = NavType.StringType})
-    val deepLinks = listOf(navDeepLink { uriPattern = "traily://${route}/{$diaryId}" })
+    const val diaryDateString = "diary_date"
+    val routeWithArgs = "${route}/{${diaryId}}&{${diaryDateString}}"
+    val arguments = listOf(
+        navArgument(diaryId){type = NavType.StringType},
+        navArgument(diaryDateString){type = NavType.StringType}
+    )
+    val deepLinks = listOf(navDeepLink { uriPattern = "traily://${route}/{$diaryId}&{$diaryDateString}" })
 }
 
 object Video : RootDestinations {

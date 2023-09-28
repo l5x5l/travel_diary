@@ -30,7 +30,7 @@ private fun NavHostController.navigateToHome(route : String) =
 @Composable
 fun HomeScreen(
     goToDiary : (String) -> Unit = {},
-    goToDiaryWrite : (String?) -> Unit = {},
+    goToDiaryWrite : (String?, String?) -> Unit = { _, _ -> },
     goToSettings : () -> Unit = {},
     goToDiaryList: (Int) -> Unit
 ) {
@@ -81,7 +81,7 @@ fun HomeNavHost(
     navHostController: NavHostController,
     modifier : Modifier = Modifier,
     goToDiary : (String) -> Unit,
-    goToDiaryWrite : (String?) -> Unit,
+    goToDiaryWrite : (String?, String?) -> Unit,
     goToDiaryList : (Int) -> Unit
 ) {
     NavHost(
@@ -94,8 +94,8 @@ fun HomeNavHost(
         ) {
             val calendarViewModel = hiltViewModel<CalendarViewModel>()
             CalendarScreen(
-                onDiaryClick = goToDiary,
-                onEmptyDiaryClick = goToDiaryWrite,
+                goToDiaryDetail = goToDiary,
+                goToDiaryWrite = goToDiaryWrite,
                 viewModel = calendarViewModel
             )
         }

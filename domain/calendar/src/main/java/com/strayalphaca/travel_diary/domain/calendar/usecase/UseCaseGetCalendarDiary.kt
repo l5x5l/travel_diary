@@ -1,8 +1,8 @@
-package com.strayalphaca.domain.calendar.use_case
+package com.strayalphaca.travel_diary.domain.calendar.usecase
 
 import com.strayalphaca.domain.all.getDayAmountOfMonth
-import com.strayalphaca.domain.calendar.model.DiaryInCalendar
-import com.strayalphaca.domain.calendar.repository.CalendarRepository
+import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
+import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository
 import com.strayalphaca.domain.model.BaseResponse
 import javax.inject.Inject
 

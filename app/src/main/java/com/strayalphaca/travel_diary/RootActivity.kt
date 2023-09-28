@@ -56,7 +56,9 @@ fun RootNavHost(
         composable(HomeGraph.route) {
             HomeScreen(
                 goToDiary = { navController.navigateToDiaryDetail(it) },
-                goToDiaryWrite = { navController.navigateToDiaryWrite(it) },
+                goToDiaryWrite = { id, dateString ->
+                    navController.navigateToDiaryWrite(id, dateString)
+                },
                 goToSettings = { navController.navigate(SettingsGraph.route) },
                 goToDiaryList = { navController.navigateToDiaryList(it) }
             )
@@ -94,7 +96,7 @@ fun RootNavHost(
                     navController.navigate("${Video.route}?${uri}")
                 },
                 goToDiaryModify = { id ->
-                    navController.navigateToDiaryWrite(id)
+                    navController.navigateToDiaryWrite(id, null)
                 },
                 needRefresh = refresh
             )
@@ -171,20 +173,11 @@ fun RootNavHost(
     }
 }
 
-//fun NavHostController.navigateSingleTopTo(route : String) =
-//    this.navigate(route){
-//        popUpTo(this@navigateSingleTopTo.graph.findStartDestination().id){
-//            saveState = true
-//        }
-//        launchSingleTop = true
-//        restoreState = true
-//    }
-
 private fun NavHostController.navigateToDiaryDetail(diaryId : String) =
     this.navigate("${DiaryDetail.route}/${diaryId}")
 
-private fun NavHostController.navigateToDiaryWrite(diaryId : String?) {
-    this.navigate("${DiaryWrite.route}/${diaryId}")
+private fun NavHostController.navigateToDiaryWrite(diaryId : String?, dateString : String?) {
+    this.navigate("${DiaryWrite.route}/${diaryId}&${dateString}")
 }
 
 private fun NavHostController.navigateToDiaryList(cityGroupId : Int) {

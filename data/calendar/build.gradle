@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.strayalphaca.data'
+    namespace 'com.strayalphaca.travel_diary.data.calendar'
     compileSdk 33
 
     defaultConfig {
@@ -32,8 +32,8 @@ android {
 
 dependencies {
     implementation project(":domain")
-    implementation project(":domain:map")
     implementation project(":domain:calendar")
+    implementation project(":data")
 
     implementation libs.android.ktx
     implementation libs.android.appcompat
@@ -50,7 +50,4 @@ dependencies {
 
     // https://mvnrepository.com/artifact/javax.inject/javax.inject/1
     implementation libs.javax.inject
-
-    // data store core
-    implementation libs.bundles.datastore
 }
