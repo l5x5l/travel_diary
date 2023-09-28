@@ -2,9 +2,9 @@ package com.strayalphaca.presentation.screens.home.calendar
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.strayalphaca.domain.calendar.model.DiaryInCalendar
-import com.strayalphaca.domain.calendar.use_case.UseCaseCheckWrittenOnToday
-import com.strayalphaca.domain.calendar.use_case.UseCaseGetCalendarDiary
+import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
+import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseCheckWrittenOnToday
+import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseGetCalendarDiary
 import com.strayalphaca.domain.model.BaseResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

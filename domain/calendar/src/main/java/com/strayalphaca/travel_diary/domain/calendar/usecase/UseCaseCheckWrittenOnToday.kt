@@ -1,6 +1,6 @@
-package com.strayalphaca.domain.calendar.use_case
+package com.strayalphaca.travel_diary.domain.calendar.usecase
 
-import com.strayalphaca.domain.calendar.repository.CalendarRepository
+import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository
 import com.strayalphaca.domain.model.BaseResponse
 import javax.inject.Inject
 

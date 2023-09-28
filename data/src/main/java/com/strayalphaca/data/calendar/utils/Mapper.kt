@@ -1,7 +1,7 @@
 package com.strayalphaca.data.calendar.utils
 
 import com.strayalphaca.data.all.model.DiaryDto
-import com.strayalphaca.domain.calendar.model.DiaryInCalendar
+import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 
 fun diaryDtoToDiaryInCalendar(diaryDto: DiaryDto) : DiaryInCalendar {
     val dateString = diaryDto.date

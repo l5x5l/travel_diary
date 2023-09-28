@@ -3,8 +3,8 @@ package com.strayalphaca.data.calendar.repository_impl
 import com.strayalphaca.data.calendar.date_source.CalendarDataSource
 import com.strayalphaca.data.calendar.utils.diaryDtoListToDiaryInCalendarList
 import com.strayalphaca.data.all.utils.mapBaseResponse
-import com.strayalphaca.domain.calendar.model.DiaryInCalendar
-import com.strayalphaca.domain.calendar.repository.CalendarRepository
+import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
+import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository
 import com.strayalphaca.domain.model.BaseResponse
 import javax.inject.Inject
 

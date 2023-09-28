@@ -42,6 +42,7 @@ android {
 dependencies {
     implementation project(":domain")
     implementation project(":domain:alarm")
+    implementation project(":domain:calendar")
     implementation project(":domain:map")
     implementation project(':domain:diary')
     implementation project(":domain:file")
