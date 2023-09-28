@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/data/alarm" />
+            <option value="$PROJECT_DIR$/data/calendar" />
             <option value="$PROJECT_DIR$/data/diary" />
             <option value="$PROJECT_DIR$/data/file" />
             <option value="$PROJECT_DIR$/data/map" />
