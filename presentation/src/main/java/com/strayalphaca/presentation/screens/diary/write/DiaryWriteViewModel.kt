@@ -65,6 +65,7 @@ class DiaryWriteViewModel @Inject constructor(
         }
 
         savedStateHandle.get<String>("diary_date")?.let { dateString ->
+            if (dateString == "null") return@let
             viewModelScope.launch {
                 events.send(DiaryWriteEvent.SetDiaryDate(DiaryDate.getInstanceFromDateString(dateString)))
             }
@@ -141,7 +142,7 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
-    fun releaseMusicPlayer() {
+    private fun releaseMusicPlayer() {
         musicPlayer.release()
     }
 
@@ -266,6 +267,11 @@ class DiaryWriteViewModel @Inject constructor(
         viewModelScope.launch {
             _goBackNavigationEvent.emit(true)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        releaseMusicPlayer()
     }
 
     private fun reduce(state: DiaryWriteState, events: DiaryWriteEvent): DiaryWriteState {

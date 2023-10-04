@@ -85,7 +85,6 @@ fun DiaryWriteContainer(
         loadDiary= viewModel::tryLoadDetail,
         playMusic = viewModel::playMusic,
         pauseMusic = viewModel::pauseMusic,
-        releaseMusicPlayer = viewModel::releaseMusicPlayer,
         changeMusicProgress = viewModel::dragMusicProgressByUser,
         showSelectView = viewModel::showSelectView,
         setWeather = viewModel::setWeather,
@@ -113,7 +112,6 @@ fun DiaryWriteScreen(
     loadDiary: (String) -> Unit = {},
     playMusic: () -> Unit = {},
     pauseMusic: () -> Unit = {},
-    releaseMusicPlayer: () -> Unit = {},
     changeMusicProgress: (Float) -> Unit = {},
     showSelectView: (CurrentShowSelectView) -> Unit = {},
     setWeather: (Weather) -> Unit = {},
@@ -161,7 +159,6 @@ fun DiaryWriteScreen(
 
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
-            releaseMusicPlayer()
         }
     }
 
