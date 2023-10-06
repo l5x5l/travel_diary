@@ -9,13 +9,12 @@ class CalendarTestDataSource @Inject constructor(): CalendarDataSource {
     override suspend fun getDiaryData(year: Int, month: Int): BaseResponse<List<DiaryDto>> {
         val diaryData = listOf(
             DiaryDto(id = "1", date = "2023/03.01",
-                medias = listOf(MediaFileInfoDto(originName = "", shortLink = "",))),
+                medias = listOf(MediaFileInfoDto(originName = "", shortLink = "",))).apply { dateStringFormat = "yyyy/MM.dd" },
             DiaryDto(id = "2", date = "2023/03.13",
-                medias = listOf(MediaFileInfoDto(originName = "", shortLink = "",))),
+                medias = listOf(MediaFileInfoDto(originName = "", shortLink = "",))).apply { dateStringFormat = "yyyy/MM.dd" },
             DiaryDto(id = "3", date = "2023/03.25",
-                medias = listOf(MediaFileInfoDto(originName = "", shortLink = "",)))
+                medias = listOf(MediaFileInfoDto(originName = "", shortLink = "",))).apply { dateStringFormat = "yyyy/MM.dd" }
         )
-
 
         return BaseResponse.Success(data = diaryData)
     }

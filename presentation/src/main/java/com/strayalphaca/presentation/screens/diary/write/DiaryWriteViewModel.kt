@@ -220,7 +220,7 @@ class DiaryWriteViewModel @Inject constructor(
                         medias = mediaFileIdList,
                         voice = voiceFileId,
                         cityId = null,
-                        recordDate = ""
+                        recordDate = state.value.diaryDate
                     )
                 )
             } else {
@@ -233,7 +233,7 @@ class DiaryWriteViewModel @Inject constructor(
                         medias = mediaFileIdList,
                         voice = voiceFileId,
                         cityId = null,
-                        date = ""
+                        date = state.value.diaryDate
                     )
                 )
             }
@@ -289,7 +289,8 @@ class DiaryWriteViewModel @Inject constructor(
                     showLoadingError = false,
                     feeling = events.diaryDetail.feeling,
                     weather = events.diaryDetail.weather,
-                    showInitLoading = false
+                    showInitLoading = false,
+                    diaryDate = events.diaryDetail.date
                 )
             }
             DiaryWriteEvent.DiaryWriteLoading -> {

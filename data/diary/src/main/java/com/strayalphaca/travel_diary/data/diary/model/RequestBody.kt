@@ -16,7 +16,7 @@ data class UploadDiaryRequestBody(
     companion object {
         fun fromDiaryWriteData(diaryWriteData: DiaryWriteData) : UploadDiaryRequestBody {
             return UploadDiaryRequestBody(
-                recordDate = diaryWriteData.recordDate,
+                recordDate = diaryWriteData.recordDate.toString(),
                 content = diaryWriteData.content,
                 feeling = diaryWriteData.feeling.name,
                 weather = diaryWriteData.weather?.name,
@@ -42,7 +42,7 @@ data class ModifyDiaryRequestBody(
     companion object {
         fun fromDiaryModifyData(diaryModifyData: DiaryModifyData) : ModifyDiaryRequestBody {
             return ModifyDiaryRequestBody(
-                recordDate = diaryModifyData.date,
+                recordDate = diaryModifyData.date.toString(),
                 content = diaryModifyData.content,
                 feeling = diaryModifyData.feeling?.name,
                 weather = diaryModifyData.weather?.name,

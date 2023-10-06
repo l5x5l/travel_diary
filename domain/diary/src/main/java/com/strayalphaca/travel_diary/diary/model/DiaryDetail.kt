@@ -2,7 +2,7 @@ package com.strayalphaca.travel_diary.diary.model
 
 data class DiaryDetail(
     val id : String,
-    val date : String,
+    val date : DiaryDate,
     val weather : Weather?,
     val feeling: Feeling,
     val content : String,
@@ -14,7 +14,7 @@ data class DiaryDetail(
 )
 
 data class DiaryWriteData(
-    val recordDate : String,
+    val recordDate : DiaryDate,
     val feeling: Feeling,
     val weather: Weather?,
     val content: String,
@@ -25,7 +25,7 @@ data class DiaryWriteData(
 
 data class DiaryModifyData(
     val id : String,
-    val date : String?,
+    val date : DiaryDate?,
     val feeling: Feeling?,
     val weather : Weather?,
     val content : String?,

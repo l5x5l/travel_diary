@@ -15,7 +15,7 @@ class DiaryTestDataSource @Inject constructor() : DiaryDataSource {
             id = "1", date = "2023/03.01",
             medias = listOf(
                 MediaFileInfoDto(originName = "1", shortLink = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", type = "video")
-            ))
+            )).apply { dateStringFormat = "yyyy/MM.dd" }
 
         return BaseResponse.Success(diary)
     }
