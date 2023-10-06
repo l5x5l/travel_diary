@@ -1,6 +1,7 @@
 package com.strayalphaca.presentation.screens.diary.write
 
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -290,7 +291,9 @@ class DiaryWriteViewModel @Inject constructor(
                     feeling = events.diaryDetail.feeling,
                     weather = events.diaryDetail.weather,
                     showInitLoading = false,
-                    diaryDate = events.diaryDetail.date
+                    diaryDate = events.diaryDetail.date,
+                    voiceFile = events.diaryDetail.voiceFile?.fileLink?.toUri(),
+                    imageFiles = events.diaryDetail.files.map { it.thumbnailLink?.toUri() ?: it.fileLink.toUri() }
                 )
             }
             DiaryWriteEvent.DiaryWriteLoading -> {
