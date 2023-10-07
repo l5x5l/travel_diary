@@ -126,6 +126,15 @@ class DiaryDetailViewModel @Inject constructor(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        releaseMusicPlayer()
+    }
+
+    private fun releaseMusicPlayer() {
+        musicPlayer.release()
+    }
+
     private fun reduce(state : DiaryDetailState, event : DiaryDetailEvent) : DiaryDetailState {
         return when(event) {
             DiaryDetailEvent.DiaryLoading -> {
