@@ -1,6 +1,7 @@
 package com.strayalphaca.presentation.screens.diary.write
 
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,8 +15,9 @@ import com.strayalphaca.travel_diary.diary.use_case.UseCaseModifyDiary
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseUploadDiary
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
-import com.strayalphaca.presentation.screens.diary.model.DiaryDate
+import com.strayalphaca.travel_diary.diary.model.DiaryDate
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
+import com.strayalphaca.presentation.screens.diary.util.getInstanceFromDateString
 import com.strayalphaca.presentation.utils.UriHandler
 import com.strayalphaca.travel_diary.domain.file.usecase.UseCaseUploadFiles
 import com.strayalphaca.travel_diary.map.model.City
@@ -65,6 +67,7 @@ class DiaryWriteViewModel @Inject constructor(
         }
 
         savedStateHandle.get<String>("diary_date")?.let { dateString ->
+            if (dateString == "null") return@let
             viewModelScope.launch {
                 events.send(DiaryWriteEvent.SetDiaryDate(DiaryDate.getInstanceFromDateString(dateString)))
             }
@@ -112,6 +115,12 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
+    fun deleteImageFile(file : Uri) {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.DeleteImage(file))
+        }
+    }
+
     fun setFeeling(feeling: Feeling) {
         viewModelScope.launch {
             events.send(DiaryWriteEvent.SetFeeling(feeling = feeling))
@@ -141,7 +150,7 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
-    fun releaseMusicPlayer() {
+    private fun releaseMusicPlayer() {
         musicPlayer.release()
     }
 
@@ -162,7 +171,6 @@ class DiaryWriteViewModel @Inject constructor(
     private fun startMusicPlayerJob() {
         musicPlayerJob = viewModelScope.launch {
             while (true) {
-
                 if (state.value.musicPlaying) {
                     _musicProgress.value = musicPlayer.getProgress()
                 }
@@ -185,9 +193,7 @@ class DiaryWriteViewModel @Inject constructor(
             val mediaFileList = state.value.imageFiles.map { uriHandler.uriToFile(it) }
 
             val voiceFileUploadJob = voiceFile?.let {
-                async {
-                    useCaseUploadFiles(listOf(it))
-                }
+                async { useCaseUploadFiles(listOf(it)) }
             }
             val mediaFileListUploadJob = async {
                 useCaseUploadFiles(mediaFileList)
@@ -196,18 +202,16 @@ class DiaryWriteViewModel @Inject constructor(
             val voiceFileLink = voiceFileUploadJob?.await()
             val mediaFileLinkList = mediaFileListUploadJob.await()
 
-            if (
-                !((voiceFileLink == null || voiceFileLink is BaseResponse.Success) && mediaFileLinkList is BaseResponse.Success)
-            ) {
+            val uploadFilesSuccess = ((voiceFileLink == null || voiceFileLink is BaseResponse.Success) && mediaFileLinkList is BaseResponse.Success)
+            if (!uploadFilesSuccess) {
                 events.send(DiaryWriteEvent.DiaryWriteFail)
                 return@launch
             }
+            mediaFileLinkList as BaseResponse.Success
+            voiceFileLink as BaseResponse.Success?
 
             val mediaFileIdList = mediaFileLinkList.data
-            val voiceFileId = voiceFileLink?.let { response ->
-                (response as BaseResponse.Success)
-                if (response.data.isNotEmpty()) response.data[0] else null
-            }
+            val voiceFileId = voiceFileLink?.data?.getOrNull(0)
 
             val response = if (diaryId == null) {
                 useCaseUploadDiary(
@@ -217,8 +221,8 @@ class DiaryWriteViewModel @Inject constructor(
                         content = writingContent.value,
                         medias = mediaFileIdList,
                         voice = voiceFileId,
-                        cityId = null,
-                        recordDate = ""
+                        cityId = state.value.cityId,
+                        recordDate = state.value.diaryDate
                     )
                 )
             } else {
@@ -230,13 +234,13 @@ class DiaryWriteViewModel @Inject constructor(
                         content = writingContent.value,
                         medias = mediaFileIdList,
                         voice = voiceFileId,
-                        cityId = null,
-                        date = ""
+                        cityId = state.value.cityId,
+                        date = state.value.diaryDate
                     )
                 )
             }
 
-            if (response is BaseResponse.EmptySuccess) {
+            if (response is BaseResponse.Success) {
                 events.send(DiaryWriteEvent.DiaryWriteSuccess)
             } else {
                 events.send(DiaryWriteEvent.DiaryWriteFail)
@@ -268,6 +272,11 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        releaseMusicPlayer()
+    }
+
     private fun reduce(state: DiaryWriteState, events: DiaryWriteEvent): DiaryWriteState {
         return when (events) {
             DiaryWriteEvent.DiaryLoading -> {
@@ -282,7 +291,10 @@ class DiaryWriteViewModel @Inject constructor(
                     showLoadingError = false,
                     feeling = events.diaryDetail.feeling,
                     weather = events.diaryDetail.weather,
-                    showInitLoading = false
+                    showInitLoading = false,
+                    diaryDate = events.diaryDetail.date,
+                    voiceFile = events.diaryDetail.voiceFile?.fileLink?.toUri(),
+                    imageFiles = events.diaryDetail.files.map { it.thumbnailLink?.toUri() ?: it.fileLink.toUri() }
                 )
             }
             DiaryWriteEvent.DiaryWriteLoading -> {
@@ -303,6 +315,10 @@ class DiaryWriteViewModel @Inject constructor(
             }
             is DiaryWriteEvent.ChangeImageList -> {
                 state.copy(imageFiles = events.file)
+            }
+            is DiaryWriteEvent.DeleteImage -> {
+                val imageFiles = state.imageFiles.filter { it != events.file }
+                state.copy(imageFiles = imageFiles)
             }
             is DiaryWriteEvent.SetFeeling -> {
                 state.copy(feeling = events.feeling, currentShowSelectView = null)
@@ -355,6 +371,7 @@ sealed class DiaryWriteEvent {
     class AddVoiceFile(val file : Uri) : DiaryWriteEvent()
     object RemoveVoiceFile : DiaryWriteEvent()
     class ChangeImageList(val file : List<Uri>) : DiaryWriteEvent()
+    class DeleteImage(val file : Uri) : DiaryWriteEvent()
     class SetFeeling(val feeling: Feeling) : DiaryWriteEvent()
     class SetWeather(val weather: Weather) : DiaryWriteEvent()
     object ShowSelectFeelingView : DiaryWriteEvent()

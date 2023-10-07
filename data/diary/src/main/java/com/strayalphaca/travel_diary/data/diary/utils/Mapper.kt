@@ -4,6 +4,7 @@ import com.strayalphaca.data.all.model.DiaryDto
 import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.MediaFileInfoDto
 import com.strayalphaca.data.all.model.VoiceFileInDiaryDto
+import com.strayalphaca.travel_diary.diary.model.DiaryDate
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryItem
 import com.strayalphaca.travel_diary.diary.model.Feeling
@@ -16,7 +17,7 @@ fun diaryDtoToDiaryDetail(diaryDto: DiaryDto) : DiaryDetail {
     val dateString = diaryDto.date
     return DiaryDetail(
         id = diaryDto.id,
-        date = dateString,
+        date = DiaryDate.getInstanceFromDateStringBySimpleDateFormat(dateString, diaryDto.dateStringFormat ?: "yyyy-MM-dd"),
         weather = weatherStringToEnum(diaryDto.weather),
         feeling = feelingStringToEnum(diaryDto.feeling),
         content = diaryDto.content,

@@ -21,7 +21,9 @@ data class DiaryDto(
     val createdAt : String = "",
     val cityId : Int ?= null,
     val place : String ?= null
-)
+) {
+    var dateStringFormat : String ?= null
+}
 
 data class VoiceFileInDiaryDto(
     val originName : String,

@@ -43,6 +43,7 @@ import com.strayalphaca.travel_diary.diary.model.File
 import com.strayalphaca.travel_diary.diary.model.FileType
 import com.strayalphaca.presentation.components.template.dialog.TwoButtonDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
+import com.strayalphaca.travel_diary.diary.model.DiaryDate
 
 @Composable
 fun DiaryDetailContainer(
@@ -188,7 +189,7 @@ fun DiaryDetailScreen(
                     .padding(16.dp)
                     .verticalScroll(scrollState)
                 ) {
-                    Text(text = state.diaryDetail.date)
+                    Text(text = state.diaryDetail.date.toString())
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -310,7 +311,7 @@ fun DiaryDetailScreenPreview() {
             state = DiaryDetailState(
                 diaryDetail = DiaryDetail(
                     id = "1",
-                    date = "2023/03/03",
+                    date = DiaryDate.getInstanceFromCalendar(),
                     weather = null,
                     feeling = Feeling.HAPPY,
                     content = "리펙토링 중, 뭐가 바뀌기만 하면 preview가 안된다. 미치겄네,",
