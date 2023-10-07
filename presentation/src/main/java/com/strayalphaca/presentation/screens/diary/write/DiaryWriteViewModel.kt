@@ -185,7 +185,6 @@ class DiaryWriteViewModel @Inject constructor(
         _musicProgress.value = progress
     }
 
-    // todo 리펙토링
     fun uploadDiary() {
         viewModelScope.launch {
             events.send(DiaryWriteEvent.DiaryWriteLoading)
@@ -194,9 +193,7 @@ class DiaryWriteViewModel @Inject constructor(
             val mediaFileList = state.value.imageFiles.map { uriHandler.uriToFile(it) }
 
             val voiceFileUploadJob = voiceFile?.let {
-                async {
-                    useCaseUploadFiles(listOf(it))
-                }
+                async { useCaseUploadFiles(listOf(it)) }
             }
             val mediaFileListUploadJob = async {
                 useCaseUploadFiles(mediaFileList)
@@ -205,18 +202,16 @@ class DiaryWriteViewModel @Inject constructor(
             val voiceFileLink = voiceFileUploadJob?.await()
             val mediaFileLinkList = mediaFileListUploadJob.await()
 
-            if (
-                !((voiceFileLink == null || voiceFileLink is BaseResponse.Success) && mediaFileLinkList is BaseResponse.Success)
-            ) {
+            val uploadFilesSuccess = ((voiceFileLink == null || voiceFileLink is BaseResponse.Success) && mediaFileLinkList is BaseResponse.Success)
+            if (!uploadFilesSuccess) {
                 events.send(DiaryWriteEvent.DiaryWriteFail)
                 return@launch
             }
+            mediaFileLinkList as BaseResponse.Success
+            voiceFileLink as BaseResponse.Success?
 
             val mediaFileIdList = mediaFileLinkList.data
-            val voiceFileId = voiceFileLink?.let { response ->
-                (response as BaseResponse.Success)
-                if (response.data.isNotEmpty()) response.data[0] else null
-            }
+            val voiceFileId = voiceFileLink?.data?.getOrNull(0)
 
             val response = if (diaryId == null) {
                 useCaseUploadDiary(
@@ -226,7 +221,7 @@ class DiaryWriteViewModel @Inject constructor(
                         content = writingContent.value,
                         medias = mediaFileIdList,
                         voice = voiceFileId,
-                        cityId = null,
+                        cityId = state.value.cityId,
                         recordDate = state.value.diaryDate
                     )
                 )
@@ -239,7 +234,7 @@ class DiaryWriteViewModel @Inject constructor(
                         content = writingContent.value,
                         medias = mediaFileIdList,
                         voice = voiceFileId,
-                        cityId = null,
+                        cityId = state.value.cityId,
                         date = state.value.diaryDate
                     )
                 )
