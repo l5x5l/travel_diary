@@ -80,6 +80,7 @@ fun DiaryWriteContainer(
         state= state,
         musicProgress= musicProgress,
         changeImageFile= viewModel::inputImageFile,
+        deleteImageFile = viewModel::deleteImageFile,
         changeVoiceFile = viewModel::inputVoiceFile,
         removeVoiceFile= viewModel::removeVoiceFile,
         loadDiary= viewModel::tryLoadDetail,
@@ -107,6 +108,7 @@ fun DiaryWriteScreen(
     state: DiaryWriteState = DiaryWriteState(),
     musicProgress: Float = 0f,
     changeImageFile: (List<Uri>) -> Unit = {},
+    deleteImageFile : (Uri) -> Unit = {},
     changeVoiceFile: (Uri, Boolean) -> Unit = { _, _ -> },
     removeVoiceFile: () -> Unit = {},
     loadDiary: (String) -> Unit = {},
@@ -310,7 +312,7 @@ fun DiaryWriteScreen(
                     if (state.imageFiles.isNotEmpty()) {
                         HorizontalPager(pageCount = state.imageFiles.size) {
                             val isVideo = checkUriIsVideo(state.imageFiles[it], context)
-                            PolaroidView(fileUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo)
+                            PolaroidView(fileUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo, onDeleteClick = deleteImageFile)
                         }
                         Spacer(modifier = Modifier.height(24.dp))
                     }

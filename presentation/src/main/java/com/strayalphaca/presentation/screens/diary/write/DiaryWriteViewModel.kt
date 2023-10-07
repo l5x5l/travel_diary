@@ -115,6 +115,12 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
+    fun deleteImageFile(file : Uri) {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.DeleteImage(file))
+        }
+    }
+
     fun setFeeling(feeling: Feeling) {
         viewModelScope.launch {
             events.send(DiaryWriteEvent.SetFeeling(feeling = feeling))
@@ -165,7 +171,6 @@ class DiaryWriteViewModel @Inject constructor(
     private fun startMusicPlayerJob() {
         musicPlayerJob = viewModelScope.launch {
             while (true) {
-
                 if (state.value.musicPlaying) {
                     _musicProgress.value = musicPlayer.getProgress()
                 }
@@ -180,6 +185,7 @@ class DiaryWriteViewModel @Inject constructor(
         _musicProgress.value = progress
     }
 
+    // todo 리펙토링
     fun uploadDiary() {
         viewModelScope.launch {
             events.send(DiaryWriteEvent.DiaryWriteLoading)
@@ -239,7 +245,7 @@ class DiaryWriteViewModel @Inject constructor(
                 )
             }
 
-            if (response is BaseResponse.EmptySuccess) {
+            if (response is BaseResponse.Success) {
                 events.send(DiaryWriteEvent.DiaryWriteSuccess)
             } else {
                 events.send(DiaryWriteEvent.DiaryWriteFail)
@@ -315,6 +321,10 @@ class DiaryWriteViewModel @Inject constructor(
             is DiaryWriteEvent.ChangeImageList -> {
                 state.copy(imageFiles = events.file)
             }
+            is DiaryWriteEvent.DeleteImage -> {
+                val imageFiles = state.imageFiles.filter { it != events.file }
+                state.copy(imageFiles = imageFiles)
+            }
             is DiaryWriteEvent.SetFeeling -> {
                 state.copy(feeling = events.feeling, currentShowSelectView = null)
             }
@@ -366,6 +376,7 @@ sealed class DiaryWriteEvent {
     class AddVoiceFile(val file : Uri) : DiaryWriteEvent()
     object RemoveVoiceFile : DiaryWriteEvent()
     class ChangeImageList(val file : List<Uri>) : DiaryWriteEvent()
+    class DeleteImage(val file : Uri) : DiaryWriteEvent()
     class SetFeeling(val feeling: Feeling) : DiaryWriteEvent()
     class SetWeather(val weather: Weather) : DiaryWriteEvent()
     object ShowSelectFeelingView : DiaryWriteEvent()
