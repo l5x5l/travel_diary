@@ -14,9 +14,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
-import com.strayalphaca.presentation.utils.compareDate
-import com.strayalphaca.presentation.utils.firstDaysOfNextMonth
-import com.strayalphaca.presentation.utils.lastDaysOfPrevMonth
+import com.strayalphaca.travel_diary.domain.calendar.utils.compareDate
+import com.strayalphaca.travel_diary.domain.calendar.utils.firstDaysOfNextMonth
+import com.strayalphaca.travel_diary.domain.calendar.utils.lastDaysOfPrevMonth
 
 @Composable
 fun <T> CalendarView(
