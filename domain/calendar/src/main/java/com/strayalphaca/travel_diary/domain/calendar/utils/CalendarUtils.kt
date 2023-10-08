@@ -21,7 +21,7 @@ fun fillEmptyCellToCalendarData(
     year : Int, month : Int, rawData : List<DiaryInCalendar>
 ) : List<DiaryInCalendar?> {
     var count = 0
-    val dataList = (0 until getDayAmountOfMonth(year, month)).toList().map {
+    val dataList = (1 .. getDayAmountOfMonth(year, month)).toList().map {
         return@map if (count < rawData.size && rawData[count].day == it) {
             rawData[count++]
         } else {
