@@ -30,8 +30,9 @@ fun <T> CalendarView(
         columns = GridCells.Fixed(7),
         content = {
             if (showWeekDays) {
-                items(7) {
-                    Text(text = "day", textAlign = TextAlign.Center, style = MaterialTheme.typography.caption)
+                val dateStringList = listOf("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")
+                items(dateStringList.size) { index ->
+                    Text(text = dateStringList[index], textAlign = TextAlign.Center, style = MaterialTheme.typography.caption)
                 }
             }
 
