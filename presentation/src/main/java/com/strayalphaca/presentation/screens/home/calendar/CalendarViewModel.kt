@@ -6,6 +6,8 @@ import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseCheckWrittenOnToday
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseGetCalendarDiary
 import com.strayalphaca.domain.model.BaseResponse
+import com.strayalphaca.presentation.utils.collectLatestInScope
+import com.strayalphaca.travel_diary.domain.calendar.utils.fillEmptyCellToCalendarData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -34,15 +36,19 @@ class CalendarViewModel @Inject constructor(
             year = Calendar.getInstance().get(Calendar.YEAR),
             month = Calendar.getInstance().get(Calendar.MONTH) + 1
         )
+
+        useCaseGetCalendarDiary.monthCalendarFlow().collectLatestInScope(viewModelScope) {
+            val diaryList = fillEmptyCellToCalendarData(it.year, it.month,  it.diaryList)
+            events.send(CalendarViewEvent.SuccessLoadDiaryData(it.year, it.month, diaryList))
+        }
+
     }
 
     fun tryGetDiaryData(year : Int, month : Int) {
         viewModelScope.launch {
             events.send(CalendarViewEvent.LoadDiaryData)
             val response = useCaseGetCalendarDiary(year = year, month = month)
-            if (response is BaseResponse.Success) {
-                events.send(CalendarViewEvent.SuccessLoadDiaryData(year = year, month = month, diaryData = response.data))
-            } else {
+            if (response is BaseResponse.Failure) {
                 events.send(CalendarViewEvent.FailureLoadDiaryData)
             }
         }
