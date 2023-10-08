@@ -15,7 +15,7 @@ import com.strayalphaca.travel_diary.diary.use_case.UseCaseModifyDiary
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseUploadDiary
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
-import com.strayalphaca.travel_diary.diary.model.DiaryDate
+import com.strayalphaca.domain.all.DiaryDate
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import com.strayalphaca.presentation.screens.diary.util.getInstanceFromDateString
 import com.strayalphaca.presentation.utils.UriHandler

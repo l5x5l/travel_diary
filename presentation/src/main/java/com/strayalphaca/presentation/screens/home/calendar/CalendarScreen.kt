@@ -28,7 +28,7 @@ import com.strayalphaca.presentation.components.template.calendar_view.CalendarV
 import com.strayalphaca.presentation.components.template.dialog.MonthPickerDialog
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
-import com.strayalphaca.travel_diary.diary.model.DiaryDate
+import com.strayalphaca.domain.all.DiaryDate
 import com.strayalphaca.presentation.utils.collectLatestInScope
 
 @OptIn(ExperimentalFoundationApi::class)

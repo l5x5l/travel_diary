@@ -43,7 +43,7 @@ import com.strayalphaca.travel_diary.diary.model.File
 import com.strayalphaca.travel_diary.diary.model.FileType
 import com.strayalphaca.presentation.components.template.dialog.TwoButtonDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
-import com.strayalphaca.travel_diary.diary.model.DiaryDate
+import com.strayalphaca.domain.all.DiaryDate
 
 @Composable
 fun DiaryDetailContainer(

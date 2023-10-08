@@ -1,4 +1,4 @@
-package com.strayalphaca.travel_diary.diary.model
+package com.strayalphaca.domain.all
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
