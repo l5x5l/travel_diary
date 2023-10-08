@@ -1,9 +1,9 @@
 package com.strayalphaca.travel_diary.domain.calendar.usecase
 
-import com.strayalphaca.domain.all.getDayAmountOfMonth
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository
 import com.strayalphaca.domain.model.BaseResponse
+import com.strayalphaca.travel_diary.domain.calendar.utils.fillEmptyCellToCalendarData
 import javax.inject.Inject
 
 class UseCaseGetCalendarDiary @Inject constructor(
@@ -16,14 +16,7 @@ class UseCaseGetCalendarDiary @Inject constructor(
         val rawData = response.data
         if (rawData.isEmpty()) return response.copy(data = listOf())
 
-        var count = 0
-        val dataList = (0 until getDayAmountOfMonth(year, month)).toList().map {
-            return@map if (count < rawData.size && rawData[count].day == it) {
-                rawData[count++]
-            } else {
-                null
-            }
-        }
+        val dataList = fillEmptyCellToCalendarData(year, month, rawData)
 
         return BaseResponse.Success(dataList)
     }
