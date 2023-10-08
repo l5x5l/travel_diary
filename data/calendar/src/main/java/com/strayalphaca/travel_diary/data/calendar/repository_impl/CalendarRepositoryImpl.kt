@@ -5,6 +5,7 @@ import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarReposito
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.calendar.data_store.CalendarDataStore
 import com.strayalphaca.travel_diary.data.calendar.utils.diaryDtoToDiaryInCalendar
+import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.model.MonthCalendar
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -33,5 +34,17 @@ class CalendarRepositoryImpl @Inject constructor(
 
     override fun getMonthCalendarFlow(): Flow<MonthCalendar> {
         return calendarDataStore.getCalendarData()
+    }
+
+    override suspend fun updateCachedDiaryInCalendar(diaryInCalendar: DiaryInCalendar) {
+        calendarDataStore.updateCalendarCell(diaryInCalendar)
+    }
+
+    override suspend fun deleteCachedDiaryInCalendar(diaryInCalendar: DiaryInCalendar) {
+        calendarDataStore.deleteCalendarCell(diaryInCalendar)
+    }
+
+    override suspend fun addCachedDiaryInCalendar(diaryInCalendar: DiaryInCalendar) {
+        calendarDataStore.addCalendarCell(diaryInCalendar)
     }
 }

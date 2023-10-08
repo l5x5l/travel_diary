@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface CalendarDataStore {
     suspend fun setCalendarData(year : Int, month : Int, dataList : List<DiaryInCalendar>)
     fun getCalendarData() : Flow<MonthCalendar>
+    suspend fun addCalendarCell(data : DiaryInCalendar)
     suspend fun updateCalendarCell(data : DiaryInCalendar)
     suspend fun deleteCalendarCell(data : DiaryInCalendar)
     suspend fun clearCalendarData()
