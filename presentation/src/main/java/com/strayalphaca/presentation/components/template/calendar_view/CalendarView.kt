@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
-import com.strayalphaca.presentation.utils.checkToday
+import com.strayalphaca.presentation.utils.compareDate
 import com.strayalphaca.presentation.utils.firstDaysOfNextMonth
 import com.strayalphaca.presentation.utils.lastDaysOfPrevMonth
 
@@ -41,9 +41,9 @@ fun <T> CalendarView(
 
             itemsIndexed(calendarData) { index, item ->
                 if (item != null)
-                    contentView(item, index + 1, checkToday(year, month, index + 1))
+                    contentView(item, index + 1, compareDate(year, month, index + 1))
                 else
-                    emptyView(index + 1, checkToday(year, month, index + 1))
+                    emptyView(index + 1, compareDate(year, month, index + 1))
             }
 
             // 다음 달 날짜
