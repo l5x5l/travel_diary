@@ -1,5 +1,7 @@
 package com.strayalphaca.travel_diary.diary.model
 
+import com.strayalphaca.domain.all.DiaryDate
+
 data class DiaryDetail(
     val id : String,
     val date : DiaryDate,
