@@ -207,6 +207,8 @@ fun DiaryWriteScreen(
                         .padding(16.dp)
                         .verticalScroll(scrollState)
                 ) {
+                    Spacer(modifier = Modifier.height(8.dp))
+
                     Text(text = state.diaryDate.toString())
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -223,7 +225,7 @@ fun DiaryWriteScreen(
                         Text(
                             text = state.cityName ?: stringResource(id = R.string.placeholder_location),
                             style = MaterialTheme.typography.body2,
-                            color = Gray2,
+                            color = if (state.cityName != null) MaterialTheme.colors.onSurface else Gray2,
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
                                 .weight(1f)
@@ -235,9 +237,9 @@ fun DiaryWriteScreen(
                             descriptionText = state.feeling.name,
                             onClick = showLocationPickerDialog
                         )
-                    }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
 
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Row(
