@@ -47,7 +47,7 @@ class DiaryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun uploadDiary(diaryWriteData: DiaryWriteData): BaseResponse<String> {
-        return BaseResponse.Success(data = "1")
+        return BaseResponse.Success(data = diaryWriteData.recordDate.toString())
     }
 
     override suspend fun modifyDiary(diaryModifyData: DiaryModifyData): BaseResponse<Nothing> {
