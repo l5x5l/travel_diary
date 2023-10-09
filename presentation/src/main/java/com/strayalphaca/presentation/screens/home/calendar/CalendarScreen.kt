@@ -120,8 +120,8 @@ fun CalendarScreen(
                     year = state.year,
                     month = state.month,
                     calendarData = state.diaryData,
-                    contentView = { data, day, isToday ->
-                        CalendarItemView(item = data, day = day, isToday = isToday,
+                    contentView = { data, _, isToday ->
+                        CalendarItemView(item = data, isToday = isToday,
                             modifier = Modifier.clickable {
                                 if (!state.clickEnable) return@clickable
                                 goToDiaryDetail(data.id)
