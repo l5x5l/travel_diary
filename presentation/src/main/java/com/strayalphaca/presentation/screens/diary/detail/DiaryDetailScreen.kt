@@ -189,6 +189,8 @@ fun DiaryDetailScreen(
                     .padding(16.dp)
                     .verticalScroll(scrollState)
                 ) {
+                    Spacer(modifier = Modifier.height(8.dp))
+
                     Text(text = state.diaryDetail.date.toString())
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -206,17 +208,16 @@ fun DiaryDetailScreen(
                             Text(
                                 text = state.diaryDetail.cityName ?: stringResource(id = R.string.placeholder_location),
                                 style = MaterialTheme.typography.body2,
-                                color = Gray2,
+                                color = MaterialTheme.colors.onSurface,
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
                                     .weight(1f)
                                     .padding(end = 10.dp)
                             )
                         }
+
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
-
-
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
