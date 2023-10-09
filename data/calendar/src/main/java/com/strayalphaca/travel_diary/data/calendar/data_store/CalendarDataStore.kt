@@ -9,6 +9,6 @@ interface CalendarDataStore {
     fun getCalendarData() : Flow<MonthCalendar>
     suspend fun addCalendarCell(data : DiaryInCalendar)
     suspend fun updateCalendarCell(data : DiaryInCalendar)
-    suspend fun deleteCalendarCell(data : DiaryInCalendar)
+    suspend fun deleteCalendarCell(id : String)
     suspend fun clearCalendarData()
 }

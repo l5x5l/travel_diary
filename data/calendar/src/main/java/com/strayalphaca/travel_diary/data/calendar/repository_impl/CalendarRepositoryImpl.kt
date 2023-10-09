@@ -40,8 +40,8 @@ class CalendarRepositoryImpl @Inject constructor(
         calendarDataStore.updateCalendarCell(diaryInCalendar)
     }
 
-    override suspend fun deleteCachedDiaryInCalendar(diaryInCalendar: DiaryInCalendar) {
-        calendarDataStore.deleteCalendarCell(diaryInCalendar)
+    override suspend fun deleteCachedDiaryInCalendar(id : String) {
+        calendarDataStore.deleteCalendarCell(id)
     }
 
     override suspend fun addCachedDiaryInCalendar(diaryInCalendar: DiaryInCalendar) {

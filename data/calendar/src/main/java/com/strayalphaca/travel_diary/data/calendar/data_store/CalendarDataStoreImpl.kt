@@ -37,8 +37,8 @@ class CalendarDataStoreImpl @Inject constructor() : CalendarDataStore {
         monthCalendarData.value = monthCalendarData.value.copy(diaryList = dataList)
     }
 
-    override suspend fun deleteCalendarCell(data: DiaryInCalendar) {
-        val dataList : List<DiaryInCalendar> = monthCalendarData.value.diaryList.filter { it.id != data.id }
+    override suspend fun deleteCalendarCell(id : String) {
+        val dataList : List<DiaryInCalendar> = monthCalendarData.value.diaryList.filter { it.id != id }
         monthCalendarData.value = monthCalendarData.value.copy(diaryList = dataList)
     }
 

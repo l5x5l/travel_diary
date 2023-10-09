@@ -10,6 +10,6 @@ interface CalendarRepository {
     suspend fun checkWrittenOnToday() : BaseResponse<Boolean>
     fun getMonthCalendarFlow() : Flow<MonthCalendar>
     suspend fun updateCachedDiaryInCalendar(diaryInCalendar: DiaryInCalendar)
-    suspend fun deleteCachedDiaryInCalendar(diaryInCalendar: DiaryInCalendar)
+    suspend fun deleteCachedDiaryInCalendar(id : String)
     suspend fun addCachedDiaryInCalendar(diaryInCalendar: DiaryInCalendar)
 }
