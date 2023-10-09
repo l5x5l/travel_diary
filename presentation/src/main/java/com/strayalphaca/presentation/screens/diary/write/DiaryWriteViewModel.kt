@@ -19,6 +19,8 @@ import com.strayalphaca.domain.all.DiaryDate
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import com.strayalphaca.presentation.screens.diary.util.getInstanceFromDateString
 import com.strayalphaca.presentation.utils.UriHandler
+import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
+import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseHandleCachedCalendarDiary
 import com.strayalphaca.travel_diary.domain.file.usecase.UseCaseUploadFiles
 import com.strayalphaca.travel_diary.map.model.City
 import com.strayalphaca.travel_diary.map.model.Province
@@ -34,6 +36,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryWriteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val useCaseHandleCachedCalendarDiary: UseCaseHandleCachedCalendarDiary,
     private val useCaseGetDiaryDetail: UseCaseGetDiaryDetail,
     private val useCaseUploadFiles: UseCaseUploadFiles,
     private val useCaseUploadDiary: UseCaseUploadDiary,
@@ -241,7 +244,7 @@ class DiaryWriteViewModel @Inject constructor(
             }
 
             if (response is BaseResponse.Success) {
-                events.send(DiaryWriteEvent.DiaryWriteSuccess)
+                events.send(DiaryWriteEvent.DiaryWriteSuccess(response.data))
             } else {
                 events.send(DiaryWriteEvent.DiaryWriteFail)
             }
@@ -269,6 +272,22 @@ class DiaryWriteViewModel @Inject constructor(
     private fun callGoBackNavigationEvent() {
         viewModelScope.launch {
             _goBackNavigationEvent.emit(true)
+        }
+    }
+
+    private fun saveWriteDiaryToCachedDataStore(id : String) {
+        viewModelScope.launch {
+            val isModify = diaryId != null
+            val diaryInCalendar = DiaryInCalendar(
+                id = id,
+                date = state.value.diaryDate,
+                thumbnailUrl = state.value.imageFiles.getOrNull(0)?.toString()
+            )
+            if (isModify) {
+                useCaseHandleCachedCalendarDiary.update(diaryInCalendar)
+            } else {
+                useCaseHandleCachedCalendarDiary.add(diaryInCalendar)
+            }
         }
     }
 
@@ -303,8 +322,9 @@ class DiaryWriteViewModel @Inject constructor(
             DiaryWriteEvent.DiaryWriteFail -> {
                 state.copy(buttonActive = true)
             }
-            DiaryWriteEvent.DiaryWriteSuccess -> {
+            is DiaryWriteEvent.DiaryWriteSuccess -> {
                 callGoBackNavigationEvent()
+                saveWriteDiaryToCachedDataStore(events.id)
                 state.copy(buttonActive = true)
             }
             is DiaryWriteEvent.AddVoiceFile -> {
@@ -367,7 +387,7 @@ sealed class DiaryWriteEvent {
     class DiaryLoadingSuccess(val diaryDetail: DiaryDetail) : DiaryWriteEvent()
     object DiaryWriteLoading : DiaryWriteEvent()
     object DiaryWriteFail : DiaryWriteEvent()
-    object DiaryWriteSuccess : DiaryWriteEvent()
+    class DiaryWriteSuccess(val id : String) : DiaryWriteEvent()
     class AddVoiceFile(val file : Uri) : DiaryWriteEvent()
     object RemoveVoiceFile : DiaryWriteEvent()
     class ChangeImageList(val file : List<Uri>) : DiaryWriteEvent()
