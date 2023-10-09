@@ -10,15 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.presentation.ui.theme.Gray4
 import com.strayalphaca.presentation.ui.theme.Tape
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
 @Composable
-fun CalendarItemView(modifier: Modifier = Modifier, item: DiaryInCalendar, day : Int, isToday : Boolean = false) {
+fun CalendarItemView(modifier: Modifier = Modifier, item: DiaryInCalendar, isToday : Boolean = false) {
     Surface(
         modifier = modifier
             .padding(2.dp)
@@ -35,7 +37,13 @@ fun CalendarItemView(modifier: Modifier = Modifier, item: DiaryInCalendar, day :
                     .fillMaxWidth()
                     .aspectRatio(0.8f)
                     .background(Tape)
-            )
+            ) {
+                AsyncImage(
+                    model = item.thumbnailUrl,
+                    contentDescription = "thumbnail_image",
+                    contentScale = ContentScale.Crop
+                )
+            }
 
             Spacer(modifier = Modifier.height(10.dp))
         }
@@ -44,8 +52,6 @@ fun CalendarItemView(modifier: Modifier = Modifier, item: DiaryInCalendar, day :
 
 @Composable
 fun CalendarItemEmptyView(modifier: Modifier = Modifier, day : Int, isToday : Boolean = false, isCurrentMonth : Boolean = true) {
-
-
     Box(
         modifier = modifier
             .padding(horizontal = 4.dp, vertical = 9.dp)

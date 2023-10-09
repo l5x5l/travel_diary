@@ -1,19 +1,37 @@
-package com.strayalphaca.presentation.utils
+package com.strayalphaca.travel_diary.domain.calendar.utils
 
-import com.strayalphaca.domain.all.getDayAmountOfMonth
-import java.util.*
+import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
+import java.util.Calendar
 
 /**
- * 인자로 전달된 날자가 오늘인지 여부를 리턴합니다.
+ * 각 월마다 일의 총 개수를 리턴합니다.
  */
-fun checkToday(year : Int, month : Int, day : Int) : Boolean {
-    val calendar = Calendar.getInstance()
-    val currentYear = calendar.get(Calendar.YEAR)
-    val currentMonth = calendar.get(Calendar.MONTH) + 1
-    val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
-
-    return (year == currentYear && month == currentMonth && day == currentDay)
+fun getDayAmountOfMonth(year : Int, month : Int) : Int {
+    return when (month) {
+        2 -> {
+            if (year % 4 != 0 || (year % 100 == 0 && year % 400 != 0)) { 28 }
+            else { 29 }
+        }
+        in listOf(1,3,5,7,8,10,12) -> { 31 }
+        else -> { 30 }
+    }
 }
+
+fun fillEmptyCellToCalendarData(
+    year : Int, month : Int, rawData : List<DiaryInCalendar>
+) : List<DiaryInCalendar?> {
+    var count = 0
+    val dataList = (1 .. getDayAmountOfMonth(year, month)).toList().map {
+        return@map if (count < rawData.size && rawData[count].day == it) {
+            rawData[count++]
+        } else {
+            null
+        }
+    }
+    return dataList
+}
+
+
 
 /**
  * 달력 상에서 이전달에 해당하는 요일의 리스트를 리턴합니다.

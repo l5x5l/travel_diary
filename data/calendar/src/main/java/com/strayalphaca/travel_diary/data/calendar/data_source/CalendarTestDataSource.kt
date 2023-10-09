@@ -8,11 +8,11 @@ import javax.inject.Inject
 class CalendarTestDataSource @Inject constructor(): CalendarDataSource {
     override suspend fun getDiaryData(year: Int, month: Int): BaseResponse<List<DiaryDto>> {
         val diaryData = listOf(
-            DiaryDto(id = "1", date = "2023/03.01",
+            DiaryDto(id = "${year}_${month}_1", date = "${year}/${month}.01",
                 medias = listOf(MediaFileInfoDto(originName = "", shortLink = "",))).apply { dateStringFormat = "yyyy/MM.dd" },
-            DiaryDto(id = "2", date = "2023/03.13",
+            DiaryDto(id = "${year}_${month}_2", date = "${year}/${month}.13",
                 medias = listOf(MediaFileInfoDto(originName = "", shortLink = "",))).apply { dateStringFormat = "yyyy/MM.dd" },
-            DiaryDto(id = "3", date = "2023/03.25",
+            DiaryDto(id = "${year}_${month}_3", date = "${year}/${month}.25",
                 medias = listOf(MediaFileInfoDto(originName = "", shortLink = "",))).apply { dateStringFormat = "yyyy/MM.dd" }
         )
 

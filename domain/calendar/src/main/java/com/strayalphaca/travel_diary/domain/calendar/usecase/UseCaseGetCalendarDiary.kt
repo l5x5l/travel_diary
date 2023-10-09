@@ -1,30 +1,21 @@
 package com.strayalphaca.travel_diary.domain.calendar.usecase
 
-import com.strayalphaca.domain.all.getDayAmountOfMonth
-import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository
 import com.strayalphaca.domain.model.BaseResponse
+import com.strayalphaca.travel_diary.domain.calendar.model.MonthCalendar
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UseCaseGetCalendarDiary @Inject constructor(
     private val calendarRepository: CalendarRepository
 ) {
-    suspend operator fun invoke(year : Int, month : Int) : BaseResponse<List<DiaryInCalendar?>> {
-        val response = calendarRepository.getDiaryData(year, month)
-        if (response !is BaseResponse.Success) return response
+    suspend operator fun invoke(year : Int, month : Int) : BaseResponse<Nothing> {
+        val response = calendarRepository.loadDiaryData(year, month)
+        if (response is BaseResponse.Failure) return response
+        return BaseResponse.EmptySuccess
+    }
 
-        val rawData = response.data
-        if (rawData.isEmpty()) return response.copy(data = listOf())
-
-        var count = 0
-        val dataList = (0 until getDayAmountOfMonth(year, month)).toList().map {
-            return@map if (count < rawData.size && rawData[count].day == it) {
-                rawData[count++]
-            } else {
-                null
-            }
-        }
-
-        return BaseResponse.Success(dataList)
+    fun monthCalendarFlow() : Flow<MonthCalendar> {
+        return calendarRepository.getMonthCalendarFlow()
     }
 }
