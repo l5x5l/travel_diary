@@ -13,6 +13,7 @@ data class MapAllLocationResponseBody(
 ) {
     fun toLocationDiary() : LocationDiary =
         LocationDiary(
+            id = id,
             thumbnailUri = image.shortLink ?: image.uploadedLink,
             location = Location(
                 id = LocationId(provinceId),
@@ -30,6 +31,7 @@ data class MapProvinceResponseBody(
 ) {
     fun toLocationDiary(provinceId : Int) : LocationDiary =
         LocationDiary(
+            id = id,
             thumbnailUri = image.shortLink ?: image.uploadedLink,
             location = Location(
                 id = LocationId(groupId),
