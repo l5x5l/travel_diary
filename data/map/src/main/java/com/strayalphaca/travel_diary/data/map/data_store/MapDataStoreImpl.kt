@@ -1,6 +1,5 @@
 package com.strayalphaca.travel_diary.data.map.data_store
 
-import com.strayalphaca.travel_diary.map.model.LocationDiary
 import com.strayalphaca.travel_diary.map.model.LocationWithData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,28 +20,8 @@ class MapDataStoreImpl @Inject constructor() : MapDataStore {
         return mapWithData.value.location?.id?.id
     }
 
-    override suspend fun updateDiary(locationDiary: LocationDiary) {
-        val diaryList = mapWithData.value.data
-        val targetLocationDiary = diaryList.find{ it.id == locationDiary.id } ?: return
-        val dataList = diaryList.map {
-            if (it.id == targetLocationDiary.id)
-                locationDiary
-            else
-                it
-        }
-        mapWithData.value = mapWithData.value.copy(data = dataList)
-    }
-
-    override suspend fun deleteDiary(id: String) {
-        val dataList = mapWithData.value.data.filter { it.id != id }
-        mapWithData.value = mapWithData.value.copy(data = dataList)
-    }
-
     override suspend fun checkContainDiary(id: String): Boolean {
         return mapWithData.value.data.find { it.id == id } != null
     }
 
-    override suspend fun clear() {
-        mapWithData.value = LocationWithData()
-    }
 }
