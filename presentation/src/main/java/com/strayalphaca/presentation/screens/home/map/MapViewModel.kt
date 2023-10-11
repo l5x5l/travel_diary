@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.home.map.model.MapScreenEvent
 import com.strayalphaca.presentation.screens.home.map.model.MapScreenState
-import com.strayalphaca.travel_diary.map.model.LocationDiary
+import com.strayalphaca.presentation.utils.collectLatestInScope
 import com.strayalphaca.travel_diary.map.usecase.UseCaseGetMapDiaryList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +29,10 @@ class MapViewModel @Inject constructor(
 
     init {
         loadLocationDiaryList(null)
+
+        useCaseGetMapDiaryList.locationWithDataFlow().collectLatestInScope(viewModelScope) {
+            event.send(MapScreenEvent.DataLoadingSuccess(it.data, it.location?.id?.id))
+        }
     }
     private fun reduce(state : MapScreenState, event : MapScreenEvent) : MapScreenState {
         return when (event) {
@@ -50,16 +54,12 @@ class MapViewModel @Inject constructor(
             try {
                 if (provinceId == null) {
                     val response = useCaseGetMapDiaryList.getNationWideDataList()
-                    if (response is BaseResponse.Success<List<LocationDiary>>) {
-                        event.send(MapScreenEvent.DataLoadingSuccess(response.data, null))
-                    } else {
+                    if (response is BaseResponse.Failure){
                         event.send(MapScreenEvent.DataLoadingFailure)
                     }
                 } else {
                     val response = useCaseGetMapDiaryList.getProvinceDataList(provinceId)
-                    if (response is BaseResponse.Success<List<LocationDiary>>) {
-                        event.send(MapScreenEvent.DataLoadingSuccess(response.data, provinceId))
-                    } else {
+                    if (response is BaseResponse.Failure){
                         event.send(MapScreenEvent.DataLoadingFailure)
                     }
                 }
