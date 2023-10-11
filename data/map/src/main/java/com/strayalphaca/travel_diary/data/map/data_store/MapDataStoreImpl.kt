@@ -17,6 +17,10 @@ class MapDataStoreImpl @Inject constructor() : MapDataStore {
         return mapWithData
     }
 
+    override suspend fun getCurrentProvinceId(): Int? {
+        return mapWithData.value.location?.id?.id
+    }
+
     override suspend fun updateDiary(locationDiary: LocationDiary) {
         val diaryList = mapWithData.value.data
         val targetLocationDiary = diaryList.find{ it.id == locationDiary.id } ?: return
@@ -32,6 +36,10 @@ class MapDataStoreImpl @Inject constructor() : MapDataStore {
     override suspend fun deleteDiary(id: String) {
         val dataList = mapWithData.value.data.filter { it.id != id }
         mapWithData.value = mapWithData.value.copy(data = dataList)
+    }
+
+    override suspend fun checkContainDiary(id: String): Boolean {
+        return mapWithData.value.data.find { it.id == id } != null
     }
 
     override suspend fun clear() {

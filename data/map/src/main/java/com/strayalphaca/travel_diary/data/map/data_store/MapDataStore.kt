@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.Flow
 interface MapDataStore {
     suspend fun setMapData(locationWithData: LocationWithData)
     fun getMapData() : Flow<LocationWithData>
+    suspend fun getCurrentProvinceId() : Int?
     suspend fun updateDiary(locationDiary: LocationDiary)
     suspend fun deleteDiary(id : String)
+    suspend fun checkContainDiary(id : String) : Boolean
     suspend fun clear()
 }
