@@ -1,15 +1,20 @@
 package com.strayalphaca.travel_diary.data.map.repository
 
 import com.strayalphaca.domain.model.BaseResponse
+import com.strayalphaca.travel_diary.data.map.data_store.MapDataStore
 import com.strayalphaca.travel_diary.map.model.Location
 import com.strayalphaca.travel_diary.map.model.LocationDiary
 import com.strayalphaca.travel_diary.map.model.LocationId
 import com.strayalphaca.travel_diary.map.model.LocationType
+import com.strayalphaca.travel_diary.map.model.LocationWithData
 import com.strayalphaca.travel_diary.map.repository.MapRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 // only for testing
-class TestMapRepository @Inject constructor() : MapRepository {
+class TestMapRepository @Inject constructor(
+    private val mapDataStore: MapDataStore
+) : MapRepository {
     override suspend fun getNationWideData(): BaseResponse<List<LocationDiary>> {
         val data = listOf(
             LocationDiary("", Location(LocationId(2), "부산", LocationId(2))),
@@ -18,6 +23,7 @@ class TestMapRepository @Inject constructor() : MapRepository {
             LocationDiary("", Location(LocationId(5), "대전", LocationId(5))),
             LocationDiary("", Location(LocationId(3), "울산", LocationId(3))),
         )
+        mapDataStore.setMapData(LocationWithData(null, data = data))
         return BaseResponse.Success(data)
     }
 
@@ -25,7 +31,7 @@ class TestMapRepository @Inject constructor() : MapRepository {
         val data = when(provinceId) {
             1, 4, 9 -> { // 경기도
                 listOf(
-                    LocationDiary("", Location(LocationId(1), "서울", LocationId(provinceId), LocationType.CITY_GROUP)),
+                    LocationDiary("", Location(LocationId(1), "서울", LocationId(provinceId), LocationType.CITY_GROUP), id = "1"),
                     LocationDiary("", Location(LocationId(18), "김포", LocationId(provinceId), LocationType.CITY_GROUP)),
                     LocationDiary("", Location(LocationId(19), "양평", LocationId(provinceId), LocationType.CITY_GROUP)),
                     LocationDiary("", Location(LocationId(20), "안성", LocationId(provinceId), LocationType.CITY_GROUP)),
@@ -114,7 +120,22 @@ class TestMapRepository @Inject constructor() : MapRepository {
                 )
             }
         }
+        mapDataStore.setMapData(LocationWithData(Location.getInstanceByProvinceId(provinceId), data))
         return BaseResponse.Success(data)
+    }
+
+    override suspend fun refreshIfContainDiary(diaryId: String) {
+        if (!mapDataStore.checkContainDiary(diaryId)) return
+        val currentLocationId = mapDataStore.getCurrentProvinceId()
+        if (currentLocationId == null) {
+            getNationWideData()
+        } else {
+            getProvinceData(currentLocationId)
+        }
+    }
+
+    override fun getLocationWithDataFlow(): Flow<LocationWithData> {
+        return mapDataStore.getMapData()
     }
 
 }

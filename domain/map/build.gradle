@@ -12,4 +12,5 @@ dependencies {
     implementation project(":domain")
     implementation libs.javax.inject
     implementation libs.kotlin.reflection
+    implementation libs.coroutine
 }
