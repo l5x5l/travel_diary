@@ -24,6 +24,7 @@ import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseHandleCached
 import com.strayalphaca.travel_diary.domain.file.usecase.UseCaseUploadFiles
 import com.strayalphaca.travel_diary.map.model.City
 import com.strayalphaca.travel_diary.map.model.Province
+import com.strayalphaca.travel_diary.map.usecase.UseCaseRefreshCachedMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -37,6 +38,7 @@ import javax.inject.Inject
 class DiaryWriteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val useCaseHandleCachedCalendarDiary: UseCaseHandleCachedCalendarDiary,
+    private val useCaseRefreshCachedMap: UseCaseRefreshCachedMap,
     private val useCaseGetDiaryDetail: UseCaseGetDiaryDetail,
     private val useCaseUploadFiles: UseCaseUploadFiles,
     private val useCaseUploadDiary: UseCaseUploadDiary,
@@ -285,6 +287,7 @@ class DiaryWriteViewModel @Inject constructor(
             )
             if (isModify) {
                 useCaseHandleCachedCalendarDiary.update(diaryInCalendar)
+                useCaseRefreshCachedMap(id)
             } else {
                 useCaseHandleCachedCalendarDiary.add(diaryInCalendar)
             }

@@ -9,6 +9,7 @@ import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryDetail
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseHandleCachedCalendarDiary
+import com.strayalphaca.travel_diary.map.usecase.UseCaseRefreshCachedMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class DiaryDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val useCaseHandleCachedCalendarDiary: UseCaseHandleCachedCalendarDiary,
+    private val useCaseRefreshCachedMap: UseCaseRefreshCachedMap,
     private val useCaseGetDiaryDetail: UseCaseGetDiaryDetail,
     private val useCaseDeleteDiary : UseCaseDeleteDiary,
     private val musicPlayer: MusicPlayer
@@ -183,6 +185,7 @@ class DiaryDetailViewModel @Inject constructor(
     private fun deleteDiaryToCachedDataStore() {
         viewModelScope.launch {
             useCaseHandleCachedCalendarDiary.delete(id.value)
+            useCaseRefreshCachedMap(id.value)
         }
     }
 }
