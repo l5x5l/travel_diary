@@ -1,6 +1,6 @@
-package com.strayalphaca.domain.login.repository
+package com.strayalphaca.travel_diary.domain.login.repository
 
-import com.strayalphaca.domain.login.model.Tokens
+import com.strayalphaca.travel_diary.domain.login.model.Tokens
 import com.strayalphaca.domain.model.BaseResponse
 
 interface LoginRepository {

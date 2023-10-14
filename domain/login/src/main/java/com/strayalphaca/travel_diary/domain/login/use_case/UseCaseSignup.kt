@@ -1,6 +1,6 @@
-package com.strayalphaca.domain.login.use_case
+package com.strayalphaca.travel_diary.domain.login.use_case
 
-import com.strayalphaca.domain.login.repository.LoginRepository
+import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
 import com.strayalphaca.domain.model.BaseResponse
 import javax.inject.Inject
 

@@ -8,8 +8,8 @@ import com.strayalphaca.data.login.model.IssueAuthCodeBody
 import com.strayalphaca.data.login.model.LoginRequestBody
 import com.strayalphaca.data.login.model.SignUpRequestBody
 import com.strayalphaca.data.login.utils.tokenDtoToToken
-import com.strayalphaca.domain.login.model.Tokens
-import com.strayalphaca.domain.login.repository.LoginRepository
+import com.strayalphaca.travel_diary.domain.login.model.Tokens
+import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
 import com.strayalphaca.domain.model.BaseResponse
 import retrofit2.Retrofit
 import javax.inject.Inject

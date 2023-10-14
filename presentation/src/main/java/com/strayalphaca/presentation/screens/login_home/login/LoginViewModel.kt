@@ -2,7 +2,7 @@ package com.strayalphaca.presentation.screens.login_home.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.strayalphaca.domain.login.use_case.UseCaseLogin
+import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

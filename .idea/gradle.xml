@@ -22,6 +22,7 @@
             <option value="$PROJECT_DIR$/domain/calendar" />
             <option value="$PROJECT_DIR$/domain/diary" />
             <option value="$PROJECT_DIR$/domain/file" />
+            <option value="$PROJECT_DIR$/domain/login" />
             <option value="$PROJECT_DIR$/domain/map" />
             <option value="$PROJECT_DIR$/presentation" />
           </set>

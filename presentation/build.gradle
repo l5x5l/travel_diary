@@ -46,6 +46,7 @@ dependencies {
     implementation project(":domain:map")
     implementation project(':domain:diary')
     implementation project(":domain:file")
+    implementation project(":domain:login")
 
     implementation libs.android.ktx
     implementation libs.android.appcompat
