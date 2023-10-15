@@ -1,8 +1,8 @@
-package com.strayalphaca.data.login.repository_impl
+package com.strayalphaca.travel_diary.data.login.repository_impl
 
-import com.strayalphaca.data.login.data_source.LoginDataSource
+import com.strayalphaca.travel_diary.data.login.data_source.LoginDataSource
 import com.strayalphaca.data.all.utils.mapBaseResponse
-import com.strayalphaca.data.login.utils.tokenDtoToToken
+import com.strayalphaca.travel_diary.data.login.utils.tokenDtoToToken
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository

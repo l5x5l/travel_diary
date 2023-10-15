@@ -1,13 +1,13 @@
-package com.strayalphaca.data.login.repository_impl
+package com.strayalphaca.travel_diary.data.login.repository_impl
 
 import com.strayalphaca.data.all.utils.responseToBaseResponse
 import com.strayalphaca.data.all.utils.responseToBaseResponseWithMapping
 import com.strayalphaca.data.all.utils.voidResponseToBaseResponse
-import com.strayalphaca.data.login.api.LoginApi
-import com.strayalphaca.data.login.model.IssueAuthCodeBody
-import com.strayalphaca.data.login.model.LoginRequestBody
-import com.strayalphaca.data.login.model.SignUpRequestBody
-import com.strayalphaca.data.login.utils.tokenDtoToToken
+import com.strayalphaca.travel_diary.data.login.api.LoginApi
+import com.strayalphaca.travel_diary.data.login.model.IssueAuthCodeBody
+import com.strayalphaca.travel_diary.data.login.model.LoginRequestBody
+import com.strayalphaca.travel_diary.data.login.model.SignUpRequestBody
+import com.strayalphaca.travel_diary.data.login.utils.tokenDtoToToken
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
 import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
 import com.strayalphaca.domain.model.BaseResponse

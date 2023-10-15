@@ -1,6 +1,6 @@
-package com.strayalphaca.data.login.data_source
+package com.strayalphaca.travel_diary.data.login.data_source
 
-import com.strayalphaca.data.login.model.TokensDto
+import com.strayalphaca.travel_diary.data.login.model.TokensDto
 import com.strayalphaca.domain.model.BaseResponse
 
 interface LoginDataSource {
@@ -10,6 +10,5 @@ interface LoginDataSource {
     suspend fun postLogin(email : String, password : String) : BaseResponse<TokensDto>
     suspend fun postRefresh() : BaseResponse<TokensDto>
     suspend fun deleteUser() : BaseResponse<Nothing>
-
     suspend fun getCheckEmail(email : String) : BaseResponse<Nothing>
 }

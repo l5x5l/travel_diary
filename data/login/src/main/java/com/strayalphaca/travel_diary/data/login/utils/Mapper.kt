@@ -1,6 +1,6 @@
-package com.strayalphaca.data.login.utils
+package com.strayalphaca.travel_diary.data.login.utils
 
-import com.strayalphaca.data.login.model.TokensDto
+import com.strayalphaca.travel_diary.data.login.model.TokensDto
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
 
 fun tokenDtoToToken(tokensDto: TokensDto) : Tokens {
