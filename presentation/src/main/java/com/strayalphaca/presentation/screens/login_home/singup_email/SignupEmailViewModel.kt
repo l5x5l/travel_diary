@@ -2,8 +2,8 @@ package com.strayalphaca.presentation.screens.login_home.singup_email
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.strayalphaca.domain.login.use_case.UseCaseCheckAuthCode
-import com.strayalphaca.domain.login.use_case.UseCaseIssueAuthCode
+import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseCheckAuthCode
+import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseIssueAuthCode
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.models.SignupData

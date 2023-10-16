@@ -1,9 +1,9 @@
 package com.strayalphaca.travel_diary.di
 
-import com.strayalphaca.data.login.data_source.LoginDataSource
-import com.strayalphaca.data.login.data_source.LoginTestDataSource
-import com.strayalphaca.data.login.repository_impl.LoginRepositoryImpl
-import com.strayalphaca.domain.login.repository.LoginRepository
+import com.strayalphaca.travel_diary.data.login.data_source.LoginDataSource
+import com.strayalphaca.travel_diary.data.login.data_source.LoginTestDataSource
+import com.strayalphaca.travel_diary.data.login.repository_impl.LoginRepositoryImpl
+import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

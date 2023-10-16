@@ -2,9 +2,8 @@ package com.strayalphaca.presentation.screens.settings.withdrawal
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.strayalphaca.domain.login.use_case.UseCaseWithdrawal
+import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseWithdrawal
 import com.strayalphaca.domain.model.BaseResponse
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
