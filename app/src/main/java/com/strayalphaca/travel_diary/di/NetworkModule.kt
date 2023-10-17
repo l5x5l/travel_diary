@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.di
 
-import com.strayalphaca.domain.auth.repository.AuthRepository
+import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import com.strayalphaca.travel_diary.network.RequestInterceptor
 import dagger.Module
 import dagger.Provides

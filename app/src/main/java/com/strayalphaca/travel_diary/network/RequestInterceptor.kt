@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.network
 
-import com.strayalphaca.domain.auth.repository.AuthRepository
+import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
