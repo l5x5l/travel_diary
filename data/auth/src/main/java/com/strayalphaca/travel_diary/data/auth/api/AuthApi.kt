@@ -1,6 +1,6 @@
-package com.strayalphaca.data.auth.api
+package com.strayalphaca.travel_diary.data.auth.api
 
-import com.strayalphaca.data.auth.model.ReissueTokenResponseBody
+import com.strayalphaca.travel_diary.data.auth.model.ReissueTokenResponseBody
 import retrofit2.Response
 import retrofit2.http.HeaderMap
 import retrofit2.http.POST

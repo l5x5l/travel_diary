@@ -1,4 +1,4 @@
-package com.strayalphaca.domain.auth.repository
+package com.strayalphaca.travel_diary.domain.auth.repository
 
 import com.strayalphaca.domain.model.BaseResponse
 

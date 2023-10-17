@@ -1,10 +1,10 @@
-package com.strayalphaca.data.auth.repository
+package com.strayalphaca.travel_diary.data.auth.repository
 
 import com.strayalphaca.data.all.utils.voidResponseToBaseResponse
-import com.strayalphaca.data.auth.api.AuthApi
-import com.strayalphaca.data.auth.datastore.AuthDataStore
-import com.strayalphaca.domain.auth.repository.AuthRepository
+import com.strayalphaca.travel_diary.data.auth.api.AuthApi
+import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import com.strayalphaca.domain.model.BaseResponse
+import com.strayalphaca.travel_diary.data.auth.datastore.AuthDataStore
 import retrofit2.Retrofit
 import javax.inject.Inject
 

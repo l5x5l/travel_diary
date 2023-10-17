@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/data/alarm" />
+            <option value="$PROJECT_DIR$/data/auth" />
             <option value="$PROJECT_DIR$/data/calendar" />
             <option value="$PROJECT_DIR$/data/diary" />
             <option value="$PROJECT_DIR$/data/file" />
@@ -20,6 +21,7 @@
             <option value="$PROJECT_DIR$/data/map" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/alarm" />
+            <option value="$PROJECT_DIR$/domain/auth" />
             <option value="$PROJECT_DIR$/domain/calendar" />
             <option value="$PROJECT_DIR$/domain/diary" />
             <option value="$PROJECT_DIR$/domain/file" />

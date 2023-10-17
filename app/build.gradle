@@ -50,6 +50,7 @@ dependencies {
     implementation project(":domain:diary")
     implementation project(":domain:calendar")
     implementation project(":domain:login")
+    implementation project(":domain:auth")
     implementation project(":data")
     implementation project(":data:calendar")
     implementation project(":data:alarm")
@@ -57,6 +58,7 @@ dependencies {
     implementation project(":data:file")
     implementation project(":data:diary")
     implementation project(":data:login")
+    implementation project(":data:auth")
 
     implementation libs.android.ktx
     implementation libs.android.appcompat
