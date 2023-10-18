@@ -23,6 +23,8 @@ import com.strayalphaca.presentation.screens.lock.LockScreen
 import com.strayalphaca.presentation.screens.lock.LockViewModel
 import com.strayalphaca.presentation.screens.login_home.loginNavGraph
 import com.strayalphaca.presentation.screens.settings.SettingsBaseScreen
+import com.strayalphaca.presentation.screens.start.StartScreenContainer
+import com.strayalphaca.presentation.screens.start.StartViewModel
 import com.strayalphaca.presentation.screens.video.VideoContainer
 import com.strayalphaca.presentation.screens.video.VideoViewModel
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
@@ -51,8 +53,26 @@ fun RootNavHost(
     NavHost(
         navController = navController,
         modifier = modifier,
-        startDestination = HomeGraph.route,
+        startDestination = Start.route,
     ) {
+
+        composable(Start.route) {
+            val viewModel = hiltViewModel<StartViewModel>()
+            StartScreenContainer(
+                viewModel = viewModel,
+                goToHome = {
+                    navController.navigate(HomeGraph.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                goToIntro = {
+                    navController.navigate(Intro.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
+        }
+
         composable(HomeGraph.route) {
             HomeScreen(
                 goToDiary = { navController.navigateToDiaryDetail(it) },

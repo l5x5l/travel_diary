@@ -17,6 +17,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -24,9 +30,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
+import com.strayalphaca.presentation.utils.collectLatestInScope
+
+@Composable
+fun StartScreenContainer(
+    viewModel: StartViewModel,
+    goToIntro : () -> Unit,
+    goToHome : () -> Unit
+) {
+    val composeScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collectLatestInScope(composeScope) { navDestination ->
+            when (navDestination) {
+                StartScreenNavDestination.LOGIN -> {
+                    goToIntro()
+                }
+                StartScreenNavDestination.HOME -> {
+                    goToHome()
+                }
+            }
+        }
+    }
+
+    StartScreen()
+}
 
 @Composable
 fun StartScreen() {
+    var visible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        visible = true
+    }
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -36,9 +73,9 @@ fun StartScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AnimatedVisibility(
-                visible = true,
+                visible = visible,
                 enter = slideInVertically(
-                    animationSpec = tween(durationMillis = 1000)
+                    animationSpec = tween(durationMillis = 800)
                 ) {
                     it
                 },
@@ -57,13 +94,16 @@ fun StartScreen() {
                 contentDescription = "logoTop"
             )
 
-            Box(modifier = Modifier.height(5.dp).fillMaxWidth().background(MaterialTheme.colors.surface))
+            Box(modifier = Modifier
+                .height(5.dp)
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.surface))
 
             AnimatedVisibility(
-                visible = true,
+                visible = visible,
                 enter = fadeIn(
                     initialAlpha = 0f,
-                    animationSpec = tween(1200, delayMillis = 500)
+                    animationSpec = tween(400, delayMillis = 400)
                 ),
                 modifier = Modifier.background(MaterialTheme.colors.surface)
             ) {
