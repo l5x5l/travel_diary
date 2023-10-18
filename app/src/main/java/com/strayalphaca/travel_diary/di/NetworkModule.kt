@@ -16,6 +16,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    const val base_url = "http://13.125.251.244:30000/"
+
     @Singleton
     @Provides
     fun provideOkhttp(
@@ -36,7 +39,7 @@ object NetworkModule {
     @Provides
     fun provideBaseRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("base_url")
+            .baseUrl(base_url)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -53,7 +56,7 @@ object NetworkModule {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("base_url")
+            .baseUrl(base_url)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
