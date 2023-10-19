@@ -53,7 +53,7 @@ value class LocationId(val id : Int) {
                 Position(x = 0.580f, y = 0.637f)
             }
             17 -> { // 제주도
-                Position(x = 0.114f, y = 0.957f)
+                Position(x = 0.126f, y = 0.90f)
             }
             else -> {
                 Position(x = -1.0f, y = -1.0f)
@@ -223,10 +223,10 @@ value class LocationId(val id : Int) {
                 Position(x = 0.382f, y = getYPositionRatioByLocalImage(0.64f, gyeongnam))
             }
             63 -> { // 제주
-                Position(x = 0.5f, y = 0.5f)
+                Position(x = 0.45f, y = 0.113f)
             }
             64 -> { // 서귀포
-                Position(x = 0.5f, y = 0.5f)
+                Position(x = 0.526f, y = 0.598f)
             }
             65 -> { // 울릉도
                 Position(x = 0.5f, y = 0.5f)
