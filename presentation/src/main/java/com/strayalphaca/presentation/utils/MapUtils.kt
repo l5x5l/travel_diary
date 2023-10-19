@@ -53,6 +53,9 @@ fun getMapImageResourceById(id: Int?): Int {
         PROVINCE_Jeju -> {
             R.mipmap.img_map_jeju
         }
+        PROVINCE_Ulreung -> {
+            R.mipmap.img_map_ulreng
+        }
         else -> {
             R.drawable.ic_map_korea
         }
@@ -92,7 +95,7 @@ fun getMapImageRatioById(id : Int?) : Float {
             1.959f
         }
         PROVINCE_Ulreung -> {
-            0.66f
+            1.338f
         }
         else -> {
             0.66f

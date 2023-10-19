@@ -55,6 +55,9 @@ value class LocationId(val id : Int) {
             17 -> { // 제주도
                 Position(x = 0.126f, y = 0.90f)
             }
+            18 -> { // 울릉도/독도
+                Position(x = 0.961f, y = 0.274f)
+            }
             else -> {
                 Position(x = -1.0f, y = -1.0f)
             }
@@ -229,10 +232,10 @@ value class LocationId(val id : Int) {
                 Position(x = 0.526f, y = 0.598f)
             }
             65 -> { // 울릉도
-                Position(x = 0.5f, y = 0.5f)
+                Position(x = 0.282f, y = 0.271f)
             }
             66 -> { // 독도
-                Position(x = 0.5f, y = 0.5f)
+                Position(x = 0.882f, y = 0.805f)
             }
             else -> {
                 Position(x = -1.0f, y = -1.0f)

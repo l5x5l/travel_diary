@@ -17,3 +17,4 @@ const val PROVINCE_Jeollanam = 14
 const val PROVINCE_Gyeongsangbuk = 15
 const val PROVINCE_Gyeongsangnam = 16
 const val PROVINCE_Jeju = 17
+const val PROVINCE_Ulreung = 18
