@@ -8,6 +8,10 @@ interface RootDestinations {
     val route : String
 }
 
+object Start : RootDestinations {
+    override val route: String = "start"
+}
+
 object HomeGraph : RootDestinations {
     override val route: String = "home_graph"
 }
