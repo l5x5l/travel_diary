@@ -58,9 +58,9 @@ fun TrailyMap(
             Modifier
                 .then(
                     if (boxRatio < imageRatio) { // 세로가 더 길다
-                        Modifier.fillMaxWidth()
+                        Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                     } else { // 가로가 더 길다
-                        Modifier.fillMaxHeight()
+                        Modifier.fillMaxHeight().padding(vertical = 16.dp)
                     }
                 )
                 .align(Alignment.Center)
