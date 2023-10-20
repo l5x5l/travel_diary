@@ -18,6 +18,7 @@ import com.strayalphaca.travel_diary.map.model.PROVINCE_Jeollanam
 import com.strayalphaca.travel_diary.map.model.PROVINCE_SEJONG
 import com.strayalphaca.travel_diary.map.model.PROVINCE_SEOUL
 import com.strayalphaca.travel_diary.map.model.PROVINCE_ULSAN
+import com.strayalphaca.travel_diary.map.model.PROVINCE_Ulreung
 
 
 fun getMapImageResourceById(id: Int?): Int {
@@ -50,8 +51,10 @@ fun getMapImageResourceById(id: Int?): Int {
             R.mipmap.img_map_gyeongnam
         }
         PROVINCE_Jeju -> {
-            // 제주도 이미지 필요!
-            R.drawable.ic_map_korea
+            R.mipmap.img_map_jeju
+        }
+        PROVINCE_Ulreung -> {
+            R.mipmap.img_map_ulreng
         }
         else -> {
             R.drawable.ic_map_korea
@@ -89,7 +92,10 @@ fun getMapImageRatioById(id : Int?) : Float {
             1.26f
         }
         PROVINCE_Jeju -> {
-            0.66f
+            1.959f
+        }
+        PROVINCE_Ulreung -> {
+            1.338f
         }
         else -> {
             0.66f

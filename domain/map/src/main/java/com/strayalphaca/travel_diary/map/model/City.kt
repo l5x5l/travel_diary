@@ -230,7 +230,8 @@ sealed class City(val id : Int, val name : String, val provinceId : Int, val gro
     object YecheonGun : City(211, "예천군", 15, 50)
     object BonghwaGun : City(212, "봉화군", 15, 50)
     object UljinGun : City(213, "울진군", 15, 51)
-    object UlreungGun : City(214, "울릉군", 15)
+    object UlreungGun : City(214, "울릉군", 18, 65)
+    object Dokdo : City(239, "독도", 18, 66)
 
     object Changwon : City(215, "창원시", 16, 61)
     object Masan : City(216, "마산시", 16, 61)
