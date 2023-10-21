@@ -12,10 +12,6 @@ class UseCaseIssueAuthCode @Inject constructor(
     }
 
     suspend fun withEmailCheck(email : String) : BaseResponse<Nothing> {
-        val checkEmailResponse = repository.checkEmailDuplication(email)
-
-        if (checkEmailResponse is BaseResponse.Failure) return checkEmailResponse
-
         return repository.issueAuthCode(email)
     }
 }
