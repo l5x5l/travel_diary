@@ -6,6 +6,6 @@ import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 
 interface AuthApi {
-    @POST("auths/refresh")
+    @POST("auth/refresh")
     suspend fun reissueToken(@HeaderMap headers : Map<String, String>) : Response<ReissueTokenResponseBody>
 }
