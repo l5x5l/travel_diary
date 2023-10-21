@@ -32,10 +32,6 @@ class RemoteLoginRepository @Inject constructor(
         return responseToBaseResponse(response)
     }
 
-    override suspend fun checkEmailDuplication(email: String): BaseResponse<Nothing> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun checkAuthCode(email: String, authCode: String): BaseResponse<Nothing> {
         val response = loginRetrofit.checkAuthCode(email, authCode)
         return voidResponseToBaseResponse(response)
@@ -44,10 +40,6 @@ class RemoteLoginRepository @Inject constructor(
     override suspend fun issueAuthCode(email: String): BaseResponse<Nothing> {
         val response = loginRetrofit.issueAuthCode(IssueAuthCodeBody(email))
         return voidResponseToBaseResponse(response)
-    }
-
-    override suspend fun refreshToken(): BaseResponse<Tokens> {
-        TODO("Not yet implemented")
     }
 
     override suspend fun withdrawal(): BaseResponse<Nothing> {
