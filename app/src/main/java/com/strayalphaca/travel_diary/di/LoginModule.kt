@@ -2,19 +2,24 @@ package com.strayalphaca.travel_diary.di
 
 import com.strayalphaca.travel_diary.data.login.data_source.LoginDataSource
 import com.strayalphaca.travel_diary.data.login.data_source.LoginTestDataSource
-import com.strayalphaca.travel_diary.data.login.repository_impl.LoginRepositoryImpl
+import com.strayalphaca.travel_diary.data.login.repository_impl.RemoteLoginRepository
 import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class LoginModule {
-    @Binds
-    abstract fun bindLoginRepository(loginRepository: LoginRepositoryImpl) : LoginRepository
+object LoginModule {
+    @Provides
+    fun provideLoginRepository(@BaseClient retrofit: Retrofit) : LoginRepository  {
+        return RemoteLoginRepository(retrofit)
+    }
 
-    @Binds
-    abstract fun bindLoginDataSource(loginDataSource: LoginTestDataSource) : LoginDataSource
+    @Provides
+    fun provideLoginDataSource() : LoginDataSource {
+        return LoginTestDataSource()
+    }
 }
