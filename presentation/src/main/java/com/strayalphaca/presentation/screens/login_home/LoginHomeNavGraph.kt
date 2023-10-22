@@ -22,7 +22,8 @@ private fun NavHostController.navigateSingleTopTo(route : String) =
 
 fun NavGraphBuilder.loginNavGraph(
     navController: NavHostController,
-    onExitLogin : () -> Unit = {}
+    onExitLogin : () -> Unit = {},
+    navigateToHome : () -> Unit = {}
 ) {
     navigation(
         route = "login_graph",
@@ -33,6 +34,7 @@ fun NavGraphBuilder.loginNavGraph(
             LoginScreen(
                 navigateToBack = onExitLogin,
                 navigateToSignup = {navController.navigate(SignupScreenDestination.route)},
+                navigateToHome = navigateToHome,
                 viewModel = loginViewModel
             )
         }

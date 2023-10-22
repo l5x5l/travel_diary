@@ -2,9 +2,12 @@ package com.strayalphaca.presentation.screens.login_home.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +25,12 @@ class LoginViewModel @Inject constructor(
     private val _networkLoading = MutableStateFlow(false)
     val networkLoading = _networkLoading.asStateFlow()
 
+    private val _errorMessage = MutableStateFlow("")
+    val errorMessage = _errorMessage.asStateFlow()
+
+    private val _loginSuccess = MutableSharedFlow<Boolean>()
+    val loginSuccess = _loginSuccess.asSharedFlow()
+
     fun inputEmail(email : String) {
         _email.value = email
     }
@@ -33,7 +42,13 @@ class LoginViewModel @Inject constructor(
     fun tryLogin() {
         viewModelScope.launch {
             _networkLoading.value = true
+            _errorMessage.value = ""
             val response = useCaseLogin(email = email.value, password = password.value)
+            if (response is BaseResponse.Failure) {
+                _errorMessage.value = response.errorMessage
+            } else {
+                _loginSuccess.emit(true)
+            }
             _networkLoading.value = false
         }
     }
