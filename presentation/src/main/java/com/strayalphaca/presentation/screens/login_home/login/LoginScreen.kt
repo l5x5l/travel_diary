@@ -20,17 +20,27 @@ import com.strayalphaca.presentation.components.atom.text_button.TextButton
 import com.strayalphaca.presentation.components.block.EditTextWithTitle
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import com.strayalphaca.presentation.components.block.EditTextType
+import com.strayalphaca.presentation.utils.collectAsEffect
 
 @Composable
 fun LoginScreen(
     navigateToSignup : () -> Unit = {},
     navigateToBack : () -> Unit = {},
+    navigateToHome : () -> Unit = {},
     viewModel : LoginViewModel = viewModel()
 ) {
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
     val loginLoading by viewModel.networkLoading.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
+    viewModel.loginSuccess.collectAsEffect { success ->
+        if (success) {
+            navigateToHome()
+        }
+    }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -82,11 +92,21 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                TextButton(
-                    text = stringResource(id = R.string.signup),
-                    modifier = Modifier.align(Alignment.End),
-                    onClick = navigateToSignup
-                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        modifier = Modifier.padding(vertical = 12.dp),
+                        text = errorMessage,
+                        style = MaterialTheme.typography.body2.copy(color = Color.Red)
+                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    TextButton(
+                        text = stringResource(id = R.string.signup),
+                        onClick = navigateToSignup
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))

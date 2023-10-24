@@ -1,5 +1,6 @@
 package com.strayalphaca.travel_diary.data.login.utils
 
+import com.strayalphaca.travel_diary.data.login.model.SignupResponseBody
 import com.strayalphaca.travel_diary.data.login.model.TokensDto
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
 
@@ -8,4 +9,8 @@ fun tokenDtoToToken(tokensDto: TokensDto) : Tokens {
         accessToken = tokensDto.accessToken,
         refreshToken = tokensDto.refreshToken
     )
+}
+
+fun extractIdFromSignupResponse(signupResponseBody: SignupResponseBody) : String {
+    return signupResponseBody.id
 }

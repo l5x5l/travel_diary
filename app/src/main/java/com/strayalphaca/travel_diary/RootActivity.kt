@@ -93,7 +93,12 @@ fun RootNavHost(
 
         loginNavGraph(
             navController = navController,
-            onExitLogin = { navController.popBackStack() }
+            onExitLogin = { navController.popBackStack() },
+            navigateToHome = {
+                navController.navigate(HomeGraph.route) {
+                    popUpTo(0) { inclusive = true }
+                }
+            }
         )
 
         composable(

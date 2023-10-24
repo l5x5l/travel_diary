@@ -83,7 +83,7 @@ class SignupEmailViewModel @Inject constructor(
     fun tryCheckAndIssueAuthCode() {
         viewModelScope.launch {
             _viewState.value = SignupEmailViewState.IssuingAuthCodeStep
-            val response = useCaseIssueAuthCode.withEmailCheck(email.value)
+            val response = useCaseIssueAuthCode(email.value)
 
             // 이메일 중복검사 및 인증번호 발급 성공시 타이머 실행
             if (response is BaseResponse.EmptySuccess) {

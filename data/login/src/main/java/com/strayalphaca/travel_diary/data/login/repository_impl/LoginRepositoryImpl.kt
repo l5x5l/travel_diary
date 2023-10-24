@@ -23,21 +23,12 @@ class LoginRepositoryImpl @Inject constructor(
         return loginDataSource.postSignup()
     }
 
-    override suspend fun checkEmailDuplication(email: String): BaseResponse<Nothing> {
-        return loginDataSource.getCheckEmail(email)
-    }
-
     override suspend fun checkAuthCode(email : String, authCode: String): BaseResponse<Nothing> {
         return loginDataSource.getAuthCode(email, authCode)
     }
 
     override suspend fun issueAuthCode(email : String): BaseResponse<Nothing> {
         return loginDataSource.postAuthCode(email)
-    }
-
-    override suspend fun refreshToken(): BaseResponse<Tokens> {
-        val response = loginDataSource.postRefresh()
-        return mapBaseResponse(response, ::tokenDtoToToken)
     }
 
     override suspend fun withdrawal(): BaseResponse<Nothing> {
