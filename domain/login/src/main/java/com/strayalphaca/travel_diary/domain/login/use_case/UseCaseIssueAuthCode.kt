@@ -10,8 +10,4 @@ class UseCaseIssueAuthCode @Inject constructor(
     suspend operator fun invoke(email : String) : BaseResponse<Nothing> {
         return repository.issueAuthCode(email)
     }
-
-    suspend fun withEmailCheck(email : String) : BaseResponse<Nothing> {
-        return repository.issueAuthCode(email)
-    }
 }
