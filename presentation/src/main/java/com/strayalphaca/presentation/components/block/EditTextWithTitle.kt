@@ -66,9 +66,8 @@ fun EditTextWithTitle(
             decorationBox = { innerTextField ->
                 if (value.isEmpty()) {
                     Text(text = placeHolder, color = Gray4, fontSize = 14.sp)
-                } else {
-                    innerTextField()
                 }
+                innerTextField()
             },
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
         )
