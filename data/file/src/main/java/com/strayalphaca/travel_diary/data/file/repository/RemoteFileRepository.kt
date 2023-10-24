@@ -22,7 +22,7 @@ class RemoteFileRepository @Inject constructor(
         when (fileInfo.fileType) {
             FileType.Image -> {
                 val file = fileInfo.file.asRequestBody("image/*".toMediaType())
-                partMap["images"] = file
+                partMap["image"] = file
             }
             FileType.Video -> {
                 val file = fileInfo.file.asRequestBody("video/*".toMediaType())
