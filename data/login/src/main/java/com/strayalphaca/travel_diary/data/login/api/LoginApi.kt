@@ -3,6 +3,7 @@ package com.strayalphaca.travel_diary.data.login.api
 import com.strayalphaca.travel_diary.data.login.model.IssueAuthCodeBody
 import com.strayalphaca.travel_diary.data.login.model.LoginRequestBody
 import com.strayalphaca.travel_diary.data.login.model.SignUpRequestBody
+import com.strayalphaca.travel_diary.data.login.model.SignupResponseBody
 import com.strayalphaca.travel_diary.data.login.model.TokensDto
 import retrofit2.Response
 import retrofit2.http.Body
@@ -19,7 +20,7 @@ interface LoginApi {
     suspend fun issueAuthCode(@Body params : IssueAuthCodeBody) : Response<Unit>
 
     @POST("auth/signup")
-    suspend fun signUpByEmail(@Body params : SignUpRequestBody) : Response<String>
+    suspend fun signUpByEmail(@Body params : SignUpRequestBody) : Response<SignupResponseBody>
 
     @POST("auth/login")
     suspend fun login(@Body params : LoginRequestBody) : Response<TokensDto>

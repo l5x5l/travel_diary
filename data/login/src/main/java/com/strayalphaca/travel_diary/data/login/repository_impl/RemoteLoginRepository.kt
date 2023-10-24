@@ -1,6 +1,5 @@
 package com.strayalphaca.travel_diary.data.login.repository_impl
 
-import com.strayalphaca.data.all.utils.responseToBaseResponse
 import com.strayalphaca.data.all.utils.responseToBaseResponseWithMapping
 import com.strayalphaca.data.all.utils.voidResponseToBaseResponse
 import com.strayalphaca.travel_diary.data.login.api.LoginApi
@@ -11,6 +10,7 @@ import com.strayalphaca.travel_diary.data.login.utils.tokenDtoToToken
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
 import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
 import com.strayalphaca.domain.model.BaseResponse
+import com.strayalphaca.travel_diary.data.login.utils.extractIdFromSignupResponse
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -29,7 +29,10 @@ class RemoteLoginRepository @Inject constructor(
 
     override suspend fun emailSignup(email: String, password: String): BaseResponse<String> {
         val response = loginRetrofit.signUpByEmail(SignUpRequestBody(email = email, password = password))
-        return responseToBaseResponse(response)
+        return responseToBaseResponseWithMapping(
+            response = response,
+            mappingFunction = ::extractIdFromSignupResponse
+        )
     }
 
     override suspend fun checkAuthCode(email: String, authCode: String): BaseResponse<Nothing> {
