@@ -39,4 +39,10 @@ class AuthDataStore @Inject constructor(
             dataStore.edit { it[ACCESS_TOKEN] = accessToken }
         }
     }
+
+    fun clearTokens() {
+        runBlocking(Dispatchers.IO) {
+            dataStore.edit { it.clear() }
+        }
+    }
 }
