@@ -3,6 +3,8 @@ package com.strayalphaca.presentation.screens.login_home.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.domain.model.BaseResponse
+import com.strayalphaca.travel_diary.domain.auth.usecase.UseCaseSaveToken
+import com.strayalphaca.travel_diary.domain.login.model.Tokens
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val useCaseLogin: UseCaseLogin
+    private val useCaseLogin: UseCaseLogin,
+    private val useCaseSaveToken: UseCaseSaveToken
 ) : ViewModel() {
     private val _email = MutableStateFlow("")
     val email = _email.asStateFlow()
@@ -47,6 +50,8 @@ class LoginViewModel @Inject constructor(
             if (response is BaseResponse.Failure) {
                 _errorMessage.value = response.errorMessage
             } else {
+                response as BaseResponse.Success<Tokens>
+                useCaseSaveToken(response.data.accessToken, response.data.refreshToken)
                 _loginSuccess.emit(true)
             }
             _networkLoading.value = false
