@@ -40,4 +40,16 @@ class AuthRepositoryImpl @Inject constructor(
         return authDataStore.getRefreshToken()
     }
 
+    override fun setAccessToken(accessToken: String) {
+        authDataStore.setAccessToken(accessToken)
+    }
+
+    override fun setRefreshToken(refreshToken: String) {
+        authDataStore.setRefreshToken(refreshToken)
+    }
+
+    override fun clearToken() {
+        authDataStore.clearTokens()
+    }
+
 }
