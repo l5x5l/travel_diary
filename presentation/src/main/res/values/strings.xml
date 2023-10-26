@@ -91,4 +91,6 @@
     <string name="error_message_removed">이미 삭제된 일지입니다.</string>
 
     <string name="select_location_message">먼저 시/도를 선택한 후\n세부 지역명을 선택해주세요</string>
+
+    <string name="finish_app_if_press_back_button_again">뒤로가기를 한 번 더 누르시면 앱이 종료됩니다.</string>
 </resources>
