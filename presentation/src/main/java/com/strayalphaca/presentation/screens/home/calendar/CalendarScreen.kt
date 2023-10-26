@@ -29,6 +29,7 @@ import com.strayalphaca.presentation.components.template.dialog.MonthPickerDialo
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
 import com.strayalphaca.domain.all.DiaryDate
+import com.strayalphaca.presentation.utils.UseFinishByBackPressTwice
 import com.strayalphaca.presentation.utils.collectLatestInScope
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -44,6 +45,8 @@ fun CalendarScreen(
     val pagerState = rememberPagerState(Int.MAX_VALUE / 2)
     val context = LocalContext.current
     val composeScope = rememberCoroutineScope()
+
+    UseFinishByBackPressTwice()
 
     LaunchedEffect(Unit) {
         viewModel.goDiaryWriteNavigationEvent.collectLatestInScope(composeScope) { goDiaryWriteNavigationEvent ->

@@ -22,12 +22,15 @@ import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_button.BaseButton
 import com.strayalphaca.presentation.components.atom.text_button.TextButton
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
+import com.strayalphaca.presentation.utils.UseFinishByBackPressTwice
 
 @Composable
 fun IntroScreen(
     goToLogin : () -> Unit = {},
     goToHome : () -> Unit = {}
 ) {
+    UseFinishByBackPressTwice()
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.fillMaxSize(),
