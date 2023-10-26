@@ -87,7 +87,12 @@ fun RootNavHost(
         composable(SettingsGraph.route) {
             SettingsBaseScreen(
                 exitSettingNav = { navController.popBackStack() },
-                goToLogin = { navController.navigate(LoginGraph.route) }
+                goToLogin = { navController.navigate(LoginGraph.route) },
+                goToIntro = {
+                    navController.navigate(Intro.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
 

@@ -7,7 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.strayalphaca.presentation.screens.settings.home.SettingsHomeScreen
+import com.strayalphaca.presentation.screens.settings.home.SettingsHomeScreenContainer
 import com.strayalphaca.presentation.screens.settings.language_setting.LanguageSettingScreen
 import com.strayalphaca.presentation.screens.settings.push_alarm.PushAlarmScreen
 import com.strayalphaca.presentation.screens.settings.push_alarm.PushAlarmViewModel
@@ -19,7 +19,8 @@ import com.strayalphaca.presentation.screens.settings.withdrawal.WithdrawalViewM
 fun SettingsNavHost(
     navController: NavHostController,
     modifier : Modifier = Modifier,
-    navigateToLogin : () -> Unit
+    navigateToLogin : () -> Unit,
+    navigateToIntro : () -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -28,12 +29,13 @@ fun SettingsNavHost(
     ) {
 
         composable(SettingsHomeScreenDestination.route) {
-            SettingsHomeScreen(
+            SettingsHomeScreenContainer(
                 navigateToLanguageSetting = { navController.navigate(LanguageSettingScreenDestination.route) },
                 navigateToPushAlarm = { navController.navigate(PushAlarmScreenDestination.route) },
                 navigateToScreenLock = { navController.navigate(ScreenLockScreenDestination.route) },
                 navigateToWithdrawal = { navController.navigate(WithdrawalScreenDestination.route) },
-                navigateToLogin = { navigateToLogin() }
+                navigateToLogin = { navigateToLogin() },
+                navigateToIntro = { navigateToIntro() }
             )
         }
 
