@@ -172,10 +172,7 @@ fun RootNavHost(
                         popUpTo(0) { inclusive = true }
                     }
                 },
-                goToLogin = { navController.navigate(LoginGraph.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
+                goToLogin = { navController.navigate(LoginGraph.route) }
             )
         }
 
