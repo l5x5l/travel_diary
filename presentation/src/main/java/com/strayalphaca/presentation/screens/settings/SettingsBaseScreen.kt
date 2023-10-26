@@ -22,7 +22,8 @@ import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 @Composable
 fun SettingsBaseScreen(
     exitSettingNav : () -> Unit = {},
-    goToLogin : () -> Unit = {}
+    goToLogin : () -> Unit = {},
+    goToIntro : () -> Unit = {},
 ) {
     val navController : NavHostController = rememberNavController()
     val currentBackStack by navController.currentBackStackEntryAsState()
@@ -46,7 +47,8 @@ fun SettingsBaseScreen(
             SettingsNavHost(
                 navController = navController,
                 modifier = Modifier.weight(1f),
-                navigateToLogin = goToLogin
+                navigateToLogin = goToLogin,
+                navigateToIntro = goToIntro
             )
         }
     }
