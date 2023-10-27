@@ -5,6 +5,7 @@ import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.MediaFileInfoDto
 import com.strayalphaca.data.all.model.VoiceFileInDiaryDto
 import com.strayalphaca.domain.all.DiaryDate
+import com.strayalphaca.travel_diary.data.diary.model.UploadResponseBody
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryItem
 import com.strayalphaca.travel_diary.diary.model.Feeling
@@ -82,4 +83,8 @@ fun voiceFileInFileDtoToFile(voiceFileInDiaryDto: VoiceFileInDiaryDto) : File {
         type = FileType.VOICE,
         thumbnailLink = null
     )
+}
+
+fun extractIdFromSignupResponse(uploadResponseBody: UploadResponseBody) : String {
+    return uploadResponseBody.id
 }
