@@ -22,6 +22,8 @@ class TestMapRepository @Inject constructor(
             LocationDiary("", Location(LocationId(1), "서울", LocationId(1))),
             LocationDiary("", Location(LocationId(5), "대전", LocationId(5))),
             LocationDiary("", Location(LocationId(3), "울산", LocationId(3))),
+            LocationDiary("", Location(LocationId(18), "울릉", LocationId(18))),
+            LocationDiary("", Location(LocationId(17), "제주", LocationId(17))),
         )
         mapDataStore.setMapData(LocationWithData(null, data = data))
         return BaseResponse.Success(data)
@@ -108,7 +110,16 @@ class TestMapRepository @Inject constructor(
                 )
             }
             17 -> { // 제주도
-                listOf()
+                listOf(
+                    LocationDiary("", Location(LocationId(63), "", LocationId(provinceId), LocationType.CITY_GROUP)),
+                    LocationDiary("", Location(LocationId(64), "", LocationId(provinceId), LocationType.CITY_GROUP)),
+                )
+            }
+            18 -> {
+                listOf(
+                    LocationDiary("", Location(LocationId(65), "", LocationId(provinceId), LocationType.CITY_GROUP)),
+                    LocationDiary("", Location(LocationId(66), "", LocationId(provinceId), LocationType.CITY_GROUP)),
+                )
             }
             else -> {
                 listOf(
