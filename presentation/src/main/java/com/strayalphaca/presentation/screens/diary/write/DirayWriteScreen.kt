@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.strayalphaca.presentation.components.atom.text_button.TextButtonState
 import com.strayalphaca.presentation.components.template.dialog.DiaryLocationPickerDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
 import com.strayalphaca.travel_diary.diary.model.Feeling
@@ -188,6 +189,7 @@ fun DiaryWriteScreen(
                 TextButton(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     text = stringResource(id = R.string.register),
+                    state = if (content.isEmpty()) TextButtonState.INACTIVE else TextButtonState.ACTIVE,
                     onClick = uploadDiary
                 )
             }

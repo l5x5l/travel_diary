@@ -5,6 +5,7 @@ import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.ListResponseData
 import com.strayalphaca.travel_diary.data.diary.model.ModifyDiaryRequestBody
 import com.strayalphaca.travel_diary.data.diary.model.UploadDiaryRequestBody
+import com.strayalphaca.travel_diary.data.diary.model.UploadResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -16,7 +17,7 @@ import retrofit2.http.Query
 
 interface DiaryApi {
     @POST("records")
-    suspend fun uploadDiary(@Body params : UploadDiaryRequestBody) : Response<String>
+    suspend fun uploadDiary(@Body params : UploadDiaryRequestBody) : Response<UploadResponseBody>
 
     @GET("records/{record}")
     suspend fun loadDetailDiary(@Path("record") record : String) : Response<DiaryDto>

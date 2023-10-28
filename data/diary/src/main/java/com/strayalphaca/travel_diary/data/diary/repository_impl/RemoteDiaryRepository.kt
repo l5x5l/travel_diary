@@ -1,6 +1,5 @@
 package com.strayalphaca.travel_diary.data.diary.repository_impl
 
-import com.strayalphaca.data.all.utils.responseToBaseResponse
 import com.strayalphaca.data.all.utils.responseToBaseResponseWithMapping
 import com.strayalphaca.data.all.utils.voidResponseToBaseResponse
 import com.strayalphaca.travel_diary.data.diary.api.DiaryApi
@@ -14,6 +13,7 @@ import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
 import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
 import com.strayalphaca.travel_diary.diary.repository.DiaryRepository
 import com.strayalphaca.domain.model.BaseResponse
+import com.strayalphaca.travel_diary.data.diary.utils.extractIdFromSignupResponse
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -54,7 +54,7 @@ class RemoteDiaryRepository @Inject constructor(
 
     override suspend fun uploadDiary(diaryWriteData: DiaryWriteData): BaseResponse<String> {
         val response = diaryRetrofit.uploadDiary(params = UploadDiaryRequestBody.fromDiaryWriteData(diaryWriteData))
-        return responseToBaseResponse(response)
+        return responseToBaseResponseWithMapping(response, ::extractIdFromSignupResponse)
     }
 
     override suspend fun modifyDiary(diaryModifyData: DiaryModifyData): BaseResponse<Nothing> {
