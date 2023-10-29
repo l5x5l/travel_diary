@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.strayalphaca.presentation.ui.theme.Tape
 
 @Composable
-fun DiaryInMap(modifier: Modifier, onClick : (Int) -> Unit, thumbnailUrl : String, id : Int) {
+fun DiaryInMap(modifier: Modifier, onClick : (Int) -> Unit, thumbnailUrl : String?, id : Int) {
     Surface(
         modifier = modifier
             .padding(2.dp)
@@ -31,12 +31,21 @@ fun DiaryInMap(modifier: Modifier, onClick : (Int) -> Unit, thumbnailUrl : Strin
                 .fillMaxWidth()
                 .padding(2.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(0.8f)
-                    .background(Tape)
-            )
+            if (thumbnailUrl == null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(0.8f)
+                        .background(Tape)
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(0.8f)
+                        .background(Tape)
+                )
+            }
 
             Spacer(modifier = Modifier.height(10.dp))
         }
