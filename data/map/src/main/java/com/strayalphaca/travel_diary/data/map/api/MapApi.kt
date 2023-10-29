@@ -8,9 +8,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface MapApi {
-    @GET("map")
+    @GET("records/map")
     suspend fun getAllLocationDiary() : Response<ListResponseData<MapAllLocationResponseBody>>
 
-    @GET("map")
+    @GET("records/map")
     suspend fun getProvinceDiary(@Query("provinceId") provinceId : Int) : Response<ListResponseData<MapProvinceResponseBody>>
 }
