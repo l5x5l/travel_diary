@@ -28,6 +28,7 @@ class AuthRepositoryImpl @Inject constructor(
             voidResponseToBaseResponse(response)
         } else {
             authDataStore.occurDetectInvalidRefreshToken()
+            authDataStore.clearTokens()
             BaseResponse.Failure(
                 errorMessage = response.message(),
                 errorCode = response.code()
@@ -44,15 +45,15 @@ class AuthRepositoryImpl @Inject constructor(
         return authDataStore.getRefreshToken()
     }
 
-    override fun setAccessToken(accessToken: String) {
+    override suspend fun setAccessToken(accessToken: String) {
         authDataStore.setAccessToken(accessToken)
     }
 
-    override fun setRefreshToken(refreshToken: String) {
+    override suspend fun setRefreshToken(refreshToken: String) {
         authDataStore.setRefreshToken(refreshToken)
     }
 
-    override fun clearToken() {
+    override suspend  fun clearToken() {
         authDataStore.clearTokens()
     }
 

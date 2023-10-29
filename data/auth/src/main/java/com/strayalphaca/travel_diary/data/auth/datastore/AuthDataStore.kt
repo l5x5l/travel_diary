@@ -37,21 +37,15 @@ class AuthDataStore @Inject constructor(
         }
     }
 
-    fun setRefreshToken(refreshToken : String) {
-        runBlocking(Dispatchers.IO) {
-            dataStore.edit { it[REFRESH_TOKEN] = refreshToken }
-        }
+    suspend fun setRefreshToken(refreshToken : String) {
+        dataStore.edit { it[REFRESH_TOKEN] = refreshToken }
     }
 
-    fun setAccessToken(accessToken : String) {
-        runBlocking(Dispatchers.IO) {
-            dataStore.edit { it[ACCESS_TOKEN] = accessToken }
-        }
+    suspend fun setAccessToken(accessToken : String) {
+        dataStore.edit { it[ACCESS_TOKEN] = accessToken }
     }
 
-    fun clearTokens() {
-        runBlocking(Dispatchers.IO) {
-            dataStore.edit { it.clear() }
-        }
+    suspend fun clearTokens() {
+        dataStore.edit { it.clear() }
     }
 }
