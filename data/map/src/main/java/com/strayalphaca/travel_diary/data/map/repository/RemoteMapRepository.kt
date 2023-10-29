@@ -11,7 +11,9 @@ import com.strayalphaca.travel_diary.map.repository.MapRepository
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Retrofit
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RemoteMapRepository @Inject constructor(
     retrofit : Retrofit,
     private val dataStore: MapDataStore

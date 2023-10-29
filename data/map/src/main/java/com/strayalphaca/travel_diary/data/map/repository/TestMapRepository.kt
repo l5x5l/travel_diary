@@ -10,8 +10,9 @@ import com.strayalphaca.travel_diary.map.model.LocationWithData
 import com.strayalphaca.travel_diary.map.repository.MapRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
-// only for testing
+@Singleton
 class TestMapRepository @Inject constructor(
     private val mapDataStore: MapDataStore
 ) : MapRepository {
