@@ -5,16 +5,25 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AuthDataStore @Inject constructor(
     private val dataStore : DataStore<Preferences>
 ) {
     val ACCESS_TOKEN = stringPreferencesKey("access_token")
     val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
+
+    val detectInvalidRefreshToken = MutableSharedFlow<Boolean>()
+
+    suspend fun occurDetectInvalidRefreshToken() {
+        detectInvalidRefreshToken.emit(true)
+    }
 
     fun getAccessToken() : String? {
         return runBlocking(Dispatchers.IO) {
