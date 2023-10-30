@@ -6,7 +6,7 @@ import javax.inject.Inject
 class UseCaseSaveToken @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    operator fun invoke(
+    suspend operator fun invoke(
         accessToken : String? = null, refreshToken : String? = null
     ) {
         accessToken?.let {

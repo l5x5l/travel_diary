@@ -1,12 +1,14 @@
 package com.strayalphaca.travel_diary.domain.auth.repository
 
 import com.strayalphaca.domain.model.BaseResponse
+import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     suspend fun reissueAccessToken() : BaseResponse<Nothing>
     fun getAccessToken() : String?
     fun getRefreshToken() : String?
-    fun setAccessToken(accessToken : String)
-    fun setRefreshToken(refreshToken : String)
-    fun clearToken()
+    suspend fun setAccessToken(accessToken : String)
+    suspend fun setRefreshToken(refreshToken : String)
+    suspend fun clearToken()
+    fun invalidRefreshToken() : Flow<Boolean>
 }

@@ -5,9 +5,12 @@ import com.strayalphaca.travel_diary.data.auth.api.AuthApi
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.auth.datastore.AuthDataStore
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Retrofit
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AuthRepositoryImpl @Inject constructor(
     retrofit: Retrofit,
     private val authDataStore: AuthDataStore
@@ -24,6 +27,8 @@ class AuthRepositoryImpl @Inject constructor(
             authDataStore.setRefreshToken(body.refreshToken)
             voidResponseToBaseResponse(response)
         } else {
+            authDataStore.occurDetectInvalidRefreshToken()
+            authDataStore.clearTokens()
             BaseResponse.Failure(
                 errorMessage = response.message(),
                 errorCode = response.code()
@@ -40,16 +45,20 @@ class AuthRepositoryImpl @Inject constructor(
         return authDataStore.getRefreshToken()
     }
 
-    override fun setAccessToken(accessToken: String) {
+    override suspend fun setAccessToken(accessToken: String) {
         authDataStore.setAccessToken(accessToken)
     }
 
-    override fun setRefreshToken(refreshToken: String) {
+    override suspend fun setRefreshToken(refreshToken: String) {
         authDataStore.setRefreshToken(refreshToken)
     }
 
-    override fun clearToken() {
+    override suspend  fun clearToken() {
         authDataStore.clearTokens()
+    }
+
+    override fun invalidRefreshToken(): Flow<Boolean> {
+        return authDataStore.detectInvalidRefreshToken
     }
 
 }
