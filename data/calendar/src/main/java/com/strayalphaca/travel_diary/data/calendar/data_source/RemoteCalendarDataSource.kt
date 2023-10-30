@@ -8,7 +8,9 @@ import com.strayalphaca.travel_diary.data.calendar.api.CalendarApi
 import com.strayalphaca.travel_diary.data.calendar.models.CalendarDiaryDto
 import retrofit2.Retrofit
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RemoteCalendarDataSource @Inject constructor(
     retrofit: Retrofit
 ) : CalendarDataSource {
