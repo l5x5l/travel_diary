@@ -17,6 +17,7 @@ import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -69,7 +70,8 @@ fun EditTextWithTitle(
                 }
                 innerTextField()
             },
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            cursorBrush = SolidColor(MaterialTheme.colors.onSurface)
         )
         Box(
             modifier = Modifier
