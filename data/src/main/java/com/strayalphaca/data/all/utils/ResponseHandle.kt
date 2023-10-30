@@ -33,7 +33,7 @@ fun<T> responseToBaseResponse(
 }
 
 fun voidResponseToBaseResponse(response : Response<*>) : BaseResponse<Nothing> {
-    return if (response.isSuccessful) {
+    return if (response.isSuccessful || response.code() == 200) {
         BaseResponse.EmptySuccess
     } else {
         BaseResponse.Failure(
