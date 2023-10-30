@@ -316,7 +316,9 @@ class DiaryWriteViewModel @Inject constructor(
                     showInitLoading = false,
                     diaryDate = events.diaryDetail.date,
                     voiceFile = events.diaryDetail.voiceFile?.fileLink?.toUri(),
-                    imageFiles = events.diaryDetail.files.map { it.thumbnailLink?.toUri() ?: it.fileLink.toUri() }
+                    imageFiles = events.diaryDetail.files.map { it.thumbnailLink?.toUri() ?: it.fileLink.toUri() },
+                    cityId = events.diaryDetail.cityId,
+                    cityName = events.diaryDetail.cityName
                 )
             }
             DiaryWriteEvent.DiaryWriteLoading -> {
