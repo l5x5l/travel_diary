@@ -28,10 +28,16 @@ import com.strayalphaca.presentation.screens.start.StartViewModel
 import com.strayalphaca.presentation.screens.video.VideoContainer
 import com.strayalphaca.presentation.screens.video.VideoViewModel
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
+import com.strayalphaca.presentation.utils.collectAsEffect
+import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RootActivity : ComponentActivity() {
+
+    @Inject lateinit var authRepository: AuthRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,10 +45,17 @@ class RootActivity : ComponentActivity() {
             TravelDiaryTheme {
                 val navHostController = rememberNavController()
 
+                authRepository.invalidRefreshToken().collectAsEffect {
+                    if (it) {
+                        navHostController.navigateToIntroTop()
+                    }
+                }
+
                 RootNavHost(navController = navHostController)
             }
         }
     }
+
 }
 
 @Composable
@@ -89,9 +102,7 @@ fun RootNavHost(
                 exitSettingNav = { navController.popBackStack() },
                 goToLogin = { navController.navigate(LoginGraph.route) },
                 goToIntro = {
-                    navController.navigate(Intro.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
+                    navController.navigateToIntroTop()
                 }
             )
         }
@@ -199,6 +210,11 @@ fun RootNavHost(
 
     }
 }
+
+private fun NavHostController.navigateToIntroTop() =
+    this.navigate(Intro.route) {
+        popUpTo(0) { inclusive = true }
+    }
 
 private fun NavHostController.navigateToDiaryDetail(diaryId : String) =
     this.navigate("${DiaryDetail.route}/${diaryId}")
