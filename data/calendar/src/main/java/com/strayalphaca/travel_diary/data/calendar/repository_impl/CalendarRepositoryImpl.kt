@@ -4,7 +4,6 @@ import com.strayalphaca.travel_diary.data.calendar.data_source.CalendarDataSourc
 import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.calendar.data_store.CalendarDataStore
-import com.strayalphaca.travel_diary.data.calendar.utils.diaryDtoToDiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.model.MonthCalendar
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +19,7 @@ class CalendarRepositoryImpl @Inject constructor(
             calendarDataStore.setCalendarData(
                 year = year,
                 month = month,
-                dataList = response.data.map { diaryDtoToDiaryInCalendar(it) }
+                dataList = response.data.map { it.toDiaryInCalendar() }
             )
             BaseResponse.EmptySuccess
         } else {
