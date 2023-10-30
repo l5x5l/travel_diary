@@ -13,7 +13,7 @@ fun UseFinishByBackPressTwice() {
     var backPressedTime = 0L
 
     BackHandler(enabled = true) {
-        if (System.currentTimeMillis() - backPressedTime <= 400L) {
+        if (System.currentTimeMillis() - backPressedTime <= 1000L) {
             (context as Activity).finish()
         } else {
             Toast.makeText(
