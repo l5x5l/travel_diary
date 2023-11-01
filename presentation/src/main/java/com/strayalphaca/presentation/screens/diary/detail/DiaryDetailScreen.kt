@@ -10,6 +10,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme
@@ -254,12 +255,20 @@ fun DiaryDetailScreen(
                                 }
                             )
                         }
-                        Spacer(modifier = Modifier.height(24.dp))
+                    } else {
+                        Divider(
+                            modifier = Modifier
+                                .fillMaxWidth(1f),
+                            thickness = 1.dp,
+                            color = MaterialTheme.colors.onSurface
+                        )
                     }
+
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
                         text = state.diaryDetail.content,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
                         style = MaterialTheme.typography.body2
                     )
 
