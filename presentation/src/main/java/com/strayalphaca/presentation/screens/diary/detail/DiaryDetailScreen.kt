@@ -203,7 +203,7 @@ fun DiaryDetailScreen(
                                 style = MaterialTheme.typography.body2,
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
-                                    .padding(end = 16.dp)
+                                    .padding(end = 10.dp)
                             )
 
                             Text(
@@ -223,7 +223,7 @@ fun DiaryDetailScreen(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                             Text(text = stringResource(id = R.string.today_feeling), style = MaterialTheme.typography.body2)
-                            Spacer(modifier = Modifier.width(6.dp))
+                            Spacer(modifier = Modifier.width(10.dp))
                             ContentIconImage(
                                 iconId = getFeelingIconId(state.diaryDetail.feeling),
                                 descriptionText = state.diaryDetail.feeling.name
@@ -231,7 +231,7 @@ fun DiaryDetailScreen(
                         }
                         Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                             Text(text = stringResource(id = R.string.weather), style = MaterialTheme.typography.body2)
-                            Spacer(modifier = Modifier.width(6.dp))
+                            Spacer(modifier = Modifier.width(10.dp))
                             ContentIconImage(
                                 iconId = state.diaryDetail.weather?.let { getWeatherIconId(it) }
                                     ?: R.drawable.ic_weather_sunny,
@@ -254,9 +254,8 @@ fun DiaryDetailScreen(
                                 }
                             )
                         }
+                        Spacer(modifier = Modifier.height(24.dp))
                     }
-
-                    Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
                         text = state.diaryDetail.content,
