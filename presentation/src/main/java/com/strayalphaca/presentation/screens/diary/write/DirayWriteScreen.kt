@@ -52,6 +52,7 @@ import com.strayalphaca.presentation.screens.diary.util.getFeelingIconId
 import com.strayalphaca.presentation.screens.diary.util.getWeatherIconId
 import com.strayalphaca.presentation.utils.GetMediaActivityResultContract
 import com.strayalphaca.presentation.utils.checkUriIsVideo
+import com.strayalphaca.presentation.utils.collectAsEffect
 import com.strayalphaca.presentation.utils.isPhotoPickerAvailable
 
 @Composable
@@ -65,9 +66,8 @@ fun DiaryWriteContainer(
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
-    val goBackNavigationEvent by viewModel.goBackNavigationEvent.collectAsState(initial = false)
 
-    LaunchedEffect(goBackNavigationEvent) {
+    viewModel.goBackNavigationEvent.collectAsEffect { goBackNavigationEvent ->
         if (goBackNavigationEvent)
             goBackWithModifySuccessResult()
     }

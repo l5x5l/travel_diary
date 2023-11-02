@@ -46,6 +46,7 @@ import com.strayalphaca.domain.all.DiaryDate
 import com.strayalphaca.presentation.screens.diary.component.ContentIconImage
 import com.strayalphaca.presentation.screens.diary.util.getFeelingIconId
 import com.strayalphaca.presentation.screens.diary.util.getWeatherIconId
+import com.strayalphaca.presentation.utils.collectAsEffect
 
 @Composable
 fun DiaryDetailContainer(
@@ -59,14 +60,13 @@ fun DiaryDetailContainer(
 ) {
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
-    val deleteSuccess by viewModel.goBackNavigationEvent.collectAsState(initial = false)
 
     LaunchedEffect(needRefresh) {
         if (needRefresh)
             viewModel.tryRefresh()
     }
 
-    LaunchedEffect(deleteSuccess) {
+    viewModel.goBackNavigationEvent.collectAsEffect { deleteSuccess ->
         if (deleteSuccess)
             goBackWithDeleteSuccess()
     }
