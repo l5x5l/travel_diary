@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.strayalphaca.presentation.components.atom.text_button.TextButton
 import com.strayalphaca.presentation.R
+import com.strayalphaca.presentation.components.template.dialog.TwoButtonDialog
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import com.strayalphaca.presentation.utils.collectAsEffect
 
@@ -28,6 +29,7 @@ fun SettingsHomeScreenContainer(
     navigateToIntro : () -> Unit = {}
 ) {
     val isLogin by viewModel.isLogin.collectAsState()
+    val showLogoutCheckDialog by viewModel.logoutCheckDialogVisible.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.checkIsLogin()
@@ -39,13 +41,28 @@ fun SettingsHomeScreenContainer(
         }
     }
 
+    if (showLogoutCheckDialog) {
+        TwoButtonDialog(
+            title = stringResource(id = R.string.logout),
+            mainText = stringResource(id = R.string.logout_check_dialog_text),
+            leftButtonText = stringResource(id = R.string.no),
+            leftButtonClick = viewModel::hideLogoutCheckDialog,
+            rightButtonText = stringResource(id = R.string.yes),
+            rightButtonClick = {
+                viewModel.hideLogoutCheckDialog()
+                viewModel.logout()
+            },
+            onDismissRequest = viewModel::hideLogoutCheckDialog
+        )
+    }
+
     SettingsHomeScreen(
         navigateToPushAlarm = navigateToPushAlarm,
         navigateToLanguageSetting = navigateToLanguageSetting,
         navigateToScreenLock = navigateToScreenLock,
         navigateToWithdrawal = navigateToWithdrawal,
         navigateToLogin = navigateToLogin,
-        logoutClick = viewModel::logout,
+        logoutClick = viewModel::showLogoutCheckDialog,
         isLogin = isLogin
     )
 }
