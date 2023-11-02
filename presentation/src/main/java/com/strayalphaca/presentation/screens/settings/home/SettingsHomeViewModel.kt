@@ -17,11 +17,22 @@ class SettingsHomeViewModel @Inject constructor(
     private val useCaseGetAccessToken: UseCaseGetAccessToken,
     private val useCaseClearToken: UseCaseClearToken
 ) : ViewModel() {
-    private val _isLogin = MutableStateFlow<Boolean>(false)
+    private val _isLogin = MutableStateFlow(false)
     val isLogin = _isLogin.asStateFlow()
+
+    private val _logoutCheckDialogVisible = MutableStateFlow(false)
+    val logoutCheckDialogVisible = _logoutCheckDialogVisible.asStateFlow()
 
     private val _navigateToIntroEvent = MutableSharedFlow<Boolean>()
     val navigateToIntroEvent = _navigateToIntroEvent.asSharedFlow()
+
+    fun showLogoutCheckDialog() {
+        _logoutCheckDialogVisible.value = true
+    }
+
+    fun hideLogoutCheckDialog() {
+        _logoutCheckDialogVisible.value = false
+    }
 
     fun checkIsLogin() {
         viewModelScope.launch {
