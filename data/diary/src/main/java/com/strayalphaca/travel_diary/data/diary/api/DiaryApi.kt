@@ -28,9 +28,9 @@ interface DiaryApi {
     @PATCH("records/{recordId}")
     suspend fun modifyDiary(@Path("recordId") recordId : String, @Body params : ModifyDiaryRequestBody) : Response<Unit>
 
-    @GET("map")
+    @GET("records/map")
     suspend fun loadDiaryList(@Query("cityId") cityId : Int, @Query("page") page : Int, @Query("offset") offset : Int) : Response<ListResponseData<DiaryItemDto>>
 
-    @GET("map")
+    @GET("records/map")
     suspend fun loadDiaryListByCityGroup(@Query("cityGroupId") cityGroupId : Int, @Query("page") page : Int, @Query("offset") offset : Int) : Response<ListResponseData<DiaryItemDto>>
 }

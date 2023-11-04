@@ -10,9 +10,9 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -35,7 +35,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.res.painterResource
 import androidx.core.net.toUri
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.Feeling
@@ -44,6 +43,10 @@ import com.strayalphaca.travel_diary.diary.model.FileType
 import com.strayalphaca.presentation.components.template.dialog.TwoButtonDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
 import com.strayalphaca.domain.all.DiaryDate
+import com.strayalphaca.presentation.screens.diary.component.ContentIconImage
+import com.strayalphaca.presentation.screens.diary.util.getFeelingIconId
+import com.strayalphaca.presentation.screens.diary.util.getWeatherIconId
+import com.strayalphaca.presentation.utils.collectAsEffect
 
 @Composable
 fun DiaryDetailContainer(
@@ -57,14 +60,13 @@ fun DiaryDetailContainer(
 ) {
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
-    val deleteSuccess by viewModel.goBackNavigationEvent.collectAsState(initial = false)
 
     LaunchedEffect(needRefresh) {
         if (needRefresh)
             viewModel.tryRefresh()
     }
 
-    LaunchedEffect(deleteSuccess) {
+    viewModel.goBackNavigationEvent.collectAsEffect { deleteSuccess ->
         if (deleteSuccess)
             goBackWithDeleteSuccess()
     }
@@ -202,7 +204,7 @@ fun DiaryDetailScreen(
                                 style = MaterialTheme.typography.body2,
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
-                                    .padding(end = 16.dp)
+                                    .padding(end = 10.dp)
                             )
 
                             Text(
@@ -222,20 +224,19 @@ fun DiaryDetailScreen(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                             Text(text = stringResource(id = R.string.today_feeling), style = MaterialTheme.typography.body2)
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_feeling_angry),
-                                contentDescription = null,
-                                modifier = Modifier.size(36.dp)
+                            Spacer(modifier = Modifier.width(10.dp))
+                            ContentIconImage(
+                                iconId = getFeelingIconId(state.diaryDetail.feeling),
+                                descriptionText = state.diaryDetail.feeling.name
                             )
                         }
                         Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                             Text(text = stringResource(id = R.string.weather), style = MaterialTheme.typography.body2)
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_weather_sunny),
-                                contentDescription = null,
-                                modifier = Modifier.size(36.dp)
+                            Spacer(modifier = Modifier.width(10.dp))
+                            ContentIconImage(
+                                iconId = state.diaryDetail.weather?.let { getWeatherIconId(it) }
+                                    ?: R.drawable.ic_weather_sunny,
+                                descriptionText = state.diaryDetail.weather?.toString()
                             )
                         }
                     }
@@ -254,13 +255,20 @@ fun DiaryDetailScreen(
                                 }
                             )
                         }
+                    } else {
+                        Divider(
+                            modifier = Modifier
+                                .fillMaxWidth(1f),
+                            thickness = 1.dp,
+                            color = MaterialTheme.colors.onSurface
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
                         text = state.diaryDetail.content,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
                         style = MaterialTheme.typography.body2
                     )
 
