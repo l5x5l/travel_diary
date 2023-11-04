@@ -93,7 +93,7 @@ class CalendarViewModel @Inject constructor(
                 state.copy(clickEnable = false)
             }
             is CalendarViewEvent.SuccessCheckingTodayWritten -> {
-                if (!event.written) {
+                if (event.writable) {
                     callGoDiaryWriteNavigationEvent()
                 } else {
                     makeToast()
@@ -119,6 +119,6 @@ sealed class CalendarViewEvent{
     class SuccessLoadDiaryData(val year : Int, val month : Int, val diaryData : List<DiaryInCalendar?>) : CalendarViewEvent()
     object FailureLoadDiaryData : CalendarViewEvent()
     object CheckingTodayWritten : CalendarViewEvent()
-    class SuccessCheckingTodayWritten(val written : Boolean) : CalendarViewEvent()
+    class SuccessCheckingTodayWritten(val writable : Boolean) : CalendarViewEvent()
     object FailureCheckingTodayWritten : CalendarViewEvent()
 }

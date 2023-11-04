@@ -1,7 +1,6 @@
 package com.strayalphaca.travel_diary.data.calendar.data_source
 
 import com.strayalphaca.data.all.utils.responseToBaseResponseWithMapping
-import com.strayalphaca.data.all.utils.voidResponseToBaseResponse
 import com.strayalphaca.domain.all.DiaryDate
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.calendar.api.CalendarApi
@@ -24,7 +23,19 @@ class RemoteCalendarDataSource @Inject constructor(
     override suspend fun checkWrittenOnToday(): BaseResponse<Boolean> {
         val todayDateString = DiaryDate.getInstanceFromCalendar()
         val response = calendarRetrofit.checkRecordExists(todayDateString.toString())
-        return voidResponseToBaseResponse(response)
+
+        val baseResponse = when {
+            response.isSuccessful && response.code() == 200 -> {
+                BaseResponse.Success(data = true)
+            }
+            response.isSuccessful && response.code() != 200 -> {
+                BaseResponse.Success(data = false)
+            }
+            else -> {
+                BaseResponse.Failure(errorCode = response.code(), errorMessage = response.message())
+            }
+        }
+        return baseResponse
     }
 
 }
