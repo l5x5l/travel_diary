@@ -36,7 +36,7 @@ class RemoteFileRepository @Inject constructor(
                 throw IllegalArgumentException("cannot find file's type : $fileInfo")
             }
         }
-        val response = fileRetrofit.uploadFiles(partMap)
-        return responseToBaseResponseWithMapping(response) { it.data[0] }
+        val response = fileRetrofit.uploadFile(partMap)
+        return responseToBaseResponseWithMapping(response) { it.id }
     }
 }
