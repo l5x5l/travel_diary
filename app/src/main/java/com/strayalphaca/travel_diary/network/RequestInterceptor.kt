@@ -3,8 +3,11 @@ package com.strayalphaca.travel_diary.network
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
+import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
+import okhttp3.ResponseBody.Companion.toResponseBody
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 class RequestInterceptor @Inject constructor(
@@ -13,7 +16,16 @@ class RequestInterceptor @Inject constructor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = setRequestHeader(chain)
-        val response = chain.proceed(request)
+        val response = try {
+            chain.proceed(request)
+        } catch (e : SocketTimeoutException) {
+            return Response.Builder()
+                .request(request)
+                .protocol(Protocol.HTTP_1_1)
+                .code(407)
+                .message("socket timeout error")
+                .body("{${e}}".toResponseBody(null)).build()
+        }
 
         val currentRefreshToken = authRepository.getRefreshToken()
         if (response.code != 407 && response.code != 401) {
