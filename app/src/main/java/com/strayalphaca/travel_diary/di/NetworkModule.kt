@@ -20,6 +20,9 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val base_url = BuildConfig.SERVER_URL
+    private const val connect_timeout_milli = 10000L
+    private const val write_timeout_milli = 10000L
+    private const val read_timeout_milli = 5000L
 
     @Singleton
     @Provides
@@ -35,9 +38,9 @@ object NetworkModule {
         }
 
         return OkHttpClient.Builder()
-            .connectTimeout(10000L, TimeUnit.MILLISECONDS)
-            .writeTimeout(10000L, TimeUnit.MILLISECONDS)
-            .readTimeout(5000L, TimeUnit.MILLISECONDS)
+            .connectTimeout(connect_timeout_milli, TimeUnit.MILLISECONDS)
+            .writeTimeout(write_timeout_milli, TimeUnit.MILLISECONDS)
+            .readTimeout(read_timeout_milli, TimeUnit.MILLISECONDS)
             .addInterceptor(RequestInterceptor(
                 setOf(), authRepository
             ))
@@ -61,9 +64,9 @@ object NetworkModule {
     @Provides
     fun provideReissueRetrofit(): Retrofit {
         val client = OkHttpClient.Builder()
-            .connectTimeout(10000L, TimeUnit.MILLISECONDS)
-            .writeTimeout(10000L, TimeUnit.MILLISECONDS)
-            .readTimeout(5000L, TimeUnit.MILLISECONDS)
+            .connectTimeout(connect_timeout_milli, TimeUnit.MILLISECONDS)
+            .writeTimeout(write_timeout_milli, TimeUnit.MILLISECONDS)
+            .readTimeout(read_timeout_milli, TimeUnit.MILLISECONDS)
             .build()
 
         return Retrofit.Builder()
