@@ -11,7 +11,9 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Retrofit
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RemoteFileRepository @Inject constructor(
     retrofit : Retrofit
 ) : FileRepository {
