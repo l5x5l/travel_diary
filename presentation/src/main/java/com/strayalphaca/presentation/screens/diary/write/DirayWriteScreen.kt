@@ -316,7 +316,7 @@ fun DiaryWriteScreen(
                     if (state.imageFiles.isNotEmpty()) {
                         HorizontalPager(pageCount = state.imageFiles.size) {
                             val isVideo = checkUriIsVideo(state.imageFiles[it], context)
-                            PolaroidView(fileUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo, onDeleteClick = deleteImageFile)
+                            PolaroidView(fileUri = state.imageFiles[it], thumbnailUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo, onDeleteClick = deleteImageFile)
                         }
                         Spacer(modifier = Modifier.height(24.dp))
                     }
