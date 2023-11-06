@@ -10,5 +10,5 @@ import retrofit2.http.PartMap
 interface FileApi {
     @Multipart
     @POST("files")
-    suspend fun uploadFile(@PartMap params : Map<String, RequestBody>) : Response<FileDto>
+    suspend fun uploadFile(@PartMap params : MutableMap<String, RequestBody>) : Response<FileDto>
 }
