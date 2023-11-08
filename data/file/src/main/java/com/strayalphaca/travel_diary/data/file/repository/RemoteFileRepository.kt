@@ -11,7 +11,9 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Retrofit
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RemoteFileRepository @Inject constructor(
     retrofit : Retrofit
 ) : FileRepository {
@@ -36,7 +38,7 @@ class RemoteFileRepository @Inject constructor(
                 throw IllegalArgumentException("cannot find file's type : $fileInfo")
             }
         }
-        val response = fileRetrofit.uploadFiles(partMap)
-        return responseToBaseResponseWithMapping(response) { it.data[0] }
+        val response = fileRetrofit.uploadFile(partMap)
+        return responseToBaseResponseWithMapping(response) { it.id }
     }
 }
