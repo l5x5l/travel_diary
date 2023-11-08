@@ -22,6 +22,7 @@ gson = "2.8.5"
 datastore = "1.0.0"
 paging = "3.1.1"
 paging_compose = "3.2.0"
+coroutine = "1.7.3"
 
 [libraries]
 android-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -76,7 +77,8 @@ kotlin_reflection = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", v
 paging3 = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging3Compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging_compose" }
 
-coroutine = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.7.3"}
+coroutine = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine"}
+coroutine_test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutine" }
 
 [bundles]
 okhttp3 = ["okhttp3-okhttp", "okhttp3-logging-interceptor"]
@@ -85,3 +87,4 @@ by-viewmodel = ["androidx-activity", "andoridx-fragment"]
 exoplayer = ["exoplayer", "exoplayer-dash", "exoplayer-ui"]
 coil = ["coil", "coil-video", "coil-compose"]
 datastore = ["datastore", "datastore_core"]
+coroutine = ["coroutine", "coroutine_test"]
