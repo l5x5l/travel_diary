@@ -41,7 +41,7 @@ class DiaryListSimplePaging(
                     state.value = SimplePagingState.IDLE
                 }
                 data.value = response
-                currentKey = initKey + firstLoadingPageRatio - 1
+                currentKey = initKey + firstLoadingPageRatio
             } catch (e : Exception) {
                 if (e !is CancellationException)
                     state.value = SimplePagingState.FAILURE_INIT
@@ -93,5 +93,11 @@ class DiaryListSimplePaging(
             }
         }
 
+    }
+
+    override fun clear() {
+        requestJob?.cancel()
+        data.value = emptyList()
+        state.value = SimplePagingState.IDLE
     }
 }

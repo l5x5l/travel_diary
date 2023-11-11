@@ -77,4 +77,9 @@ class DiaryListViewModel @Inject constructor(
             diaryListSimplePaging.load()
         }
     }
+
+    override fun onCleared() {
+        diaryListSimplePaging.clear()
+        super.onCleared()
+    }
 }
