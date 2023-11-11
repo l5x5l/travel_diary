@@ -143,13 +143,64 @@ class SimplePagingTest {
         assertEquals(samplePagingDataContainer.getMaxCount(), data.size)
 
     }
+
+    /**
+     * 일지의 위치가 수정된 경우, 기존 위치에 해당하는 일지 리스트에는 표시되면 안되기 때문에 제거되어야 함.
+     */
+    @Test
+    fun delete_position_changed_item() = runTest {
+        diaryListSimplePaging.load()
+        withContext(Dispatchers.Default) {
+            delay(510L)
+        }
+
+        diaryListSimplePaging.modifyItem(
+            DiaryItem(id = "5", imageUrl = null, cityName = "")
+        )
+
+        val data = diaryListSimplePaging.pagingData().first()
+        assertEquals(9, data.size)
+    }
+
+    @Test
+    fun modify_item() = runTest {
+        diaryListSimplePaging.load()
+        withContext(Dispatchers.Default) {
+            delay(510L)
+        }
+
+        val changedImageUrl = "changed_image_url"
+        diaryListSimplePaging.modifyItem(
+            DiaryItem(id = "5", imageUrl = changedImageUrl, cityName = "Seoul")
+        )
+
+        val data = diaryListSimplePaging.pagingData().first()
+        val target = data.find { it.id == "5" }
+        assertEquals(changedImageUrl, target?.imageUrl)
+    }
+
+    @Test
+    fun delete_item() = runTest {
+        diaryListSimplePaging.load()
+        withContext(Dispatchers.Default) {
+            delay(510L)
+        }
+
+        diaryListSimplePaging.deleteItem(
+            DiaryItem(id = "5", imageUrl = "", cityName = "Seoul")
+        )
+
+        val data = diaryListSimplePaging.pagingData().first()
+        val target = data.find { it.id == "5" }
+        assertEquals(null, target?.imageUrl)
+    }
 }
 
 class SamplePagingDataContainer() {
 
     private val maxCount = 35
     private val dataList = MutableList(maxCount) { index ->
-        DiaryItem(id = index.toString(), imageUrl = null, cityName = "")
+        DiaryItem(id = index.toString(), imageUrl = null, cityName = "Seoul")
     }
     private val delayMap = mutableMapOf(0 to 500L, 1 to 200L, 2 to 200L, 3 to 200L, 4 to 200L)
 

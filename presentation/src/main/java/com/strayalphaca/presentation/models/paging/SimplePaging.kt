@@ -7,4 +7,6 @@ interface SimplePaging<T> {
     suspend fun refresh()
     suspend fun load()
     fun pagingState() : Flow<SimplePagingState>
+    suspend fun modifyItem(item : T)
+    suspend fun deleteItem(item : T)
 }

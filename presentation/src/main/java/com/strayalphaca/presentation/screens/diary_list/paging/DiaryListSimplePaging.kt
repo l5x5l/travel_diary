@@ -74,4 +74,24 @@ class DiaryListSimplePaging(
     }
 
     override fun pagingState(): Flow<SimplePagingState> = state
+
+    override suspend fun deleteItem(item: DiaryItem) {
+        val currentDataList = data.value
+        data.value = currentDataList.filter { it.id != item.id }
+    }
+
+    override suspend fun modifyItem(item: DiaryItem) {
+        val currentDataList = data.value
+        val targetDiaryItem = currentDataList.find { it.id == item.id } ?: return
+
+        // 만약 일지 수정 과정에서 위치 정보를 변경했다면, 현재 목록에는 표시되면 안되므로 해당 일지를 제거
+        if (targetDiaryItem.cityName != item.cityName) {
+            deleteItem(item)
+        } else {
+            data.value = currentDataList.map {
+                if (it.id == item.id) { item } else { it }
+            }
+        }
+
+    }
 }
