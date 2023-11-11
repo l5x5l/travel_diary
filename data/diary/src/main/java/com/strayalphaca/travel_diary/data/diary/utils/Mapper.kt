@@ -1,6 +1,7 @@
 package com.strayalphaca.travel_diary.data.diary.utils
 
 import com.strayalphaca.data.all.model.DiaryDto
+import com.strayalphaca.data.all.model.DiaryItemCityGroupDto
 import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.MediaFileInfoDto
 import com.strayalphaca.data.all.model.VoiceFileInDiaryDto
@@ -35,6 +36,14 @@ fun diaryListDtoToDiaryItem(diaryItemDto: DiaryItemDto) : DiaryItem {
         id = diaryItemDto.id,
         imageUrl = diaryItemDto.image?.shortLink ?: diaryItemDto.image?.uploadedLink,
         cityName = City.findCity(diaryItemDto.cityId).name
+    )
+}
+
+fun diaryListCityGroupDtoToDiaryItem(diaryItemCityGroupDto: DiaryItemCityGroupDto) : DiaryItem {
+    return DiaryItem(
+        id = diaryItemCityGroupDto.id,
+        imageUrl = diaryItemCityGroupDto.image?.shortLink ?: diaryItemCityGroupDto.image?.uploadedLink,
+        cityName = City.findCity(diaryItemCityGroupDto.provinceId).name
     )
 }
 

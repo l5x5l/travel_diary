@@ -13,6 +13,7 @@ import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
 import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
 import com.strayalphaca.travel_diary.diary.repository.DiaryRepository
 import com.strayalphaca.domain.model.BaseResponse
+import com.strayalphaca.travel_diary.data.diary.utils.diaryListCityGroupDtoToDiaryItem
 import com.strayalphaca.travel_diary.data.diary.utils.extractIdFromSignupResponse
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -46,7 +47,7 @@ class RemoteDiaryRepository @Inject constructor(
     ): List<DiaryItem> {
         val response = diaryRetrofit.loadDiaryListByCityGroup(cityGroupId = cityGroupId, page = perPage, offset = offset)
         if (response.isSuccessful && response.body() != null) {
-            return response.body()!!.data.map { diaryListDtoToDiaryItem(it) }
+            return response.body()!!.data.map { diaryListCityGroupDtoToDiaryItem(it) }
         } else {
             throw Exception("error occur when load diaryList : $cityGroupId, $perPage, $offset")
         }
