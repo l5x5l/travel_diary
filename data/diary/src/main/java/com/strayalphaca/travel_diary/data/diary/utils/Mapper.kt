@@ -59,7 +59,7 @@ internal fun feelingStringToEnum(feeling : String) : Feeling {
     }
 }
 
-internal fun weatherStringToEnum(weather : String?) : Weather? {
+internal fun weatherStringToEnum(weather : String?) : Weather {
     return when (weather) {
         "SUNNY" -> Weather.SUNNY
         "PARTLY_CLOUDY" -> Weather.PARTLY_CLOUDY
@@ -68,7 +68,7 @@ internal fun weatherStringToEnum(weather : String?) : Weather? {
         "RAINY" -> Weather.RAINY
         "SNOWY" -> Weather.SNOWY
         "WINDY" -> Weather.WINDY
-        else -> null
+        else -> Weather.SUNNY
     }
 }
 

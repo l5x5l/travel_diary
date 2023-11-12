@@ -415,7 +415,7 @@ data class DiaryWriteState(
     val voiceFile : Uri ?= null,
     val imageFiles : List<Uri> = listOf(),
     val feeling: Feeling = Feeling.HAPPY,
-    val weather: Weather? = null,
+    val weather: Weather = Weather.SUNNY,
     val currentShowSelectView: CurrentShowSelectView ?= null,
     val musicPlaying : Boolean = false,
     val showInitLoading : Boolean = false,

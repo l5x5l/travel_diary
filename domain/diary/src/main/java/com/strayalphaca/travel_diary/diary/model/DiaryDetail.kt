@@ -5,7 +5,7 @@ import com.strayalphaca.domain.all.DiaryDate
 data class DiaryDetail(
     val id : String,
     val date : DiaryDate,
-    val weather : Weather?,
+    val weather : Weather,
     val feeling: Feeling,
     val content : String,
     val files : List<File>,
@@ -18,7 +18,7 @@ data class DiaryDetail(
 data class DiaryWriteData(
     val recordDate : DiaryDate,
     val feeling: Feeling,
-    val weather: Weather?,
+    val weather: Weather,
     val content: String,
     val medias : List<String>?,
     val voice : String?,
