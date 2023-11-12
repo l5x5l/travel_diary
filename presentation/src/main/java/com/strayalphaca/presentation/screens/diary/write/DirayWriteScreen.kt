@@ -277,9 +277,8 @@ fun DiaryWriteScreen(
                                     .padding(end = 10.dp)
                             )
                             ContentIconImage(
-                                iconId = state.weather?.let { getWeatherIconId(it) }
-                                    ?: R.drawable.ic_weather_sunny,
-                                descriptionText = state.weather?.toString(),
+                                iconId = getWeatherIconId(state.weather),
+                                descriptionText = state.weather.toString(),
                                 onClick = {
                                     showSelectView(CurrentShowSelectView.WEATHER)
                                 }
