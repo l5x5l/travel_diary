@@ -390,7 +390,7 @@ fun DiaryWriteScreen(
                             if (isPhotoPickerAvailable()) {
                                 photoPickerLauncher.launch(
                                     PickVisualMediaRequest(
-                                        ActivityResultContracts.PickVisualMedia.ImageAndVideo
+                                        ActivityResultContracts.PickVisualMedia.ImageOnly
                                     )
                                 )
                             } else {
