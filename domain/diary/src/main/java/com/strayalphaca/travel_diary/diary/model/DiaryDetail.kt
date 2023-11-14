@@ -35,4 +35,8 @@ data class DiaryModifyData(
     val voice : String?,
     val cityId : Int?,
     val cityName : String ?= null
-)
+) {
+    fun toDiaryItem() : DiaryItem {
+        return DiaryItem(id = id, imageUrl = medias?.getOrNull(0), cityName = cityName ?: "-")
+    }
+}
