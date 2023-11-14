@@ -104,8 +104,10 @@ fun DiaryListScreen(
     }
     val color = if (isSystemInDarkTheme()) Gray4 else Gray2
 
-    LaunchedEffect(title) {
-        lazyColumnListState.scrollToItem(0)
+    LaunchedEffect(pagingState) {
+        if (pagingState == SimplePagingState.LOADING_INIT) {
+            lazyColumnListState.scrollToItem(0)
+        }
     }
 
     LaunchedEffect(startPaginate.value) {
@@ -262,7 +264,7 @@ fun DiaryListScreen(
 )
 @Preview(showBackground = true, widthDp = 360)
 fun DiaryListScreenPreview() {
-    val data = listOf<DiaryItem>(
+    val data = listOf(
         DiaryItem("1", null, "서울"),
         DiaryItem("2", null, "부산"),
         DiaryItem("3", null, "울산"),
