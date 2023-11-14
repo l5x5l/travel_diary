@@ -3,6 +3,7 @@ package com.strayalphaca.presentation.screens.diary_list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.presentation.screens.diary_list.paging.DiaryListSimplePaging
+import com.strayalphaca.travel_diary.diary.model.DiaryItemUpdate
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryList
 import com.strayalphaca.travel_diary.map.model.City
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +32,21 @@ class DiaryListViewModel @Inject constructor(
 
     private val _locationTitle = MutableStateFlow("-")
     val locationTitle = _locationTitle.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            useCaseGetDiaryList.getUpdatedDiary().collect {
+                when (it) {
+                    is DiaryItemUpdate.Delete -> {
+                        diaryListSimplePaging.deleteItem(it.item)
+                    }
+                    is DiaryItemUpdate.Modify -> {
+                        diaryListSimplePaging.modifyItem(it.item)
+                    }
+                }
+            }
+        }
+    }
 
     fun setCityGroup(cityGroupId : Int) {
         if (this.cityGroupId == cityGroupId) return
