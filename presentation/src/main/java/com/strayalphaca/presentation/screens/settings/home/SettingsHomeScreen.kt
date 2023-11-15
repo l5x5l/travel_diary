@@ -81,12 +81,12 @@ fun SettingsHomeScreen(
         .fillMaxWidth()
         .padding(horizontal = 32.dp, vertical = 12.dp)
     ) {
-        TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.push_alarm), onClick = navigateToPushAlarm)
         // TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.screen_lock), onClick = navigateToScreenLock)
         // TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.language_setting), onClick = navigateToLanguageSetting)
 
         // 로그인 상태에 따라 로그인/로그아웃 전환 필요
         if (isLogin) {
+            TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.push_alarm), onClick = navigateToPushAlarm)
             TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.logout), onClick = logoutClick)
             TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.withdrawal), onClick = navigateToWithdrawal)
         } else {
