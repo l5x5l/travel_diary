@@ -35,15 +35,15 @@ fun DiaryLocationPickerDialog(
     onDismissRequest : () -> Unit = {},
     onCitySelect: (Int?) -> Unit,
     title : String = stringResource(id = R.string.select_location),
-    message : String = stringResource(id = R.string.select_location_message)
+    message : String = stringResource(id = R.string.select_location_message),
+    prevSelectedCityId : Int? = null
 ) {
-    var selectedProvinceId by remember { mutableStateOf<Int?>(null) }
-    var selectedCityId by remember { mutableStateOf<Int?>(null) }
+    var selectedProvinceId by remember { mutableStateOf(prevSelectedCityId?.let{City.findCity(it).provinceId}) }
+    var selectedCityId by remember { mutableStateOf(prevSelectedCityId) }
     var cityList by remember { mutableStateOf<List<City>>(emptyList()) }
 
     LaunchedEffect(selectedProvinceId) {
         selectedProvinceId?.let {
-            selectedCityId = null
             cityList = City.getCityListInProvince(it)
         }
     }
@@ -83,6 +83,7 @@ fun DiaryLocationPickerDialog(
                                 )
                                 .clickable {
                                     selectedProvinceId = province.id
+                                    selectedCityId = null
                                 }
                                 .padding(vertical = 8.dp)
                             ,

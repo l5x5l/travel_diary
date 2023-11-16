@@ -170,7 +170,8 @@ fun DiaryWriteScreen(
             title = stringResource(id = R.string.select_location),
             message = stringResource(id = R.string.select_location_message),
             onDismissRequest = hideLocationPickerDialog,
-            onCitySelect = selectCityById
+            onCitySelect = selectCityById,
+            prevSelectedCityId = state.cityId
         )
     }
 
