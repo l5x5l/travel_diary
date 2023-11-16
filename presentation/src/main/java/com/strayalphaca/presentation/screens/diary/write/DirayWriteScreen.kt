@@ -122,7 +122,7 @@ fun DiaryWriteScreen(
     uploadDiary : () -> Unit = {},
     showLocationPickerDialog : () -> Unit = {},
     hideLocationPickerDialog : () -> Unit = {},
-    selectCityById : (Int) -> Unit = {}
+    selectCityById : (Int?) -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current

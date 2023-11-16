@@ -2,6 +2,7 @@ package com.strayalphaca.presentation.components.template.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,7 +33,7 @@ import com.strayalphaca.travel_diary.map.model.Province
 @Composable
 fun DiaryLocationPickerDialog(
     onDismissRequest : () -> Unit = {},
-    onCitySelect: (Int) -> Unit,
+    onCitySelect: (Int?) -> Unit,
     title : String = stringResource(id = R.string.select_location),
     message : String = stringResource(id = R.string.select_location_message)
 ) {
@@ -103,8 +104,15 @@ fun DiaryLocationPickerDialog(
                                 .background(
                                     color = if (selectedCityId == city.id) MaterialTheme.colors.onSurface else MaterialTheme.colors.surface
                                 )
-                                .clickable {
-                                    selectedCityId = city.id
+                                .clickable(
+                                    indication = null,
+                                    interactionSource = remember{ MutableInteractionSource() }
+                                ) {
+                                    selectedCityId = if (selectedCityId == city.id) {
+                                        null
+                                    } else {
+                                        city.id
+                                    }
                                 }
                                 .padding(vertical = 8.dp)
                             ,
@@ -132,9 +140,8 @@ fun DiaryLocationPickerDialog(
                 TextButton(
                     onClick = {
                         onDismissRequest()
-                        selectedCityId?.let(onCitySelect)
-                    },
-                    enabled = (selectedCityId != null)
+                        onCitySelect(selectedCityId)
+                    }
                 ) {
                     Text(text = stringResource(id = R.string.confirm), color = MaterialTheme.colors.onSurface)
                 }
