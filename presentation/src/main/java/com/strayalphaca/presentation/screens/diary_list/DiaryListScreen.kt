@@ -1,8 +1,6 @@
 package com.strayalphaca.presentation.screens.diary_list
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -43,8 +41,8 @@ import com.strayalphaca.presentation.components.block.DiaryItemView
 import com.strayalphaca.presentation.components.block.TapePolaroidView
 import com.strayalphaca.presentation.components.template.dialog.CityPickerDialog
 import com.strayalphaca.presentation.models.paging.SimplePagingState
-import com.strayalphaca.presentation.ui.theme.Gray2
-import com.strayalphaca.presentation.ui.theme.Gray4
+import com.strayalphaca.presentation.screens.diary_list.component.EndOfPageView
+import com.strayalphaca.presentation.screens.diary_list.component.NextPageLoadFailView
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import com.strayalphaca.travel_diary.diary.model.DiaryItem
 
@@ -102,7 +100,6 @@ fun DiaryListScreen(
                 ?: -6) >= lazyColumnListState.layoutInfo.totalItemsCount - 4
         }
     }
-    val color = if (isSystemInDarkTheme()) Gray4 else Gray2
 
     LaunchedEffect(pagingState) {
         if (pagingState == SimplePagingState.LOADING_INIT) {
@@ -205,14 +202,11 @@ fun DiaryListScreen(
                                     item(span = { GridItemSpan(2)}) {
                                         when (pagingState) {
                                             SimplePagingState.LAST -> {
-                                                Canvas(
+                                                EndOfPageView(
                                                     modifier = Modifier
                                                         .align(Alignment.Center)
                                                         .size(48.dp)
-                                                        .padding(16.dp),
-                                                    onDraw = {
-                                                        drawCircle(color)
-                                                    }
+                                                        .padding(16.dp)
                                                 )
                                             }
                                             SimplePagingState.LOADING_NEXT -> {
@@ -230,7 +224,12 @@ fun DiaryListScreen(
                                                 }
                                             }
                                             SimplePagingState.FAILURE_NEXT -> {
-
+                                                NextPageLoadFailView(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .height(48.dp),
+                                                    onClickRetry = loadNext
+                                                )
                                             }
                                             else -> {}
                                         }
