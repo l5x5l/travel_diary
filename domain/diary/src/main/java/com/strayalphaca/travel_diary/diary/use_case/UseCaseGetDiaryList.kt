@@ -1,7 +1,9 @@
 package com.strayalphaca.travel_diary.diary.use_case
 
 import com.strayalphaca.travel_diary.diary.model.DiaryItem
+import com.strayalphaca.travel_diary.diary.model.DiaryItemUpdate
 import com.strayalphaca.travel_diary.diary.repository.DiaryRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UseCaseGetDiaryList @Inject constructor(
@@ -13,5 +15,9 @@ class UseCaseGetDiaryList @Inject constructor(
 
     suspend fun getByCityGroupId(cityGroupId : Int, perPage: Int, offset: Int) : List<DiaryItem> {
         return repository.getDiaryListByCityGroup(cityGroupId, perPage, offset)
+    }
+
+    suspend fun getUpdatedDiary() : Flow<DiaryItemUpdate> {
+        return repository.getDiaryItemUpdate()
     }
 }

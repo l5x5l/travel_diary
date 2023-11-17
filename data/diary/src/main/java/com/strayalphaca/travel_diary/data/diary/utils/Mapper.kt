@@ -1,6 +1,7 @@
 package com.strayalphaca.travel_diary.data.diary.utils
 
 import com.strayalphaca.data.all.model.DiaryDto
+import com.strayalphaca.data.all.model.DiaryItemCityGroupDto
 import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.MediaFileInfoDto
 import com.strayalphaca.data.all.model.VoiceFileInDiaryDto
@@ -38,6 +39,14 @@ fun diaryListDtoToDiaryItem(diaryItemDto: DiaryItemDto) : DiaryItem {
     )
 }
 
+fun diaryListCityGroupDtoToDiaryItem(diaryItemCityGroupDto: DiaryItemCityGroupDto) : DiaryItem {
+    return DiaryItem(
+        id = diaryItemCityGroupDto.id,
+        imageUrl = diaryItemCityGroupDto.image?.shortLink ?: diaryItemCityGroupDto.image?.uploadedLink,
+        cityName = City.findCity(diaryItemCityGroupDto.provinceId).name
+    )
+}
+
 internal fun feelingStringToEnum(feeling : String) : Feeling {
     return when(feeling) {
         "HAPPY" -> Feeling.HAPPY
@@ -50,7 +59,7 @@ internal fun feelingStringToEnum(feeling : String) : Feeling {
     }
 }
 
-internal fun weatherStringToEnum(weather : String?) : Weather? {
+internal fun weatherStringToEnum(weather : String?) : Weather {
     return when (weather) {
         "SUNNY" -> Weather.SUNNY
         "PARTLY_CLOUDY" -> Weather.PARTLY_CLOUDY
@@ -59,7 +68,7 @@ internal fun weatherStringToEnum(weather : String?) : Weather? {
         "RAINY" -> Weather.RAINY
         "SNOWY" -> Weather.SNOWY
         "WINDY" -> Weather.WINDY
-        else -> null
+        else -> Weather.SUNNY
     }
 }
 

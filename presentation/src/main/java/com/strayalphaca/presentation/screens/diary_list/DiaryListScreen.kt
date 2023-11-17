@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
@@ -20,6 +23,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,19 +34,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.strayalphaca.travel_diary.diary.model.DiaryItem
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
-import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.paging.LoadState
 import com.strayalphaca.presentation.components.block.DiaryItemView
 import com.strayalphaca.presentation.components.block.TapePolaroidView
 import com.strayalphaca.presentation.components.template.dialog.CityPickerDialog
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.strayalphaca.presentation.models.paging.SimplePagingState
+import com.strayalphaca.presentation.screens.diary_list.component.EndOfPageView
+import com.strayalphaca.presentation.screens.diary_list.component.NextPageLoadFailView
+import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
+import com.strayalphaca.travel_diary.diary.model.DiaryItem
 
 @Composable
 fun DiaryListScreenContainer(
@@ -51,9 +53,11 @@ fun DiaryListScreenContainer(
     initCityGroupId : Int,
     viewModel : DiaryListViewModel = viewModel()
 ) {
-    val diaryList = viewModel.diaryPager.collectAsLazyPagingItems()
     val title by viewModel.locationTitle.collectAsState()
     var showCityPickerDialog by remember { mutableStateOf(false) }
+
+    val diaryPagingList = viewModel.diaryListSimplePaging.pagingData().collectAsState(emptyList())
+    val diaryPagingState = viewModel.diaryListSimplePaging.pagingState().collectAsState(SimplePagingState.IDLE)
 
     LaunchedEffect(Unit) {
         viewModel.setCityGroup(initCityGroupId)
@@ -73,7 +77,9 @@ fun DiaryListScreenContainer(
         onBackPress = onBackPress,
         onMapButtonPress = { showCityPickerDialog = true },
         title = title,
-        diaryList = diaryList
+        diaryList = diaryPagingList.value,
+        pagingState = diaryPagingState.value,
+        loadNext = viewModel::loadNext
     )
 }
 
@@ -83,8 +89,30 @@ fun DiaryListScreen(
     onBackPress: () -> Unit,
     onMapButtonPress : () -> Unit = {},
     title : String,
-    diaryList : LazyPagingItems<DiaryItem>,
+    diaryList : List<DiaryItem>,
+    pagingState : SimplePagingState,
+    loadNext : () -> Unit = {},
 ) {
+    val lazyColumnListState = rememberLazyGridState()
+    val startPaginate = remember {
+        derivedStateOf {
+            (lazyColumnListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+                ?: -6) >= lazyColumnListState.layoutInfo.totalItemsCount - 4
+        }
+    }
+
+    LaunchedEffect(pagingState) {
+        if (pagingState == SimplePagingState.LOADING_INIT) {
+            lazyColumnListState.scrollToItem(0)
+        }
+    }
+
+    LaunchedEffect(startPaginate.value) {
+        if (startPaginate.value && pagingState == SimplePagingState.IDLE) {
+            loadNext()
+        }
+    }
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             Modifier
@@ -132,15 +160,15 @@ fun DiaryListScreen(
                 .weight(1f)
                 .fillMaxWidth()) {
 
-                when (diaryList.loadState.refresh) {
-                    LoadState.Loading -> {
+                when (pagingState) {
+                    SimplePagingState.LOADING_INIT -> {
                         CircularProgressIndicator(
                             modifier = Modifier.align(Alignment.Center),
                             color = MaterialTheme.colors.onSurface,
                             strokeWidth = 2.dp
                         )
                     }
-                    is LoadState.Error -> {
+                    SimplePagingState.FAILURE_INIT -> {
                         TapePolaroidView(
                             modifier = Modifier
                                 .fillMaxWidth(0.5f)
@@ -150,24 +178,61 @@ fun DiaryListScreen(
                         )
                     }
                     else -> {
-                        if (diaryList.itemCount > 0) {
+                        if (diaryList.isNotEmpty()) {
                             LazyVerticalGrid(
+                                state = lazyColumnListState,
                                 columns = GridCells.Fixed(2),
                                 contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
                                 content = {
                                     items(
-                                        count = diaryList.itemCount,
-                                        key = { diaryList[it]?.id ?: "empty_$it" }
+                                        count = diaryList.size,
+                                        key = { diaryList[it].id }
                                     ) {
                                         DiaryItemView(
                                             modifier = Modifier.fillMaxWidth(),
                                             onClick = { id ->
                                                 moveToDiary(id)
                                             },
-                                            imageUrl = diaryList[it]?.imageUrl,
-                                            id = diaryList[it]?.id ?: "",
-                                            leftText = diaryList[it]?.cityName ?: ""
+                                            imageUrl = diaryList[it].imageUrl,
+                                            id = diaryList[it].id,
+                                            leftText = diaryList[it].cityName
                                         )
+                                    }
+
+                                    item(span = { GridItemSpan(2)}) {
+                                        when (pagingState) {
+                                            SimplePagingState.LAST -> {
+                                                EndOfPageView(
+                                                    modifier = Modifier
+                                                        .align(Alignment.Center)
+                                                        .size(48.dp)
+                                                        .padding(16.dp)
+                                                )
+                                            }
+                                            SimplePagingState.LOADING_NEXT -> {
+                                                Box(modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .height(48.dp),
+                                                    contentAlignment = Alignment.Center
+                                                ) {
+                                                    CircularProgressIndicator(
+                                                        modifier = Modifier
+                                                            .size(24.dp),
+                                                        color = MaterialTheme.colors.onSurface,
+                                                        strokeWidth = 2.dp
+                                                    )
+                                                }
+                                            }
+                                            SimplePagingState.FAILURE_NEXT -> {
+                                                NextPageLoadFailView(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .height(48.dp),
+                                                    onClickRetry = loadNext
+                                                )
+                                            }
+                                            else -> {}
+                                        }
                                     }
                                 }
                             )
@@ -198,7 +263,7 @@ fun DiaryListScreen(
 )
 @Preview(showBackground = true, widthDp = 360)
 fun DiaryListScreenPreview() {
-    val data = listOf<DiaryItem>(
+    val data = listOf(
         DiaryItem("1", null, "서울"),
         DiaryItem("2", null, "부산"),
         DiaryItem("3", null, "울산"),
@@ -212,11 +277,10 @@ fun DiaryListScreenPreview() {
         DiaryItem("11", null, "서울"),
         DiaryItem("12", null, "서울")
     )
-    val flow = MutableStateFlow(PagingData.from(data))
 
     TravelDiaryTheme {
         DiaryListScreen(
-            {}, {}, {}, "서울", flow.collectAsLazyPagingItems()
+            {}, {}, {}, "서울", data, SimplePagingState.IDLE
         )
     }
 }

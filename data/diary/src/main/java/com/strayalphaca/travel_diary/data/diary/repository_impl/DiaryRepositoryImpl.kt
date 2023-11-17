@@ -1,20 +1,25 @@
 package com.strayalphaca.travel_diary.data.diary.repository_impl
 
 import com.strayalphaca.data.all.utils.mapBaseResponse
+import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.diary.data_source.DiaryDataSource
 import com.strayalphaca.travel_diary.data.diary.utils.diaryDtoToDiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryItem
+import com.strayalphaca.travel_diary.diary.model.DiaryItemUpdate
 import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
 import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
 import com.strayalphaca.travel_diary.diary.repository.DiaryRepository
-import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.map.model.City
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 
 class DiaryRepositoryImpl @Inject constructor(
     private val dataSource: DiaryDataSource
 ): DiaryRepository {
+    private val diaryItemUpdateChannel = MutableSharedFlow<DiaryItemUpdate>()
+
     override suspend fun getDiaryDetail(id: String): BaseResponse<DiaryDetail> {
         val data = dataSource.getDiaryData(id)
         return mapBaseResponse(data, ::diaryDtoToDiaryDetail)
@@ -51,10 +56,16 @@ class DiaryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun modifyDiary(diaryModifyData: DiaryModifyData): BaseResponse<Nothing> {
+        diaryItemUpdateChannel.emit(DiaryItemUpdate.Modify(diaryModifyData.toDiaryItem()))
         return BaseResponse.EmptySuccess
     }
 
     override suspend fun deleteDiary(diaryId: String): BaseResponse<Nothing> {
+        diaryItemUpdateChannel.emit(DiaryItemUpdate.Delete(DiaryItem(id = diaryId, cityName = "-", imageUrl = null)))
         return BaseResponse.EmptySuccess
+    }
+
+    override suspend fun getDiaryItemUpdate(): Flow<DiaryItemUpdate> {
+        return diaryItemUpdateChannel
     }
 }

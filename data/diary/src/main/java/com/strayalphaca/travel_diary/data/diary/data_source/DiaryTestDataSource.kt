@@ -22,6 +22,8 @@ class DiaryTestDataSource @Inject constructor() : DiaryDataSource {
 
     override suspend fun getDiaryList(cityId: Int, perPage: Int, offset: Int): List<DiaryItemDto> {
         delay(1000L)
+        if (offset >= 5) return emptyList()
+
         val result = mutableListOf<DiaryItemDto>()
 
         for (i in 0 until perPage) {
@@ -37,6 +39,7 @@ class DiaryTestDataSource @Inject constructor() : DiaryDataSource {
         offset: Int
     ): List<DiaryItemDto> {
         delay(1000L)
+        if (offset >= 5) return emptyList()
         val result = mutableListOf<DiaryItemDto>()
 
         for (i in 0 until perPage) {

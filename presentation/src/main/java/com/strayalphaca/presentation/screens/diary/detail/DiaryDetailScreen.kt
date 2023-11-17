@@ -47,6 +47,7 @@ import com.strayalphaca.presentation.screens.diary.component.ContentIconImage
 import com.strayalphaca.presentation.screens.diary.util.getFeelingIconId
 import com.strayalphaca.presentation.screens.diary.util.getWeatherIconId
 import com.strayalphaca.presentation.utils.collectAsEffect
+import com.strayalphaca.travel_diary.diary.model.Weather
 
 @Composable
 fun DiaryDetailContainer(
@@ -234,9 +235,8 @@ fun DiaryDetailScreen(
                             Text(text = stringResource(id = R.string.weather), style = MaterialTheme.typography.body2)
                             Spacer(modifier = Modifier.width(10.dp))
                             ContentIconImage(
-                                iconId = state.diaryDetail.weather?.let { getWeatherIconId(it) }
-                                    ?: R.drawable.ic_weather_sunny,
-                                descriptionText = state.diaryDetail.weather?.toString()
+                                iconId = state.diaryDetail.weather.let { getWeatherIconId(it) },
+                                descriptionText = state.diaryDetail.weather.toString()
                             )
                         }
                     }
@@ -321,7 +321,7 @@ fun DiaryDetailScreenPreview() {
                 diaryDetail = DiaryDetail(
                     id = "1",
                     date = DiaryDate.getInstanceFromCalendar(),
-                    weather = null,
+                    weather = Weather.SUNNY,
                     feeling = Feeling.HAPPY,
                     content = "리펙토링 중, 뭐가 바뀌기만 하면 preview가 안된다. 미치겄네,",
                     files = listOf(File(id = "", type = FileType.VIDEO, fileLink = "")),

@@ -265,9 +265,13 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
-    fun selectCityById(cityId : Int) {
+    fun selectCityById(cityId : Int?) {
         viewModelScope.launch {
-            events.send(DiaryWriteEvent.SelectLocationById(cityId))
+            if (cityId != null) {
+                events.send(DiaryWriteEvent.SelectLocationById(cityId))
+            } else {
+                events.send(DiaryWriteEvent.ClearLocation)
+            }
         }
     }
 
@@ -376,6 +380,9 @@ class DiaryWriteViewModel @Inject constructor(
                 val province = Province.findProvince(city.provinceId)
                 state.copy(cityName = "${province.name} ${city.name}", cityId = city.id)
             }
+            DiaryWriteEvent.ClearLocation -> {
+                state.copy(cityName = null, cityId = null)
+            }
             is DiaryWriteEvent.SetDiaryDate -> {
                 state.copy(
                     diaryDate = events.diaryDate
@@ -406,6 +413,7 @@ sealed class DiaryWriteEvent {
     object PauseMusic : DiaryWriteEvent()
     class SetShowLocationPickerDialog(val show : Boolean) : DiaryWriteEvent()
     class SelectLocationById(val cityId : Int) : DiaryWriteEvent()
+    object ClearLocation : DiaryWriteEvent()
     class SetDiaryDate(val diaryDate: DiaryDate) : DiaryWriteEvent()
 }
 
@@ -415,7 +423,7 @@ data class DiaryWriteState(
     val voiceFile : Uri ?= null,
     val imageFiles : List<Uri> = listOf(),
     val feeling: Feeling = Feeling.HAPPY,
-    val weather: Weather? = null,
+    val weather: Weather = Weather.SUNNY,
     val currentShowSelectView: CurrentShowSelectView ?= null,
     val musicPlaying : Boolean = false,
     val showInitLoading : Boolean = false,

@@ -2,18 +2,22 @@ package com.strayalphaca.travel_diary.data.diary.repository_impl
 
 import com.strayalphaca.data.all.utils.responseToBaseResponseWithMapping
 import com.strayalphaca.data.all.utils.voidResponseToBaseResponse
+import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.diary.api.DiaryApi
 import com.strayalphaca.travel_diary.data.diary.model.ModifyDiaryRequestBody
 import com.strayalphaca.travel_diary.data.diary.model.UploadDiaryRequestBody
 import com.strayalphaca.travel_diary.data.diary.utils.diaryDtoToDiaryDetail
+import com.strayalphaca.travel_diary.data.diary.utils.diaryListCityGroupDtoToDiaryItem
 import com.strayalphaca.travel_diary.data.diary.utils.diaryListDtoToDiaryItem
+import com.strayalphaca.travel_diary.data.diary.utils.extractIdFromSignupResponse
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryItem
+import com.strayalphaca.travel_diary.diary.model.DiaryItemUpdate
 import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
 import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
 import com.strayalphaca.travel_diary.diary.repository.DiaryRepository
-import com.strayalphaca.domain.model.BaseResponse
-import com.strayalphaca.travel_diary.data.diary.utils.extractIdFromSignupResponse
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -21,6 +25,7 @@ class RemoteDiaryRepository @Inject constructor(
     retrofit : Retrofit
 ) : DiaryRepository {
     private val diaryRetrofit = retrofit.create(DiaryApi::class.java)
+    private val diaryItemUpdateChannel = MutableSharedFlow<DiaryItemUpdate>()
 
     override suspend fun getDiaryDetail(id: String): BaseResponse<DiaryDetail> {
         val response = diaryRetrofit.loadDetailDiary(id)
@@ -46,7 +51,7 @@ class RemoteDiaryRepository @Inject constructor(
     ): List<DiaryItem> {
         val response = diaryRetrofit.loadDiaryListByCityGroup(cityGroupId = cityGroupId, page = perPage, offset = offset)
         if (response.isSuccessful && response.body() != null) {
-            return response.body()!!.data.map { diaryListDtoToDiaryItem(it) }
+            return response.body()!!.data.map { diaryListCityGroupDtoToDiaryItem(it) }
         } else {
             throw Exception("error occur when load diaryList : $cityGroupId, $perPage, $offset")
         }
@@ -62,12 +67,24 @@ class RemoteDiaryRepository @Inject constructor(
             recordId = diaryModifyData.id,
             params = ModifyDiaryRequestBody.fromDiaryModifyData(diaryModifyData)
         )
-        return voidResponseToBaseResponse(response)
+        return voidResponseToBaseResponse(response).also {
+            if (it is BaseResponse.EmptySuccess) {
+                diaryItemUpdateChannel.emit(DiaryItemUpdate.Modify(diaryModifyData.toDiaryItem()))
+            }
+        }
     }
 
     override suspend fun deleteDiary(diaryId: String): BaseResponse<Nothing> {
         val response = diaryRetrofit.deleteDiary(diaryId)
-        return voidResponseToBaseResponse(response)
+        return voidResponseToBaseResponse(response).also {
+            if (it is BaseResponse.EmptySuccess) {
+                diaryItemUpdateChannel.emit(DiaryItemUpdate.Delete(DiaryItem(id = diaryId, imageUrl = null, cityName = "-")))
+            }
+        }
+    }
+
+    override suspend fun getDiaryItemUpdate(): Flow<DiaryItemUpdate> {
+        return diaryItemUpdateChannel
     }
 
 }

@@ -122,7 +122,7 @@ fun DiaryWriteScreen(
     uploadDiary : () -> Unit = {},
     showLocationPickerDialog : () -> Unit = {},
     hideLocationPickerDialog : () -> Unit = {},
-    selectCityById : (Int) -> Unit = {}
+    selectCityById : (Int?) -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -170,7 +170,8 @@ fun DiaryWriteScreen(
             title = stringResource(id = R.string.select_location),
             message = stringResource(id = R.string.select_location_message),
             onDismissRequest = hideLocationPickerDialog,
-            onCitySelect = selectCityById
+            onCitySelect = selectCityById,
+            prevSelectedCityId = state.cityId
         )
     }
 
@@ -277,9 +278,8 @@ fun DiaryWriteScreen(
                                     .padding(end = 10.dp)
                             )
                             ContentIconImage(
-                                iconId = state.weather?.let { getWeatherIconId(it) }
-                                    ?: R.drawable.ic_weather_sunny,
-                                descriptionText = state.weather?.toString(),
+                                iconId = getWeatherIconId(state.weather),
+                                descriptionText = state.weather.toString(),
                                 onClick = {
                                     showSelectView(CurrentShowSelectView.WEATHER)
                                 }
@@ -316,7 +316,7 @@ fun DiaryWriteScreen(
                     if (state.imageFiles.isNotEmpty()) {
                         HorizontalPager(pageCount = state.imageFiles.size) {
                             val isVideo = checkUriIsVideo(state.imageFiles[it], context)
-                            PolaroidView(fileUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo, onDeleteClick = deleteImageFile)
+                            PolaroidView(fileUri = state.imageFiles[it], thumbnailUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo, onDeleteClick = deleteImageFile)
                         }
                         Spacer(modifier = Modifier.height(24.dp))
                     }
@@ -391,7 +391,7 @@ fun DiaryWriteScreen(
                             if (isPhotoPickerAvailable()) {
                                 photoPickerLauncher.launch(
                                     PickVisualMediaRequest(
-                                        ActivityResultContracts.PickVisualMedia.ImageAndVideo
+                                        ActivityResultContracts.PickVisualMedia.ImageOnly
                                     )
                                 )
                             } else {

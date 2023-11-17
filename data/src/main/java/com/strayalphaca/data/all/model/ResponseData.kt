@@ -37,6 +37,12 @@ data class DiaryItemDto(
     val cityId : Int
 )
 
+data class DiaryItemCityGroupDto(
+    val id : String,
+    val image : ImageDto?,
+    val provinceId : Int
+)
+
 data class ImageDto(
     val originalName : String,
     val uploadedLink : String,

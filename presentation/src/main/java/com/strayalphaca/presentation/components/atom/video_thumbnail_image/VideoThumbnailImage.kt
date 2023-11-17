@@ -16,9 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.decode.VideoFrameDecoder
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.ui.theme.BlackSurfaceTransparent50
 import com.strayalphaca.presentation.ui.theme.Gray4
@@ -30,11 +33,17 @@ fun VideoThumbnailImage(
     thumbnailUri : Uri
 ) {
 
+    val imageLoader = ImageLoader.Builder(LocalContext.current)
+        .components {
+            add(VideoFrameDecoder.Factory())
+        }.build()
+
     Box(modifier = modifier) {
         AsyncImage(
             modifier = Modifier.fillMaxSize(),
             contentDescription = "video thumbnail image",
             model = thumbnailUri,
+            imageLoader = imageLoader,
             contentScale = ContentScale.Crop,
             placeholder = ColorPainter(Gray4)
         )
