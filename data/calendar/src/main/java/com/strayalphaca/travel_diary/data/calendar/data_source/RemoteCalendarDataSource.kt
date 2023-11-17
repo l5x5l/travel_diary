@@ -17,7 +17,9 @@ class RemoteCalendarDataSource @Inject constructor(
 
     override suspend fun getDiaryData(year: Int, month: Int): BaseResponse<List<CalendarDiaryDto>> {
         val response = calendarRetrofit.getDiaryOfMonth(year, month)
-        return responseToBaseResponseWithMapping(response) {it.data}
+        return responseToBaseResponseWithMapping(response) { calendarDiaryDtoList ->
+            calendarDiaryDtoList.data.map { it.apply { dateStringFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" } }
+        }
     }
 
     override suspend fun checkWrittenOnToday(): BaseResponse<Boolean> {
