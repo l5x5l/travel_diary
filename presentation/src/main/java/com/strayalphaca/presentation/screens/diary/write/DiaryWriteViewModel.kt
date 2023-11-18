@@ -1,10 +1,16 @@
 package com.strayalphaca.presentation.screens.diary.write
 
 import android.net.Uri
-import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.strayalphaca.domain.all.DiaryDate
+import com.strayalphaca.domain.model.BaseResponse
+import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
+import com.strayalphaca.presentation.screens.diary.model.MediaFileInDiary
+import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
+import com.strayalphaca.presentation.screens.diary.util.getInstanceFromDateString
+import com.strayalphaca.presentation.utils.UriHandler
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
 import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
@@ -13,21 +19,15 @@ import com.strayalphaca.travel_diary.diary.model.Weather
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryDetail
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseModifyDiary
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseUploadDiary
-import com.strayalphaca.domain.model.BaseResponse
-import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
-import com.strayalphaca.domain.all.DiaryDate
-import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
-import com.strayalphaca.presentation.screens.diary.util.getInstanceFromDateString
-import com.strayalphaca.presentation.utils.UriHandler
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseHandleCachedCalendarDiary
+import com.strayalphaca.travel_diary.domain.file.model.FileType
 import com.strayalphaca.travel_diary.domain.file.usecase.UseCaseUploadFiles
 import com.strayalphaca.travel_diary.map.model.City
 import com.strayalphaca.travel_diary.map.model.Province
 import com.strayalphaca.travel_diary.map.usecase.UseCaseRefreshCachedMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -194,18 +194,8 @@ class DiaryWriteViewModel @Inject constructor(
         viewModelScope.launch {
             events.send(DiaryWriteEvent.DiaryWriteLoading)
 
-            val voiceFile = state.value.voiceFile?.let { uriHandler.uriToFile(it) }
-            val mediaFileList = state.value.imageFiles.map { uriHandler.uriToFile(it) }
-
-            val voiceFileUploadJob = voiceFile?.let {
-                async { useCaseUploadFiles(listOf(it)) }
-            }
-            val mediaFileListUploadJob = async {
-                useCaseUploadFiles(mediaFileList)
-            }
-
-            val voiceFileLink = voiceFileUploadJob?.await()
-            val mediaFileLinkList = mediaFileListUploadJob.await()
+            val voiceFileLink = state.value.voiceFile?.let{ uploadFileList(listOf(it)) }
+            val mediaFileLinkList = uploadFileList(state.value.imageFiles)
 
             val uploadFilesSuccess = ((voiceFileLink == null || voiceFileLink is BaseResponse.Success) && mediaFileLinkList is BaseResponse.Success)
             if (!uploadFilesSuccess) {
@@ -250,6 +240,27 @@ class DiaryWriteViewModel @Inject constructor(
             } else {
                 events.send(DiaryWriteEvent.DiaryWriteFail)
             }
+        }
+    }
+
+    private suspend fun uploadFileList(fileList: List<MediaFileInDiary>): BaseResponse<List<String>> {
+        val alreadyUploadedFileIndexList = fileList.mapIndexed { index, mediaFileInDiary ->
+            if (mediaFileInDiary is MediaFileInDiary.UploadedFile) Pair(index, mediaFileInDiary) else null
+        }.filterNotNull()
+
+        val localFileList = fileList.filterIsInstance<MediaFileInDiary.LocalFile>()
+            .map { uriHandler.uriToFile(it.uri) }
+
+        val response = useCaseUploadFiles(localFileList)
+
+        return if (response is BaseResponse.Success<List<String>>) {
+            val uploadFileIdList = response.data.toMutableList()
+            for (uploadedFile in alreadyUploadedFileIndexList) {
+                uploadFileIdList.add(uploadedFile.first, uploadedFile.second.id)
+            }
+            response.copy(data = uploadFileIdList)
+        } else {
+            response
         }
     }
 
@@ -319,8 +330,8 @@ class DiaryWriteViewModel @Inject constructor(
                     weather = events.diaryDetail.weather,
                     showInitLoading = false,
                     diaryDate = events.diaryDetail.date,
-                    voiceFile = events.diaryDetail.voiceFile?.fileLink?.toUri(),
-                    imageFiles = events.diaryDetail.files.map { it.thumbnailLink?.toUri() ?: it.fileLink.toUri() },
+                    voiceFile = events.diaryDetail.voiceFile?.let { MediaFileInDiary.UploadedFile.createFromFile(it) },
+                    imageFiles = events.diaryDetail.files.map { MediaFileInDiary.UploadedFile.createFromFile(it) },
                     cityId = events.diaryDetail.cityId,
                     cityName = events.diaryDetail.cityName
                 )
@@ -337,16 +348,16 @@ class DiaryWriteViewModel @Inject constructor(
                 state.copy(buttonActive = true)
             }
             is DiaryWriteEvent.AddVoiceFile -> {
-                state.copy(voiceFile = events.file)
+                state.copy(voiceFile = MediaFileInDiary.LocalFile(localUri = events.file, fileType = FileType.Voice))
             }
             DiaryWriteEvent.RemoveVoiceFile -> {
                 state.copy(voiceFile = null)
             }
             is DiaryWriteEvent.ChangeImageList -> {
-                state.copy(imageFiles = events.file)
+                state.copy(imageFiles = events.file.map { MediaFileInDiary.LocalFile(localUri = it, fileType = uriHandler.getFileType(it)) })
             }
             is DiaryWriteEvent.DeleteImage -> {
-                val imageFiles = state.imageFiles.filter { it != events.file }
+                val imageFiles = state.imageFiles.filter { !it.checkUri(events.file) }
                 state.copy(imageFiles = imageFiles)
             }
             is DiaryWriteEvent.SetFeeling -> {
@@ -420,8 +431,8 @@ sealed class DiaryWriteEvent {
 data class DiaryWriteState(
     val buttonActive: Boolean = true,
     val showLoadingError : Boolean = false,
-    val voiceFile : Uri ?= null,
-    val imageFiles : List<Uri> = listOf(),
+    val voiceFile : MediaFileInDiary ?= null,
+    val imageFiles : List<MediaFileInDiary> = listOf(),
     val feeling: Feeling = Feeling.HAPPY,
     val weather: Weather = Weather.SUNNY,
     val currentShowSelectView: CurrentShowSelectView ?= null,

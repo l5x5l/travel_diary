@@ -36,7 +36,6 @@ import com.strayalphaca.presentation.ui.theme.Gray2
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -51,9 +50,9 @@ import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
 import com.strayalphaca.presentation.screens.diary.util.getFeelingIconId
 import com.strayalphaca.presentation.screens.diary.util.getWeatherIconId
 import com.strayalphaca.presentation.utils.GetMediaActivityResultContract
-import com.strayalphaca.presentation.utils.checkUriIsVideo
 import com.strayalphaca.presentation.utils.collectAsEffect
 import com.strayalphaca.presentation.utils.isPhotoPickerAvailable
+import com.strayalphaca.travel_diary.domain.file.model.FileType
 
 @Composable
 fun DiaryWriteContainer(
@@ -126,8 +125,6 @@ fun DiaryWriteScreen(
 ) {
     val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current
-    val context = LocalContext.current
-
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(3)
@@ -314,9 +311,9 @@ fun DiaryWriteScreen(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     if (state.imageFiles.isNotEmpty()) {
-                        HorizontalPager(pageCount = state.imageFiles.size) {
-                            val isVideo = checkUriIsVideo(state.imageFiles[it], context)
-                            PolaroidView(fileUri = state.imageFiles[it], thumbnailUri = state.imageFiles[it], isVideo = isVideo, onClick = goToVideo, onDeleteClick = deleteImageFile)
+                        HorizontalPager(pageCount = state.imageFiles.size) { index ->
+                            val isVideo = state.imageFiles[index].fileType == FileType.Video
+                            PolaroidView(fileUri = state.imageFiles[index].uri, thumbnailUri = state.imageFiles[index].getThumbnailUriOrFileUri(), isVideo = isVideo, onClick = goToVideo, onDeleteClick = deleteImageFile)
                         }
                         Spacer(modifier = Modifier.height(24.dp))
                     }
@@ -347,9 +344,9 @@ fun DiaryWriteScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    state.voiceFile?.let { uri ->
+                    state.voiceFile?.let { mediaFileInDiary ->
                         SoundView(
-                            file = uri,
+                            file = mediaFileInDiary.uri,
                             playing = state.musicPlaying,
                             play = playMusic,
                             pause = pauseMusic,
