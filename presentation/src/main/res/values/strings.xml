@@ -96,4 +96,7 @@
     <string name="select_location_message">먼저 시/도를 선택한 후\n세부 지역명을 선택해주세요</string>
 
     <string name="finish_app_if_press_back_button_again">뒤로가기를 한 번 더 누르시면 앱이 종료됩니다.</string>
+
+    <string name="fail_next_page_load">로딩중 문제가 발생했어요.</string>
+    <string name="retry_next_page_load">재시도</string>
 </resources>
