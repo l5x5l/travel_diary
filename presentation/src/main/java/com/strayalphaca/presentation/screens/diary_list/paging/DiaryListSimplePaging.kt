@@ -17,7 +17,7 @@ class DiaryListSimplePaging(
     private val perPage: Int,
     private val targetId: Int,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO),
-    private val initKey : Int = 0,
+    private val initKey : Int = 1,
 ) : SimplePaging<DiaryItem> {
 
     private val data : MutableStateFlow<List<DiaryItem>> = MutableStateFlow(emptyList())
@@ -34,7 +34,7 @@ class DiaryListSimplePaging(
 
         requestJob = coroutineScope.launch {
             try {
-                val response = getDiaryList(targetId, perPage * firstLoadingPageRatio, currentKey)
+                val response = getDiaryList(targetId, perPage * firstLoadingPageRatio, initKey)
                 if (response.size < perPage * firstLoadingPageRatio) {
                     state.value = SimplePagingState.LAST
                 } else {

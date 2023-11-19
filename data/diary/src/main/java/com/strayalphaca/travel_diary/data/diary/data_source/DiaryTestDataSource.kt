@@ -1,5 +1,6 @@
 package com.strayalphaca.travel_diary.data.diary.data_source
 
+import com.strayalphaca.data.all.model.CityDto
 import com.strayalphaca.data.all.model.DiaryDto
 import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.MediaFileInfoDto
@@ -27,7 +28,7 @@ class DiaryTestDataSource @Inject constructor() : DiaryDataSource {
         val result = mutableListOf<DiaryItemDto>()
 
         for (i in 0 until perPage) {
-            result.add(DiaryItemDto("${offset * perPage + i}", null, 1))
+            result.add(DiaryItemDto("${offset * perPage + i}", null, CityDto(id=cityId, name=""), provinceId = 1))
         }
 
         return result
@@ -43,7 +44,7 @@ class DiaryTestDataSource @Inject constructor() : DiaryDataSource {
         val result = mutableListOf<DiaryItemDto>()
 
         for (i in 0 until perPage) {
-            result.add(DiaryItemDto("${offset * perPage + i}", null, 1))
+            result.add(DiaryItemDto("${offset * perPage + i}", null, CityDto(id=1, name=""), provinceId = 1))
         }
 
         return result
