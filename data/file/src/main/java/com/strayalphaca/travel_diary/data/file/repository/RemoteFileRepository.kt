@@ -7,7 +7,7 @@ import com.strayalphaca.travel_diary.domain.file.model.FileInfo
 import com.strayalphaca.travel_diary.domain.file.model.FileType
 import com.strayalphaca.travel_diary.domain.file.repository.FileRepository
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody
+import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -20,25 +20,28 @@ class RemoteFileRepository @Inject constructor(
     private val fileRetrofit = retrofit.create(FileApi::class.java)
 
     override suspend fun uploadFile(fileInfo: FileInfo): BaseResponse<String> {
-        val partMap = mutableMapOf<String, RequestBody>()
-        when (fileInfo.fileType) {
+        return when (fileInfo.fileType) {
             FileType.Image -> {
                 val file = fileInfo.file.asRequestBody("image/*".toMediaType())
-                partMap["image"] = file
+                val part = MultipartBody.Part.createFormData("image", fileInfo.file.name, file)
+                val response = fileRetrofit.uploadImage(listOf(part))
+                responseToBaseResponseWithMapping(response) { it.data[0].id }
             }
             FileType.Video -> {
                 val file = fileInfo.file.asRequestBody("video/*".toMediaType())
-                partMap["video"] = file
+                val part = MultipartBody.Part.createFormData("image", fileInfo.file.name, file)
+                val response = fileRetrofit.uploadVideo(listOf(part))
+                responseToBaseResponseWithMapping(response) { it.data[0].id }
             }
             FileType.Voice -> {
                 val file = fileInfo.file.asRequestBody("audio/*".toMediaType())
-                partMap["voice"] = file
+                val part = MultipartBody.Part.createFormData("image", fileInfo.file.name, file)
+                val response = fileRetrofit.uploadVoice(listOf(part))
+                responseToBaseResponseWithMapping(response) { it.data[0].id }
             }
             else -> {
                 throw IllegalArgumentException("cannot find file's type : $fileInfo")
             }
         }
-        val response = fileRetrofit.uploadFile(partMap)
-        return responseToBaseResponseWithMapping(response) { it.id }
     }
 }
