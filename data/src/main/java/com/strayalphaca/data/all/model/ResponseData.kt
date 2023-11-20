@@ -34,13 +34,13 @@ data class VoiceFileInDiaryDto(
 data class DiaryItemDto(
     val id : String,
     val image : ImageDto?,
-    val cityId : Int
+    val city : CityDto,
+    val provinceId : Int
 )
 
-data class DiaryItemCityGroupDto(
-    val id : String,
-    val image : ImageDto?,
-    val provinceId : Int
+data class CityDto(
+    val id : Int,
+    val name : String
 )
 
 data class ImageDto(

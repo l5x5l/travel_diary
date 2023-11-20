@@ -28,7 +28,7 @@ import com.strayalphaca.travel_diary.map.model.City
 @Composable
 fun CityPickerDialog(
     onDismissRequest : () -> Unit = {},
-    onLocationSelect : (locationId : Int) -> Unit,
+    onLocationSelect : (locationId : Int?) -> Unit,
     cityGroupId : Int,
     currentSelectedLocationId : Int ?= null
 ) {
@@ -57,7 +57,11 @@ fun CityPickerDialog(
                                 color = if (selectedLocation == city.id) MaterialTheme.colors.onSurface else MaterialTheme.colors.surface
                             )
                             .clickable {
-                                selectedLocation = city.id
+                                selectedLocation = if (selectedLocation == city.id) {
+                                    null
+                                } else {
+                                    city.id
+                                }
                             }
                             .padding(vertical = 8.dp)
                         ,
@@ -84,10 +88,9 @@ fun CityPickerDialog(
 
                 TextButton(
                     onClick = {
-                        onLocationSelect(selectedLocation ?: -1)
+                        onLocationSelect(selectedLocation)
                         onDismissRequest()
-                    },
-                    enabled = selectedLocation != null
+                    }
                 ) {
                     Text(text = stringResource(id = R.string.confirm), color = MaterialTheme.colors.onSurface)
                 }

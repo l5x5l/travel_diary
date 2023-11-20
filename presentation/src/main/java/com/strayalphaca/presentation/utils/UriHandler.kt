@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UriHandler @Inject constructor(
-    @ApplicationContext private val  context : Context
+    @ApplicationContext private val context : Context
 ) {
     fun uriToFile(uri : Uri) : FileInfo {
         val path = uriToFilePath(uri)
@@ -36,7 +36,7 @@ class UriHandler @Inject constructor(
         return path ?: throw IllegalArgumentException("file path from uri does not exist : $uri")
     }
 
-    private fun getFileType(uri: Uri): FileType {
+    fun getFileType(uri: Uri): FileType {
         val mimeType = context.contentResolver.getType(uri) ?: return FileType.Unknown
         return when {
             mimeType.contains("audio") -> {

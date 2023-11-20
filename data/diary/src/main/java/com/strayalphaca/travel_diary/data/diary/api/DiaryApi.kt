@@ -1,7 +1,6 @@
 package com.strayalphaca.travel_diary.data.diary.api
 
 import com.strayalphaca.data.all.model.DiaryDto
-import com.strayalphaca.data.all.model.DiaryItemCityGroupDto
 import com.strayalphaca.data.all.model.DiaryItemDto
 import com.strayalphaca.data.all.model.ListResponseData
 import com.strayalphaca.travel_diary.data.diary.model.ModifyDiaryRequestBody
@@ -33,5 +32,5 @@ interface DiaryApi {
     suspend fun loadDiaryList(@Query("cityId") cityId : Int, @Query("page") page : Int, @Query("offset") offset : Int) : Response<ListResponseData<DiaryItemDto>>
 
     @GET("records/map")
-    suspend fun loadDiaryListByCityGroup(@Query("cityGroupId") cityGroupId : Int, @Query("page") page : Int, @Query("offset") offset : Int) : Response<ListResponseData<DiaryItemCityGroupDto>>
+    suspend fun loadDiaryListByCityGroup(@Query("groupId") cityGroupId : Int, @Query("page") page : Int, @Query("offset") offset : Int) : Response<ListResponseData<DiaryItemDto>>
 }
