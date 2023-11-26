@@ -35,7 +35,7 @@ class RemoteDiaryRepository @Inject constructor(
     }
 
     override suspend fun getDiaryList(cityId: Int, perPage: Int, offset: Int): List<DiaryItem> {
-        val response = diaryRetrofit.loadDiaryList(cityId = cityId, page = perPage, offset = offset)
+        val response = diaryRetrofit.loadDiaryList(cityId = cityId, page = offset, offset = perPage)
         if (response.isSuccessful && response.body() != null) {
             return response.body()!!.data.map { diaryListDtoToDiaryItem(it) }
         } else {
@@ -48,7 +48,7 @@ class RemoteDiaryRepository @Inject constructor(
         perPage: Int,
         offset: Int
     ): List<DiaryItem> {
-        val response = diaryRetrofit.loadDiaryListByCityGroup(cityGroupId = cityGroupId, page = perPage, offset = offset)
+        val response = diaryRetrofit.loadDiaryListByCityGroup(cityGroupId = cityGroupId, page = offset, offset = perPage)
         if (response.isSuccessful && response.body() != null) {
             return response.body()!!.data.map { diaryListDtoToDiaryItem(it) }
         } else {
