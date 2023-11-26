@@ -274,5 +274,9 @@ sealed class City(val id : Int, val name : String, val provinceId : Int, val gro
         fun getCityListInProvince(provinceId : Int) : List<City> {
             return listOfCity().mapNotNull { it.objectInstance }.toList().filter { it.provinceId == provinceId }
         }
+
+        fun findCityByNameOrNull(cityName : String) : City? {
+            return listOfCity().find { it.objectInstance?.name == cityName }?.objectInstance
+        }
     }
 }
