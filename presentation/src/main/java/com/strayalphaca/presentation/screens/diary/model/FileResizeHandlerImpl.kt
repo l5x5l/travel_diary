@@ -43,7 +43,7 @@ class FileResizeHandlerImpl @Inject constructor(
             val resizedFile = File(outputDir, "resized_${file.name}")
 
             val outputStream = FileOutputStream(resizedFile)
-            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             outputStream.close()
 
             return resizedFile
