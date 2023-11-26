@@ -2,6 +2,7 @@ package com.strayalphaca.presentation.screens.diary_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.strayalphaca.presentation.screens.diary_list.model.SearchTargetType
 import com.strayalphaca.presentation.screens.diary_list.paging.DiaryListSimplePaging
 import com.strayalphaca.travel_diary.diary.model.DiaryItemUpdate
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryList
@@ -68,7 +69,8 @@ class DiaryListViewModel @Inject constructor(
             diaryListSimplePaging = DiaryListSimplePaging(
                 getDiaryList = useCaseGetDiaryList::getByCityGroupId,
                 perPage = 10,
-                targetId = cityGroupId
+                targetId = cityGroupId,
+                targetType = SearchTargetType.GROUP
             )
             viewModelScope.launch {
                 diaryListSimplePaging.refresh()
@@ -80,7 +82,8 @@ class DiaryListViewModel @Inject constructor(
             diaryListSimplePaging = DiaryListSimplePaging(
                 getDiaryList = useCaseGetDiaryList::invoke,
                 perPage = 10,
-                targetId = cityId
+                targetId = cityId,
+                targetType = SearchTargetType.CITY
             )
             viewModelScope.launch {
                 diaryListSimplePaging.refresh()
