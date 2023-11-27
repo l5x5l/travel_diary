@@ -65,7 +65,7 @@ internal fun weatherStringToEnum(weather : String?) : Weather {
 
 fun mediaFileInfoDtoToFile(fileDto: MediaFileInfoDto) : File {
     return File(
-        id = fileDto.originName,
+        id = fileDto.id,
         fileLink = fileDto.shortLink ?: fileDto.uploadedLink,
         type = when (fileDto.type) {
             "video", "VIDEO" -> FileType.VIDEO

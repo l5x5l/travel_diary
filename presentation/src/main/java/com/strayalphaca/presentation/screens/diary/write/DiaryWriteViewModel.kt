@@ -238,10 +238,16 @@ class DiaryWriteViewModel @Inject constructor(
                 )
             }
 
-            if (response is BaseResponse.Success) {
-                events.send(DiaryWriteEvent.DiaryWriteSuccess(response.data))
-            } else {
-                events.send(DiaryWriteEvent.DiaryWriteFail)
+            when (response) {
+                is BaseResponse.Success -> { // 새로 작성한 경우, response에 새로 작성된 일지의 id가 같이 리턴됨
+                    events.send(DiaryWriteEvent.DiaryWriteSuccess(response.data))
+                }
+                is BaseResponse.EmptySuccess -> { // 기존 일지를 수정한 경우, 별도의 데이터가 같이 전달되지 않음
+                    events.send(DiaryWriteEvent.DiaryWriteSuccess(diaryId!!))
+                }
+                else -> {
+                    events.send(DiaryWriteEvent.DiaryWriteFail)
+                }
             }
         }
     }

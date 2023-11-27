@@ -1,6 +1,7 @@
 package com.strayalphaca.data.all.model
 
 data class MediaFileInfoDto(
+    val id : String = "",
     val originName : String,
     val type : String = "",
     val uploadedLink : String = "",
