@@ -30,7 +30,7 @@ class RemoteCalendarDataSource @Inject constructor(
             response.isSuccessful && response.code() == 200 -> {
                 BaseResponse.Success(data = true)
             }
-            response.isSuccessful && response.code() != 200 -> {
+            response.code() == 409 -> {
                 BaseResponse.Success(data = false)
             }
             else -> {

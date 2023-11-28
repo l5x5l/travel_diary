@@ -32,7 +32,7 @@ class CalendarDataStoreImpl @Inject constructor() : CalendarDataStore {
         val diaryList : List<DiaryInCalendar> = monthCalendarData.value.diaryList
         val target : DiaryInCalendar = diaryList.find { it.id == data.id } ?: return
         val dataList : List<DiaryInCalendar> = diaryList.map {
-            if (it.id == target.id) target else it
+            if (it.id == target.id) data else it
         }.sortedBy { it.day }
         monthCalendarData.value = monthCalendarData.value.copy(diaryList = dataList)
     }
