@@ -311,7 +311,7 @@ class DiaryWriteViewModel @Inject constructor(
             val diaryInCalendar = DiaryInCalendar(
                 id = id,
                 date = state.value.diaryDate,
-                thumbnailUrl = state.value.imageFiles.getOrNull(0)?.toString()
+                thumbnailUrl = state.value.imageFiles.getOrNull(0)?.uri.toString()
             )
             if (isModify) {
                 useCaseHandleCachedCalendarDiary.update(diaryInCalendar)
