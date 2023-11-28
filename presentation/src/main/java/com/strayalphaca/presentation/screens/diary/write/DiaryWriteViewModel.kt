@@ -11,6 +11,7 @@ import com.strayalphaca.presentation.screens.diary.model.MediaFileInDiary
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import com.strayalphaca.presentation.screens.diary.util.getInstanceFromDateString
 import com.strayalphaca.presentation.utils.UriHandler
+import com.strayalphaca.presentation.utils.mapIf
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
 import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
@@ -21,6 +22,7 @@ import com.strayalphaca.travel_diary.diary.use_case.UseCaseModifyDiary
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseUploadDiary
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseHandleCachedCalendarDiary
+import com.strayalphaca.travel_diary.domain.file.model.FileResizeHandler
 import com.strayalphaca.travel_diary.domain.file.model.FileType
 import com.strayalphaca.travel_diary.domain.file.usecase.UseCaseUploadFiles
 import com.strayalphaca.travel_diary.map.model.City
@@ -44,7 +46,8 @@ class DiaryWriteViewModel @Inject constructor(
     private val useCaseUploadDiary: UseCaseUploadDiary,
     private val useCaseModifyDiary: UseCaseModifyDiary,
     private val musicPlayer: MusicPlayer,
-    private val uriHandler: UriHandler
+    private val uriHandler: UriHandler,
+    private val fileResizeHandler: FileResizeHandler
 ) : ViewModel() {
     private val events = Channel<DiaryWriteEvent>()
     val state: StateFlow<DiaryWriteState> = events.receiveAsFlow()
@@ -235,10 +238,16 @@ class DiaryWriteViewModel @Inject constructor(
                 )
             }
 
-            if (response is BaseResponse.Success) {
-                events.send(DiaryWriteEvent.DiaryWriteSuccess(response.data))
-            } else {
-                events.send(DiaryWriteEvent.DiaryWriteFail)
+            when (response) {
+                is BaseResponse.Success -> { // 새로 작성한 경우, response에 새로 작성된 일지의 id가 같이 리턴됨
+                    events.send(DiaryWriteEvent.DiaryWriteSuccess(response.data))
+                }
+                is BaseResponse.EmptySuccess -> { // 기존 일지를 수정한 경우, 별도의 데이터가 같이 전달되지 않음
+                    events.send(DiaryWriteEvent.DiaryWriteSuccess(diaryId!!))
+                }
+                else -> {
+                    events.send(DiaryWriteEvent.DiaryWriteFail)
+                }
             }
         }
     }
@@ -250,6 +259,10 @@ class DiaryWriteViewModel @Inject constructor(
 
         val localFileList = fileList.filterIsInstance<MediaFileInDiary.LocalFile>()
             .map { uriHandler.uriToFile(it.uri) }
+            .mapIf({it.fileType == FileType.Image}) {
+                val resizedFile = fileResizeHandler.resizeImageFile(it.file, 1024 * 1024)
+                it.copy(file = resizedFile)
+            }
 
         val response = useCaseUploadFiles(localFileList)
 
@@ -298,7 +311,7 @@ class DiaryWriteViewModel @Inject constructor(
             val diaryInCalendar = DiaryInCalendar(
                 id = id,
                 date = state.value.diaryDate,
-                thumbnailUrl = state.value.imageFiles.getOrNull(0)?.toString()
+                thumbnailUrl = state.value.imageFiles.getOrNull(0)?.uri.toString()
             )
             if (isModify) {
                 useCaseHandleCachedCalendarDiary.update(diaryInCalendar)

@@ -1,9 +1,9 @@
 package com.strayalphaca.presentation
 
 import com.strayalphaca.presentation.models.paging.SimplePagingState
+import com.strayalphaca.presentation.screens.diary_list.model.SearchTargetType
 import com.strayalphaca.presentation.screens.diary_list.paging.DiaryListSimplePaging
 import com.strayalphaca.travel_diary.diary.model.DiaryItem
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -26,17 +26,20 @@ import kotlin.math.min
 class SimplePagingTest {
     private val testDispatcher = StandardTestDispatcher()
     private val samplePagingDataContainer = SamplePagingDataContainer()
-    private var diaryListSimplePaging : DiaryListSimplePaging = DiaryListSimplePaging(
-        samplePagingDataContainer::load, perPage = 10, targetId = 1,
-        coroutineScope = CoroutineScope(testDispatcher)
-    )
+    private lateinit var diaryListSimplePaging : DiaryListSimplePaging
+    private lateinit var diaryListSimplePagingByGroupId : DiaryListSimplePaging
     private val periodReceiveNextPageRequest = 210L
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
 
-        diaryListSimplePaging = DiaryListSimplePaging(samplePagingDataContainer::load, perPage = 10, targetId = 1)
+        diaryListSimplePaging = DiaryListSimplePaging(
+            samplePagingDataContainer::load, perPage = 10, targetId = 1, targetType = SearchTargetType.CITY,
+        )
+        diaryListSimplePagingByGroupId = DiaryListSimplePaging(
+            samplePagingDataContainer::load, perPage = 10, targetId = 1, targetType = SearchTargetType.GROUP,
+        )
         samplePagingDataContainer.setDelayOfOffset(0, 500L)
     }
 
@@ -163,6 +166,21 @@ class SimplePagingTest {
     }
 
     @Test
+    fun delete_position_group_changed_item() = runTest {
+        diaryListSimplePagingByGroupId.load()
+        withContext(Dispatchers.Default) {
+            delay(510L)
+        }
+
+        diaryListSimplePagingByGroupId.modifyItem(
+            DiaryItem(id = "5", imageUrl = null, cityName = "울릉군")
+        )
+
+        val itemRemovedData = diaryListSimplePagingByGroupId.pagingData().first()
+        assertEquals(9, itemRemovedData.size)
+    }
+
+    @Test
     fun modify_item() = runTest {
         diaryListSimplePaging.load()
         withContext(Dispatchers.Default) {
@@ -171,7 +189,7 @@ class SimplePagingTest {
 
         val changedImageUrl = "changed_image_url"
         diaryListSimplePaging.modifyItem(
-            DiaryItem(id = "5", imageUrl = changedImageUrl, cityName = "Seoul")
+            DiaryItem(id = "5", imageUrl = changedImageUrl, cityName = "종로구")
         )
 
         val data = diaryListSimplePaging.pagingData().first()
@@ -200,15 +218,16 @@ class SamplePagingDataContainer() {
 
     private val maxCount = 35
     private val dataList = MutableList(maxCount) { index ->
-        DiaryItem(id = index.toString(), imageUrl = null, cityName = "Seoul")
+        DiaryItem(id = index.toString(), imageUrl = null, cityName = "종로구")
     }
     private val delayMap = mutableMapOf(0 to 500L, 1 to 200L, 2 to 200L, 3 to 200L, 4 to 200L)
 
     suspend fun load(cityId : Int, perPage : Int, offset : Int) : List<DiaryItem> {
-        delay(delayMap.getOrDefault(offset, 200L))
-        if (perPage * offset >= dataList.size) return emptyList()
+        val indexOffset = offset - 1
+        delay(delayMap.getOrDefault(indexOffset, 200L))
+        if (perPage * indexOffset >= dataList.size) return emptyList()
 
-        return dataList.subList(offset * perPage, min((offset + 1)*perPage, dataList.size))
+        return dataList.subList(indexOffset * perPage, min((indexOffset + 1)*perPage, dataList.size))
     }
 
     fun setDelayOfOffset(offset : Int, milli : Long) {

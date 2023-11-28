@@ -2,7 +2,10 @@ package com.strayalphaca.presentation.screens.diary_list.paging
 
 import com.strayalphaca.presentation.models.paging.SimplePaging
 import com.strayalphaca.presentation.models.paging.SimplePagingState
+import com.strayalphaca.presentation.screens.diary_list.model.SearchTargetType
+import com.strayalphaca.presentation.utils.mapIf
 import com.strayalphaca.travel_diary.diary.model.DiaryItem
+import com.strayalphaca.travel_diary.map.model.City
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +19,7 @@ class DiaryListSimplePaging(
     private val getDiaryList: KSuspendFunction3<Int, Int, Int, List<DiaryItem>>,
     private val perPage: Int,
     private val targetId: Int,
+    private val targetType : SearchTargetType = SearchTargetType.GROUP,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO),
     private val initKey : Int = 1,
 ) : SimplePaging<DiaryItem> {
@@ -85,14 +89,21 @@ class DiaryListSimplePaging(
         val targetDiaryItem = currentDataList.find { it.id == item.id } ?: return
 
         // 만약 일지 수정 과정에서 위치 정보를 변경했다면, 현재 목록에는 표시되면 안되므로 해당 일지를 제거
-        if (targetDiaryItem.cityName != item.cityName) {
+        if (targetDiaryItem.cityName != item.cityName && targetType == SearchTargetType.CITY) {
+            deleteItem(item)
+        } else if (!cityGroupInDiaryItemIsMaintained(item) && targetType == SearchTargetType.GROUP) {
             deleteItem(item)
         } else {
-            data.value = currentDataList.map {
-                if (it.id == item.id) { item } else { it }
-            }
+            data.value = currentDataList.mapIf({it.id == item.id}) { item }
         }
 
+    }
+
+    private fun cityGroupInDiaryItemIsMaintained(item : DiaryItem) : Boolean {
+        val targetCity = City.findCityByNameOrNull(item.cityName) ?: return false
+
+        val groupId = targetCity.group
+        return groupId == targetId
     }
 
     override fun clear() {
