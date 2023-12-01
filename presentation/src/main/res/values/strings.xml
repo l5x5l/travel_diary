@@ -46,6 +46,7 @@
     <string name="modify">수정하기</string>
     <string name="delete">삭제하기</string>
     <string name="retry">다시 시도하기</string>
+    <string name="add_image">사진 추가하기</string>
 
     <string name="time_pm">오후 %02d:%02d</string>
     <string name="time_am">오전 %02d:%02d</string>
