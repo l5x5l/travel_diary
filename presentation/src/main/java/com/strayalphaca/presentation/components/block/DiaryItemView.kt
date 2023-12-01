@@ -18,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.strayalphaca.presentation.ui.theme.Tape
@@ -53,7 +54,8 @@ fun DiaryItemView(
                     AsyncImage(
                         modifier = Modifier.fillMaxSize(),
                         model = imageUrl,
-                        contentDescription = "image"
+                        contentDescription = "image",
+                        contentScale = ContentScale.Crop
                     )
                 }
             }

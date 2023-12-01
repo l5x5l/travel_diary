@@ -14,7 +14,9 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.strayalphaca.presentation.ui.theme.Tape
 
 @Composable
@@ -44,7 +46,14 @@ fun DiaryInMap(modifier: Modifier, onClick : (Int) -> Unit, thumbnailUrl : Strin
                         .fillMaxWidth()
                         .aspectRatio(0.8f)
                         .background(Tape)
-                )
+                ) {
+                    AsyncImage(
+                        model = thumbnailUrl,
+                        contentDescription = "thumbnail_image",
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
             }
 
             Spacer(modifier = Modifier.height(10.dp))
