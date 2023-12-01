@@ -327,7 +327,9 @@ fun DiaryWriteScreen(
                                 thumbnailUri = state.imageFiles[index].getThumbnailUriOrFileUri(),
                                 isVideo = isVideo,
                                 onClick = goToVideo,
-                                onDeleteClick = deleteImageFile
+                                onDeleteClick = deleteImageFile,
+                                dateString = state.diaryDate.toString(),
+                                positionString = "${index + 1}/${state.imageFiles.size}"
                             )
                         } else {
                             EmptyPolaroidView(
