@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.strayalphaca.presentation.components.atom.text_button.TextButtonState
+import com.strayalphaca.presentation.components.block.EmptyPolaroidView
 import com.strayalphaca.presentation.components.template.dialog.DiaryLocationPickerDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
 import com.strayalphaca.travel_diary.diary.model.Feeling
@@ -53,6 +54,7 @@ import com.strayalphaca.presentation.utils.GetMediaActivityResultContract
 import com.strayalphaca.presentation.utils.collectAsEffect
 import com.strayalphaca.presentation.utils.isPhotoPickerAvailable
 import com.strayalphaca.travel_diary.domain.file.model.FileType
+import kotlin.math.min
 
 @Composable
 fun DiaryWriteContainer(
@@ -79,7 +81,7 @@ fun DiaryWriteContainer(
         changeContent= viewModel::inputContent,
         state= state,
         musicProgress= musicProgress,
-        changeImageFile= viewModel::inputImageFile,
+        addImageFile= viewModel::inputImageFile,
         deleteImageFile = viewModel::deleteImageFile,
         changeVoiceFile = viewModel::inputVoiceFile,
         removeVoiceFile= viewModel::removeVoiceFile,
@@ -107,7 +109,7 @@ fun DiaryWriteScreen(
     changeContent: (String) -> Unit = {},
     state: DiaryWriteState = DiaryWriteState(),
     musicProgress: Float = 0f,
-    changeImageFile: (List<Uri>) -> Unit = {},
+    addImageFile: (List<Uri>) -> Unit = {},
     deleteImageFile : (Uri) -> Unit = {},
     changeVoiceFile: (Uri, Boolean) -> Unit = { _, _ -> },
     removeVoiceFile: () -> Unit = {},
@@ -126,14 +128,20 @@ fun DiaryWriteScreen(
     val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(3)
-    ) { uriList ->
-        changeImageFile(uriList)
+    val photoPickerLauncher = if (3 - state.imageFiles.size > 1) {
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickMultipleVisualMedia(3 - state.imageFiles.size),
+            onResult = { uriList -> addImageFile(uriList) }
+        )
+    } else {
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = { uri -> uri?.let{ addImageFile(listOf(uri)) } }
+        )
     }
 
     val prevPhotoPickerLauncher = rememberLauncherForActivityResult(contract = GetMediaActivityResultContract()) { uriList ->
-        changeImageFile(uriList)
+        addImageFile(uriList)
     }
 
     val mp3PickerLauncher = rememberLauncherForActivityResult(
@@ -310,13 +318,36 @@ fun DiaryWriteScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    if (state.imageFiles.isNotEmpty()) {
-                        HorizontalPager(pageCount = state.imageFiles.size) { index ->
+                    HorizontalPager(pageCount = min(state.imageFiles.size + 1, 3)) { index ->
+                        val target = state.imageFiles.getOrNull(index)
+                        if (target != null) {
                             val isVideo = state.imageFiles[index].fileType == FileType.Video
-                            PolaroidView(fileUri = state.imageFiles[index].uri, thumbnailUri = state.imageFiles[index].getThumbnailUriOrFileUri(), isVideo = isVideo, onClick = goToVideo, onDeleteClick = deleteImageFile)
+                            PolaroidView(
+                                fileUri = state.imageFiles[index].uri,
+                                thumbnailUri = state.imageFiles[index].getThumbnailUriOrFileUri(),
+                                isVideo = isVideo,
+                                onClick = goToVideo,
+                                onDeleteClick = deleteImageFile
+                            )
+                        } else {
+                            EmptyPolaroidView(
+                                onClick = {
+                                    if (isPhotoPickerAvailable()) {
+                                        photoPickerLauncher.launch(
+                                            PickVisualMediaRequest(
+                                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                                            )
+                                        )
+                                    } else {
+                                        prevPhotoPickerLauncher.launch("*/*")
+                                    }
+                                }
+                            )
                         }
-                        Spacer(modifier = Modifier.height(24.dp))
                     }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
 
                     BasicTextField(
                         value = content,
@@ -382,20 +413,6 @@ fun DiaryWriteScreen(
                 Row(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    BaseIconButton(
-                        iconResourceId = R.drawable.ic_image,
-                        onClick = {
-                            if (isPhotoPickerAvailable()) {
-                                photoPickerLauncher.launch(
-                                    PickVisualMediaRequest(
-                                        ActivityResultContracts.PickVisualMedia.ImageOnly
-                                    )
-                                )
-                            } else {
-                                prevPhotoPickerLauncher.launch("*/*")
-                            }
-                        }
-                    )
 
                     BaseIconButton(
                         iconResourceId = R.drawable.ic_music,
