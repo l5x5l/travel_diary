@@ -213,10 +213,10 @@ fun DiaryWriteScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding(16.dp)
+                        .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState)
                 ) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     Text(text = state.diaryDate.toString())
 
@@ -395,6 +395,8 @@ fun DiaryWriteScreen(
                             }
                         )
                     }
+
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             } else if (state.showInitLoading) {
                 Box(
