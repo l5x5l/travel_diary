@@ -41,6 +41,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.strayalphaca.presentation.components.atom.text_button.TextButtonState
 import com.strayalphaca.presentation.components.block.EmptyPolaroidView
+import com.strayalphaca.presentation.components.block.EmptySoundView
 import com.strayalphaca.presentation.components.template.dialog.DiaryLocationPickerDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
 import com.strayalphaca.travel_diary.diary.model.Feeling
@@ -377,15 +378,21 @@ fun DiaryWriteScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    state.voiceFile?.let { mediaFileInDiary ->
+                    if (state.voiceFile != null) {
                         SoundView(
-                            file = mediaFileInDiary.uri,
+                            file = state.voiceFile.uri,
                             playing = state.musicPlaying,
                             play = playMusic,
                             pause = pauseMusic,
                             remove = removeVoiceFile,
                             soundProgressChange = changeMusicProgress,
                             soundProgress = musicProgress
+                        )
+                    } else {
+                        EmptySoundView(
+                            onClick = {
+                                mp3PickerLauncher.launch("audio/*")
+                            }
                         )
                     }
                 }
@@ -402,28 +409,6 @@ fun DiaryWriteScreen(
                 }
             } else {
                 ErrorView(modifier = Modifier.fillMaxSize())
-            }
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(Gray2)
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-
-                    BaseIconButton(
-                        iconResourceId = R.drawable.ic_music,
-                        onClick = {
-                            mp3PickerLauncher.launch("audio/*")
-                        }
-                    )
-
-                }
             }
 
         }
