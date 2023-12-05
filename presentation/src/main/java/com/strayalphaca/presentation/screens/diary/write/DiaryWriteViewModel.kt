@@ -119,7 +119,7 @@ class DiaryWriteViewModel @Inject constructor(
 
     fun inputImageFile(file : List<Uri>) {
         viewModelScope.launch {
-            events.send(DiaryWriteEvent.ChangeImageList(file))
+            events.send(DiaryWriteEvent.AddImageList(file))
         }
     }
 
@@ -366,8 +366,10 @@ class DiaryWriteViewModel @Inject constructor(
             DiaryWriteEvent.RemoveVoiceFile -> {
                 state.copy(voiceFile = null)
             }
-            is DiaryWriteEvent.ChangeImageList -> {
-                state.copy(imageFiles = events.file.map { MediaFileInDiary.LocalFile(localUri = it, fileType = uriHandler.getFileType(it)) })
+            is DiaryWriteEvent.AddImageList -> {
+                val newImages = events.file.map { MediaFileInDiary.LocalFile(localUri = it, fileType = uriHandler.getFileType(it)) }
+                val images = (state.imageFiles + newImages)
+                state.copy(imageFiles = images.subList(0, 3.coerceAtMost(images.size)))
             }
             is DiaryWriteEvent.DeleteImage -> {
                 val imageFiles = state.imageFiles.filter { !it.checkUri(events.file) }
@@ -426,7 +428,7 @@ sealed class DiaryWriteEvent {
     class DiaryWriteSuccess(val id : String) : DiaryWriteEvent()
     class AddVoiceFile(val file : Uri) : DiaryWriteEvent()
     object RemoveVoiceFile : DiaryWriteEvent()
-    class ChangeImageList(val file : List<Uri>) : DiaryWriteEvent()
+    class AddImageList(val file : List<Uri>) : DiaryWriteEvent()
     class DeleteImage(val file : Uri) : DiaryWriteEvent()
     class SetFeeling(val feeling: Feeling) : DiaryWriteEvent()
     class SetWeather(val weather: Weather) : DiaryWriteEvent()

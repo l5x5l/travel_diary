@@ -95,6 +95,9 @@ dependencies {
 
     // coroutine test
     testImplementation libs.coroutine.test
+
+    // exif interface
+    implementation libs.exifinterface
 }
 
 kapt {

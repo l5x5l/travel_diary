@@ -252,7 +252,9 @@ fun DiaryDetailScreen(
                                 onClick = { uri ->
                                     if (state.deleteLoading) return@PolaroidView
                                     goToVideo(uri)
-                                }
+                                },
+                                dateString = state.diaryDetail.date.toString(),
+                                positionString = "${it + 1}/${state.diaryDetail.files.size}"
                             )
                         }
                     } else {

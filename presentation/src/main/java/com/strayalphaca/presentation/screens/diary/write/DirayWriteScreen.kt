@@ -2,6 +2,8 @@ package com.strayalphaca.presentation.screens.diary.write
 
 import android.content.res.Configuration
 import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,10 +38,13 @@ import com.strayalphaca.presentation.ui.theme.Gray2
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.strayalphaca.presentation.components.atom.text_button.TextButtonState
+import com.strayalphaca.presentation.components.block.EmptyPolaroidView
+import com.strayalphaca.presentation.components.block.EmptySoundView
 import com.strayalphaca.presentation.components.template.dialog.DiaryLocationPickerDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
 import com.strayalphaca.travel_diary.diary.model.Feeling
@@ -53,6 +58,7 @@ import com.strayalphaca.presentation.utils.GetMediaActivityResultContract
 import com.strayalphaca.presentation.utils.collectAsEffect
 import com.strayalphaca.presentation.utils.isPhotoPickerAvailable
 import com.strayalphaca.travel_diary.domain.file.model.FileType
+import kotlin.math.min
 
 @Composable
 fun DiaryWriteContainer(
@@ -65,10 +71,18 @@ fun DiaryWriteContainer(
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
+    val context = LocalContext.current
 
     viewModel.goBackNavigationEvent.collectAsEffect { goBackNavigationEvent ->
         if (goBackNavigationEvent)
             goBackWithModifySuccessResult()
+    }
+
+    BackHandler(true) {
+        if (state.buttonActive)
+            goBack()
+        else
+            Toast.makeText(context, context.getString(R.string.waiting_update_diary), Toast.LENGTH_SHORT).show()
     }
 
     DiaryWriteScreen(
@@ -79,7 +93,7 @@ fun DiaryWriteContainer(
         changeContent= viewModel::inputContent,
         state= state,
         musicProgress= musicProgress,
-        changeImageFile= viewModel::inputImageFile,
+        addImageFile= viewModel::inputImageFile,
         deleteImageFile = viewModel::deleteImageFile,
         changeVoiceFile = viewModel::inputVoiceFile,
         removeVoiceFile= viewModel::removeVoiceFile,
@@ -107,7 +121,7 @@ fun DiaryWriteScreen(
     changeContent: (String) -> Unit = {},
     state: DiaryWriteState = DiaryWriteState(),
     musicProgress: Float = 0f,
-    changeImageFile: (List<Uri>) -> Unit = {},
+    addImageFile: (List<Uri>) -> Unit = {},
     deleteImageFile : (Uri) -> Unit = {},
     changeVoiceFile: (Uri, Boolean) -> Unit = { _, _ -> },
     removeVoiceFile: () -> Unit = {},
@@ -126,14 +140,20 @@ fun DiaryWriteScreen(
     val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(3)
-    ) { uriList ->
-        changeImageFile(uriList)
+    val photoPickerLauncher = if (3 - state.imageFiles.size > 1) {
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickMultipleVisualMedia(3 - state.imageFiles.size),
+            onResult = { uriList -> addImageFile(uriList) }
+        )
+    } else {
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = { uri -> uri?.let{ addImageFile(listOf(uri)) } }
+        )
     }
 
     val prevPhotoPickerLauncher = rememberLauncherForActivityResult(contract = GetMediaActivityResultContract()) { uriList ->
-        changeImageFile(uriList)
+        addImageFile(uriList)
     }
 
     val mp3PickerLauncher = rememberLauncherForActivityResult(
@@ -181,13 +201,16 @@ fun DiaryWriteScreen(
             ) {
                 BaseIconButton(
                     iconResourceId = R.drawable.ic_back,
-                    onClick = goBack
+                    onClick = {
+                        if (!state.buttonActive) return@BaseIconButton
+                        goBack()
+                    }
                 )
 
                 TextButton(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     text = stringResource(id = R.string.register),
-                    state = if (content.isEmpty()) TextButtonState.INACTIVE else TextButtonState.ACTIVE,
+                    state = if (content.isEmpty() || !state.buttonActive) TextButtonState.INACTIVE else TextButtonState.ACTIVE,
                     onClick = uploadDiary
                 )
             }
@@ -204,10 +227,10 @@ fun DiaryWriteScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding(16.dp)
+                        .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState)
                 ) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     Text(text = state.diaryDate.toString())
 
@@ -310,13 +333,40 @@ fun DiaryWriteScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    if (state.imageFiles.isNotEmpty()) {
-                        HorizontalPager(pageCount = state.imageFiles.size) { index ->
+                    HorizontalPager(pageCount = min(state.imageFiles.size + 1, 3)) { index ->
+                        val target = state.imageFiles.getOrNull(index)
+                        if (target != null) {
                             val isVideo = state.imageFiles[index].fileType == FileType.Video
-                            PolaroidView(fileUri = state.imageFiles[index].uri, thumbnailUri = state.imageFiles[index].getThumbnailUriOrFileUri(), isVideo = isVideo, onClick = goToVideo, onDeleteClick = deleteImageFile)
+                            PolaroidView(
+                                fileUri = state.imageFiles[index].uri,
+                                thumbnailUri = state.imageFiles[index].getThumbnailUriOrFileUri(),
+                                isVideo = isVideo,
+                                onClick = goToVideo,
+                                onDeleteClick = deleteImageFile,
+                                dateString = state.diaryDate.toString(),
+                                positionString = "${index + 1}/${state.imageFiles.size}"
+                            )
+                        } else {
+                            EmptyPolaroidView(
+                                onClick = {
+                                    if (!state.buttonActive) return@EmptyPolaroidView
+
+                                    if (isPhotoPickerAvailable()) {
+                                        photoPickerLauncher.launch(
+                                            PickVisualMediaRequest(
+                                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                                            )
+                                        )
+                                    } else {
+                                        prevPhotoPickerLauncher.launch("*/*")
+                                    }
+                                }
+                            )
                         }
-                        Spacer(modifier = Modifier.height(24.dp))
                     }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
 
                     BasicTextField(
                         value = content,
@@ -344,9 +394,9 @@ fun DiaryWriteScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    state.voiceFile?.let { mediaFileInDiary ->
+                    if (state.voiceFile != null) {
                         SoundView(
-                            file = mediaFileInDiary.uri,
+                            file = state.voiceFile.uri,
                             playing = state.musicPlaying,
                             play = playMusic,
                             pause = pauseMusic,
@@ -354,7 +404,16 @@ fun DiaryWriteScreen(
                             soundProgressChange = changeMusicProgress,
                             soundProgress = musicProgress
                         )
+                    } else {
+                        EmptySoundView(
+                            onClick = {
+                                if (!state.buttonActive) return@EmptySoundView
+                                mp3PickerLauncher.launch("audio/*")
+                            }
+                        )
                     }
+
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             } else if (state.showInitLoading) {
                 Box(
@@ -369,42 +428,6 @@ fun DiaryWriteScreen(
                 }
             } else {
                 ErrorView(modifier = Modifier.fillMaxSize())
-            }
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(Gray2)
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    BaseIconButton(
-                        iconResourceId = R.drawable.ic_image,
-                        onClick = {
-                            if (isPhotoPickerAvailable()) {
-                                photoPickerLauncher.launch(
-                                    PickVisualMediaRequest(
-                                        ActivityResultContracts.PickVisualMedia.ImageOnly
-                                    )
-                                )
-                            } else {
-                                prevPhotoPickerLauncher.launch("*/*")
-                            }
-                        }
-                    )
-
-                    BaseIconButton(
-                        iconResourceId = R.drawable.ic_music,
-                        onClick = {
-                            mp3PickerLauncher.launch("audio/*")
-                        }
-                    )
-
-                }
             }
 
         }
