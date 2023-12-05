@@ -2,6 +2,8 @@ package com.strayalphaca.presentation.screens.diary.write
 
 import android.content.res.Configuration
 import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,6 +38,7 @@ import com.strayalphaca.presentation.ui.theme.Gray2
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -68,10 +71,18 @@ fun DiaryWriteContainer(
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
+    val context = LocalContext.current
 
     viewModel.goBackNavigationEvent.collectAsEffect { goBackNavigationEvent ->
         if (goBackNavigationEvent)
             goBackWithModifySuccessResult()
+    }
+
+    BackHandler(true) {
+        if (state.buttonActive)
+            goBack()
+        else
+            Toast.makeText(context, context.getString(R.string.waiting_update_diary), Toast.LENGTH_SHORT).show()
     }
 
     DiaryWriteScreen(
@@ -190,13 +201,16 @@ fun DiaryWriteScreen(
             ) {
                 BaseIconButton(
                     iconResourceId = R.drawable.ic_back,
-                    onClick = goBack
+                    onClick = {
+                        if (!state.buttonActive) return@BaseIconButton
+                        goBack()
+                    }
                 )
 
                 TextButton(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     text = stringResource(id = R.string.register),
-                    state = if (content.isEmpty()) TextButtonState.INACTIVE else TextButtonState.ACTIVE,
+                    state = if (content.isEmpty() || !state.buttonActive) TextButtonState.INACTIVE else TextButtonState.ACTIVE,
                     onClick = uploadDiary
                 )
             }
@@ -335,6 +349,8 @@ fun DiaryWriteScreen(
                         } else {
                             EmptyPolaroidView(
                                 onClick = {
+                                    if (!state.buttonActive) return@EmptyPolaroidView
+
                                     if (isPhotoPickerAvailable()) {
                                         photoPickerLauncher.launch(
                                             PickVisualMediaRequest(
@@ -391,6 +407,7 @@ fun DiaryWriteScreen(
                     } else {
                         EmptySoundView(
                             onClick = {
+                                if (!state.buttonActive) return@EmptySoundView
                                 mp3PickerLauncher.launch("audio/*")
                             }
                         )
