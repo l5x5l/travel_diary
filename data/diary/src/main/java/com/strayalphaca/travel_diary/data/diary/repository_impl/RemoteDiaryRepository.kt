@@ -86,4 +86,9 @@ class RemoteDiaryRepository @Inject constructor(
         return diaryItemUpdateChannel
     }
 
+    // todo api 구현시 연결하기
+    override suspend fun getDiaryCount(): BaseResponse<Int> {
+        return BaseResponse.Success(100)
+    }
+
 }
