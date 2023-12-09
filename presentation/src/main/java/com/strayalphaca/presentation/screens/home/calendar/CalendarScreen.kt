@@ -1,38 +1,43 @@
 package com.strayalphaca.presentation.screens.home.calendar
 
+import android.content.res.Configuration
 import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.strayalphaca.presentation.components.block.CalendarItemEmptyView
-import com.strayalphaca.presentation.components.block.CalendarItemView
-import com.strayalphaca.presentation.components.template.calendar_view.CalendarView
-import com.strayalphaca.presentation.components.template.dialog.MonthPickerDialog
-import com.strayalphaca.presentation.R
-import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
 import com.strayalphaca.domain.all.DiaryDate
+import com.strayalphaca.presentation.components.template.dialog.MonthPickerDialog
+import com.strayalphaca.presentation.screens.home.calendar.component.CalendarUi
+import com.strayalphaca.presentation.screens.home.calendar.component.ToolButtons
+import com.strayalphaca.presentation.screens.home.calendar.component.YearMonthText
+import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import com.strayalphaca.presentation.utils.UseFinishByBackPressTwice
 import com.strayalphaca.presentation.utils.collectLatestInScope
+import com.strayalphaca.travel_diary.domain.calendar.utils.fillEmptyCellToCalendarData
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
@@ -42,7 +47,6 @@ fun CalendarScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var datePickerDialogShow by remember { mutableStateOf(false) }
-    val pagerState = rememberPagerState(Int.MAX_VALUE / 2)
     val context = LocalContext.current
     val composeScope = rememberCoroutineScope()
 
@@ -72,79 +76,163 @@ fun CalendarScreen(
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(modifier = modifier.padding(vertical = 48.dp)) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    Text(text = state.month.toString(), style = MaterialTheme.typography.h1)
+        BoxWithConstraints {
+            if (maxWidth < 600.dp) {
+                Column(modifier = modifier.padding(vertical = 48.dp)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        YearMonthText(
+                            modifier = Modifier.weight(1f),
+                            year = state.year,
+                            month = state.month
+                        )
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                        ToolButtons(
+                            onClickCalendarButton = { datePickerDialogShow = true },
+                            onClickWrite = viewModel::checkTodayWrite,
+                            enable = state.clickEnable
+                        )
+                    }
 
-                    Text(text = state.year.toString(), style = MaterialTheme.typography.h2)
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    CalendarUi(
+                        goToDiaryDetail = goToDiaryDetail,
+                        goToDiaryWrite = goToDiaryWrite,
+                        year = state.year,
+                        month = state.month,
+                        diaryData = state.diaryData,
+                        enable = state.clickEnable
+                    )
                 }
+            } else {
+                Row(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Column(
+                        modifier = Modifier.fillMaxHeight()
+                    ) {
+                        Spacer(modifier = Modifier.height(128.dp))
 
-                BaseIconButton(
-                    iconResourceId = R.drawable.ic_write,
-                    onClick = {
-                        if (!state.clickEnable) return@BaseIconButton
-                        viewModel.checkTodayWrite()
+                        ToolButtons(
+                            onClickCalendarButton = { datePickerDialogShow = true },
+                            onClickWrite = viewModel::checkTodayWrite,
+                            enable = state.clickEnable
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        YearMonthText(
+                            year = state.year,
+                            month = state.month
+                        )
                     }
-                )
 
-                Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(60.dp))
 
-                BaseIconButton(
-                    iconResourceId = R.drawable.ic_calendar,
-                    onClick = {
-                        if (!state.clickEnable) return@BaseIconButton
-                        datePickerDialogShow = true
-                    }
-                )
+                    CalendarUi(
+                        goToDiaryDetail = goToDiaryDetail,
+                        goToDiaryWrite = goToDiaryWrite,
+                        year = state.year,
+                        month = state.month,
+                        diaryData = state.diaryData,
+                        enable = state.clickEnable
+                    )
+                }
             }
+        }
 
-            Spacer(modifier = Modifier.height(32.dp))
 
-            HorizontalPager(
-                pageCount = 1,
-                state = pagerState
-            ) {
-                CalendarView(
+    }
+}
+
+
+@Composable
+@Preview(
+    showBackground = true,
+    widthDp = 360,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "dark"
+)
+@Preview(showBackground = true, widthDp = 360)
+fun CalendarScreenPreview() {
+    TravelDiaryTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Column(modifier = Modifier.padding(vertical = 48.dp)) {
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
-                    year = state.year,
-                    month = state.month,
-                    calendarData = state.diaryData,
-                    contentView = { data, _, isToday ->
-                        CalendarItemView(item = data, isToday = isToday,
-                            modifier = Modifier.clickable {
-                                if (!state.clickEnable) return@clickable
-                                goToDiaryDetail(data.id)
-                            })
-                    },
-                    emptyView = { day, isToday ->
-                        CalendarItemEmptyView(day = day, isToday = isToday,
-                            modifier = Modifier.clickable {
-                                if (!state.clickEnable) return@clickable
-                                goToDiaryWrite(
-                                    null,
-                                    DiaryDate(year = state.year, month = state.month, day = day).toString()
-                                )
-                            }
-                        )
-                    },
-                    outRangeView = { day ->
-                        if (!state.clickEnable) return@CalendarView
-                        CalendarItemEmptyView(day = day, isToday = false, isCurrentMonth = false)
-                    }
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    YearMonthText(
+                        modifier = Modifier.weight(1f),
+                        year = 2023,
+                        month = 12
+                    )
+
+                    ToolButtons(enable = true)
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                CalendarUi(
+                    diaryData = fillEmptyCellToCalendarData(2023, 12, emptyList())
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+@Preview(
+    showBackground = true,
+    widthDp = 690,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "dark"
+)
+@Preview(showBackground = true, widthDp = 690)
+fun CalendarScreenTabletPreview() {
+    TravelDiaryTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Row(
+                modifier = Modifier.padding(24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Column(
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    Spacer(modifier = Modifier.height(128.dp))
+
+                    ToolButtons(enable = true)
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    YearMonthText(
+                        year = 2023,
+                        month = 12
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(60.dp))
+
+                CalendarUi(
+                    modifier = Modifier.weight(1f),
+                    diaryData = fillEmptyCellToCalendarData(2023, 12, emptyList())
                 )
             }
 
