@@ -60,7 +60,6 @@ internal fun CalendarUi(
                 )
             },
             outRangeView = { day ->
-                if (!enable) return@CalendarView
                 CalendarItemEmptyView(day = day, isToday = false, isCurrentMonth = false)
             }
         )
