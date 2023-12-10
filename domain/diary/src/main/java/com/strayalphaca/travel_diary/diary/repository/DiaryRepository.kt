@@ -17,4 +17,5 @@ interface DiaryRepository {
     suspend fun modifyDiary(diaryModifyData: DiaryModifyData) : BaseResponse<Nothing>
     suspend fun deleteDiary(diaryId : String) : BaseResponse<Nothing>
     suspend fun getDiaryItemUpdate() : Flow<DiaryItemUpdate>
+    suspend fun getDiaryCount() : BaseResponse<Int>
 }

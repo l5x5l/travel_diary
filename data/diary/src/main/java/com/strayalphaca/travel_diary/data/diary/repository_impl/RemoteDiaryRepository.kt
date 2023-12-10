@@ -86,4 +86,9 @@ class RemoteDiaryRepository @Inject constructor(
         return diaryItemUpdateChannel
     }
 
+    override suspend fun getDiaryCount(): BaseResponse<Int> {
+        val response = diaryRetrofit.diaryTotalCount()
+        return responseToBaseResponseWithMapping(response) { it.total }
+    }
+
 }

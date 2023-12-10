@@ -68,4 +68,8 @@ class DiaryRepositoryImpl @Inject constructor(
     override suspend fun getDiaryItemUpdate(): Flow<DiaryItemUpdate> {
         return diaryItemUpdateChannel
     }
+
+    override suspend fun getDiaryCount(): BaseResponse<Int> {
+        return BaseResponse.Success(data = 100)
+    }
 }
