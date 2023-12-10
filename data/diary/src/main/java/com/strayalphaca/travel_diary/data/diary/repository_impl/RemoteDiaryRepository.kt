@@ -86,9 +86,9 @@ class RemoteDiaryRepository @Inject constructor(
         return diaryItemUpdateChannel
     }
 
-    // todo api 구현시 연결하기
     override suspend fun getDiaryCount(): BaseResponse<Int> {
-        return BaseResponse.Success(100)
+        val response = diaryRetrofit.diaryTotalCount()
+        return responseToBaseResponseWithMapping(response) { it.total }
     }
 
 }
