@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseWithdrawal
 import com.strayalphaca.domain.model.BaseResponse
+import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryCount
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -15,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WithdrawalViewModel @Inject constructor(
-    private val useCaseWithdrawal: UseCaseWithdrawal
+    private val useCaseWithdrawal: UseCaseWithdrawal,
+    private val useCaseGetDiaryCount: UseCaseGetDiaryCount
 ) : ViewModel() {
     private val _totalDiaryCount = MutableStateFlow(0)
     val totalDiaryCount = _totalDiaryCount.asStateFlow()
@@ -38,7 +39,10 @@ class WithdrawalViewModel @Inject constructor(
     fun initDataLoading() {
         _initDataLoading.value = true
         viewModelScope.launch {
-            delay(1000L)
+            val response = useCaseGetDiaryCount()
+            if (response is BaseResponse.Success<Int>) {
+                _totalDiaryCount.value = response.data
+            }
             _initDataLoading.value = false
         }
     }
