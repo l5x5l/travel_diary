@@ -2,6 +2,8 @@ package com.strayalphaca.presentation.screens.settings.withdrawal
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -30,6 +32,7 @@ fun WithdrawalScreen(
         viewModel.initDataLoading()
     }
 
+    val scrollState = rememberScrollState()
     val localContext = LocalContext.current
     val diaryCount by viewModel.totalDiaryCount.collectAsStateWithLifecycle()
     val initLoading by viewModel.initDataLoading.collectAsStateWithLifecycle()
@@ -73,41 +76,49 @@ fun WithdrawalScreen(
         Column(modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp)) {
-            Spacer(modifier = Modifier.height(12.dp))
 
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(scrollState)
             ) {
-                Text(style = MaterialTheme.typography.body1, text = stringResource(id = R.string.current_login))
-                Text(style = MaterialTheme.typography.body1, text = "")
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(style = MaterialTheme.typography.body1, text = stringResource(id = R.string.current_login))
+                    Text(style = MaterialTheme.typography.body1, text = "")
+                }
+
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(style = MaterialTheme.typography.body1, text = stringResource(id = R.string.my_diaries))
+                    Text(style = MaterialTheme.typography.body1, text = stringResource(id = R.string.total_count_format, diaryCount))
+                }
+
+                Spacer(modifier = Modifier.height(60.dp))
+
+                Text(
+                    style = MaterialTheme.typography.body1,
+                    text = stringResource(id = R.string.caution)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    style = MaterialTheme.typography.body2,
+                    text = stringResource(id = R.string.withdrawal_caution_message)
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
             }
 
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(style = MaterialTheme.typography.body1, text = stringResource(id = R.string.my_diaries))
-                Text(style = MaterialTheme.typography.body1, text = stringResource(id = R.string.total_count_format, diaryCount))
-            }
-
-            Spacer(modifier = Modifier.height(60.dp))
-
-            Text(
-                style = MaterialTheme.typography.body1,
-                text = stringResource(id = R.string.caution)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                style = MaterialTheme.typography.body2,
-                text = stringResource(id = R.string.withdrawal_caution_message)
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
 
             BaseButton(
                 modifier = Modifier
