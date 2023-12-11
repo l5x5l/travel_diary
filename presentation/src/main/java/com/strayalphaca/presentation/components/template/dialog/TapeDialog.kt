@@ -36,7 +36,7 @@ sealed class TapeSize(val height : Dp, val width : Dp) {
 @Composable
 fun TapeDialog(
     onDismissRequest: () -> Unit,
-    properties: DialogProperties = DialogProperties(),
+    properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = false),
     tapeSize : TapeSize = TapeSize.Normal,
     content: @Composable () -> Unit
 ) {
@@ -47,7 +47,7 @@ fun TapeDialog(
         Surface(
             shape = RectangleShape,
             color = Color.Transparent,
-            modifier = Modifier.fillMaxWidth()) {
+            modifier = Modifier.fillMaxWidth(0.9f)) {
 
             Box(modifier = Modifier
                 .fillMaxWidth()
