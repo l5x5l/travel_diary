@@ -25,6 +25,11 @@
     <string name="placeholder_input_auth_code">인증번호 4자리 입력</string>
     <string name="placeholder_write_diary">일기 내용을 작성해보세요.</string>
 
+    <string name="resetting_password">비밀번호 재설정</string>
+    <string name="reset_password">비밀번호 재설정하기</string>
+    <string name="complete_reset_password">비밀번호 재설정 완료</string>
+    <string name="sub_message_complete_reset_password">입력하신 이메일로 새 비밀번호를 전송했습니다. 이메일을 확인해주세요.</string>
+
     <string name="use_screen_lock">화면 잠금 사용</string>
     <string name="use_biometric">생체인식 사용</string>
     <string name="change_password">비밀번호 변경</string>

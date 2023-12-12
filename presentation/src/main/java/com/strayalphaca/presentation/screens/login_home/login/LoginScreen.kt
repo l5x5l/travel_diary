@@ -2,6 +2,7 @@ package com.strayalphaca.presentation.screens.login_home.login
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -29,6 +30,7 @@ fun LoginScreen(
     navigateToSignup : () -> Unit = {},
     navigateToBack : () -> Unit = {},
     navigateToHome : () -> Unit = {},
+    navigateToResetPassword : () -> Unit = {},
     viewModel : LoginViewModel = viewModel()
 ) {
     val email by viewModel.email.collectAsState()
@@ -92,7 +94,10 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Row(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
                         modifier = Modifier.padding(vertical = 12.dp),
                         text = errorMessage,
@@ -100,6 +105,16 @@ fun LoginScreen(
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
+
+                    TextButton(
+                        text = stringResource(id = R.string.resetting_password),
+                        onClick = navigateToResetPassword
+                    )
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Divider(modifier = Modifier.width(1.dp).height(16.dp))
+
                     Spacer(modifier = Modifier.width(12.dp))
 
                     TextButton(
