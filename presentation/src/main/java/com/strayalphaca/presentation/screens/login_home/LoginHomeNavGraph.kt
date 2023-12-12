@@ -1,7 +1,6 @@
 package com.strayalphaca.presentation.screens.login_home
 
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -14,11 +13,12 @@ import com.strayalphaca.presentation.screens.login_home.signup_password.SignupPa
 import com.strayalphaca.presentation.screens.login_home.singup_email.SignupEmailScreen
 import com.strayalphaca.presentation.screens.login_home.singup_email.SignupEmailViewModel
 
-private fun NavHostController.navigateSingleTopTo(route : String) =
+private fun NavHostController.navigateSingleTopTo(route : String) {
     this.navigate(route) {
-        popUpTo(this@navigateSingleTopTo.graph.findStartDestination().id)
+        popUpTo(LoginScreenDestination.route)
         launchSingleTop = true
     }
+}
 
 fun NavGraphBuilder.loginNavGraph(
     navController: NavHostController,
