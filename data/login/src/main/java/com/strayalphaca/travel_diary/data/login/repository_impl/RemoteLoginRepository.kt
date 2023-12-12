@@ -49,4 +49,9 @@ class RemoteLoginRepository @Inject constructor(
         val response = loginRetrofit.withDraw()
         return voidResponseToBaseResponse(response)
     }
+
+    // todo - 비밀번호 초기화 api 구현시 연동
+    override suspend fun issueRandomPasswordToEmail(email: String): BaseResponse<Nothing> {
+        return BaseResponse.EmptySuccess
+    }
 }
