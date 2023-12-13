@@ -35,4 +35,8 @@ class LoginRepositoryImpl @Inject constructor(
         return loginDataSource.deleteUser()
     }
 
+    override suspend fun issueRandomPasswordToEmail(email: String): BaseResponse<Nothing> {
+        return BaseResponse.EmptySuccess
+    }
+
 }

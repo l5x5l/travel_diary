@@ -19,3 +19,7 @@ object SignupEmailScreenDestination : LoginDestinations {
 object SignupPasswordScreenDestination : LoginDestinations {
     override val route: String = "signup_password"
 }
+
+object ResetPasswordScreenDestination : LoginDestinations {
+    override val route: String = "reset_password"
+}
