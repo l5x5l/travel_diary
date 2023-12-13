@@ -32,5 +32,10 @@ object WithdrawalScreenDestination : SettingsDestinations {
     override val titleStringId : Int = R.string.withdrawal
 }
 
+object ChangePasswordScreenDestination : SettingsDestinations {
+    override val route: String = "change_password"
+    override val titleStringId: Int = R.string.change_password
+}
 
-val settingsScreens = listOf(SettingsHomeScreenDestination, PushAlarmScreenDestination, LanguageSettingScreenDestination, ScreenLockScreenDestination, WithdrawalScreenDestination)
+
+val settingsScreens = listOf(SettingsHomeScreenDestination, PushAlarmScreenDestination, LanguageSettingScreenDestination, ScreenLockScreenDestination, WithdrawalScreenDestination, ChangePasswordScreenDestination)

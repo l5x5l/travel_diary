@@ -7,6 +7,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.strayalphaca.presentation.screens.settings.change_password.ChangePasswordScreen
+import com.strayalphaca.presentation.screens.settings.change_password.ChangePasswordViewModel
 import com.strayalphaca.presentation.screens.settings.home.SettingsHomeScreenContainer
 import com.strayalphaca.presentation.screens.settings.language_setting.LanguageSettingScreen
 import com.strayalphaca.presentation.screens.settings.push_alarm.PushAlarmScreen
@@ -35,7 +37,8 @@ fun SettingsNavHost(
                 navigateToScreenLock = { navController.navigate(ScreenLockScreenDestination.route) },
                 navigateToWithdrawal = { navController.navigate(WithdrawalScreenDestination.route) },
                 navigateToLogin = { navigateToLogin() },
-                navigateToIntro = { navigateToIntro() }
+                navigateToIntro = { navigateToIntro() },
+                navigateToChangePassword = { navController.navigate(ChangePasswordScreenDestination.route) }
             )
         }
 
@@ -55,6 +58,11 @@ fun SettingsNavHost(
         composable(WithdrawalScreenDestination.route) {
             val viewModel = hiltViewModel<WithdrawalViewModel>()
             WithdrawalScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel)
+        }
+
+        composable(ChangePasswordScreenDestination.route) {
+            val viewModel = hiltViewModel<ChangePasswordViewModel>()
+            ChangePasswordScreen(viewModel = viewModel)
         }
 
     }

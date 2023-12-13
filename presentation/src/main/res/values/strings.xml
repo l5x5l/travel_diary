@@ -15,7 +15,7 @@
     <string name="login_with_social_account">소셜 계정으로 로그인</string>
     <string name="signup_with_email">이메일로 회원가입</string>
     <string name="request_auth_code">인증번호 요청하기</string>
-    <string name="input_auth_code">인증번호 입력</string>
+    <string name="input_auth_code">인증번호 입력</string>호
     <string name="change_email">이메일 변경</string>
     <string name="request_again">재요청</string>
     <string name="move_to_next_step">다음 단계로 이동하기</string>
@@ -29,6 +29,9 @@
     <string name="reset_password">비밀번호 재설정하기</string>
     <string name="complete_reset_password">비밀번호 재설정 완료</string>
     <string name="sub_message_complete_reset_password">입력하신 이메일로 새 비밀번호를 전송했습니다. 이메일을 확인해주세요.</string>
+
+    <string name="prev_password">이전 비밀번호</string>
+    <string name="new_password">새 비밀번호</string>
 
     <string name="use_screen_lock">화면 잠금 사용</string>
     <string name="use_biometric">생체인식 사용</string>
