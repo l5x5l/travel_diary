@@ -10,4 +10,5 @@ interface LoginRepository {
     suspend fun issueAuthCode(email : String) : BaseResponse<Nothing>
     suspend fun withdrawal() : BaseResponse<Nothing>
     suspend fun issueRandomPasswordToEmail(email : String) : BaseResponse<Nothing>
+    suspend fun changePassword(prevPassword : String, newPassword : String) : BaseResponse<Nothing>
 }

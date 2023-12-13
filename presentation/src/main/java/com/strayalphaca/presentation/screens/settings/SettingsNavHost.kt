@@ -62,7 +62,10 @@ fun SettingsNavHost(
 
         composable(ChangePasswordScreenDestination.route) {
             val viewModel = hiltViewModel<ChangePasswordViewModel>()
-            ChangePasswordScreen(viewModel = viewModel)
+            ChangePasswordScreen(
+                viewModel = viewModel,
+                goToBack = { navController.popBackStack() }
+            )
         }
 
     }

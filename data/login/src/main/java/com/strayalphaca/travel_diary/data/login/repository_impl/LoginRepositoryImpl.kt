@@ -39,4 +39,11 @@ class LoginRepositoryImpl @Inject constructor(
         return BaseResponse.EmptySuccess
     }
 
+    override suspend fun changePassword(
+        prevPassword: String,
+        newPassword: String
+    ): BaseResponse<Nothing> {
+        return BaseResponse.EmptySuccess
+    }
+
 }

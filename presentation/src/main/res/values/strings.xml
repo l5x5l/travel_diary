@@ -32,6 +32,7 @@
 
     <string name="prev_password">이전 비밀번호</string>
     <string name="new_password">새 비밀번호</string>
+    <string name="success_change_password">비밀번호 변경에 성공했습니다.</string>
 
     <string name="use_screen_lock">화면 잠금 사용</string>
     <string name="use_biometric">생체인식 사용</string>

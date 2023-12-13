@@ -54,4 +54,12 @@ class RemoteLoginRepository @Inject constructor(
     override suspend fun issueRandomPasswordToEmail(email: String): BaseResponse<Nothing> {
         return BaseResponse.EmptySuccess
     }
+
+    // todo - 비밀번호 변경 api 구현시 연동
+    override suspend fun changePassword(
+        prevPassword: String,
+        newPassword: String
+    ): BaseResponse<Nothing> {
+        return BaseResponse.EmptySuccess
+    }
 }

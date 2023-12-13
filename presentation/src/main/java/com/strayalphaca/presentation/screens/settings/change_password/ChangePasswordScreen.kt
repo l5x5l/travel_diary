@@ -1,5 +1,6 @@
 package com.strayalphaca.presentation.screens.settings.change_password
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.strayalphaca.presentation.R
@@ -17,14 +19,23 @@ import com.strayalphaca.presentation.components.atom.base_button.BaseButtonState
 import com.strayalphaca.presentation.components.block.EditTextState
 import com.strayalphaca.presentation.components.block.EditTextType
 import com.strayalphaca.presentation.components.block.EditTextWithTitle
+import com.strayalphaca.presentation.utils.collectAsEffect
 
 @Composable
 fun ChangePasswordScreen(
-    viewModel : ChangePasswordViewModel
+    viewModel : ChangePasswordViewModel,
+    goToBack : () -> Unit = {}
 ) {
+    val context = LocalContext.current
+
     val prevPassword by viewModel.prevPassword.collectAsState()
     val newPassword by viewModel.newPassword.collectAsState()
     val screenState by viewModel.state.collectAsState()
+
+    viewModel.changePasswordSuccess.collectAsEffect{
+        Toast.makeText(context, context.getString(R.string.success_change_password), Toast.LENGTH_SHORT).show()
+        goToBack()
+    }
 
     Column(
         modifier = Modifier
