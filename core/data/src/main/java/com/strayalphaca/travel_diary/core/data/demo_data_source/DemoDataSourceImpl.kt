@@ -1,12 +1,10 @@
 package com.strayalphaca.travel_diary.core.data.demo_data_source
 
-import android.annotation.SuppressLint
 import com.strayalphaca.domain.all.DiaryDate
 import com.strayalphaca.travel_diary.core.data.model.CityDto
 import com.strayalphaca.travel_diary.core.data.model.DiaryDto
 import com.strayalphaca.travel_diary.core.data.model.DiaryItemDto
 import com.strayalphaca.travel_diary.core.data.model.ImageDto
-import java.text.SimpleDateFormat
 import java.util.Calendar
 
 class DemoDataSourceImpl : DemoDataSource {
@@ -36,7 +34,6 @@ class DemoDataSourceImpl : DemoDataSource {
         return if (filteredData.size <= startIndex) emptyList() else filteredData.subList(startIndex, endIndex)
     }
 
-    @SuppressLint("SimpleDateFormat")
     override fun getDiaryListByMonth(year: Int, month: Int): List<DiaryDto> {
         val startDate = Calendar.getInstance().apply{ set(Calendar.DAY_OF_MONTH, 1) }
         val endDate = Calendar.getInstance().apply{
@@ -44,9 +41,10 @@ class DemoDataSourceImpl : DemoDataSource {
             add(Calendar.MONTH, 1)
         }
 
-        val df = SimpleDateFormat("yyyy-MM-dd")
+        val startDateString = DiaryDate.getInstanceFromCalendar(startDate).toString()
+        val endDateString = DiaryDate.getInstanceFromCalendar(endDate).toString()
 
-        return dataList.filter { it.createdAt >= df.format(startDate) && it.createdAt < df.format(endDate) }
+        return dataList.filter { it.date >= startDateString && it.date < endDateString }
     }
 
     override fun getTitleDiaryListByProvinceId(provinceId: Int): List<DiaryItemDto> {
