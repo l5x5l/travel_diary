@@ -1,4 +1,4 @@
-package com.strayalphaca.data.all.model
+package com.strayalphaca.travel_diary.core.data.model
 
 data class MediaFileInfoDto(
     val id : String = "",

@@ -1,4 +1,4 @@
-package com.strayalphaca.data.all.utils
+package com.strayalphaca.travel_diary.core.data.utils
 
 import com.strayalphaca.domain.model.BaseResponse
 import retrofit2.Response

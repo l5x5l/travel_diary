@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.data.file.api
 
-import com.strayalphaca.data.all.model.ListResponseData
+import com.strayalphaca.travel_diary.core.data.model.ListResponseData
 import com.strayalphaca.travel_diary.data.file.model.FileDto
 import okhttp3.MultipartBody
 import retrofit2.Response

@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.data.diary.repository_impl
 
-import com.strayalphaca.data.all.utils.responseToBaseResponseWithMapping
-import com.strayalphaca.data.all.utils.voidResponseToBaseResponse
+import com.strayalphaca.travel_diary.core.data.utils.responseToBaseResponseWithMapping
+import com.strayalphaca.travel_diary.core.data.utils.voidResponseToBaseResponse
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.diary.api.DiaryApi
 import com.strayalphaca.travel_diary.data.diary.model.ModifyDiaryRequestBody

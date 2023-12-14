@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.data.login.repository_impl
 
-import com.strayalphaca.data.all.utils.responseToBaseResponseWithMapping
-import com.strayalphaca.data.all.utils.voidResponseToBaseResponse
+import com.strayalphaca.travel_diary.core.data.utils.responseToBaseResponseWithMapping
+import com.strayalphaca.travel_diary.core.data.utils.voidResponseToBaseResponse
 import com.strayalphaca.travel_diary.data.login.api.LoginApi
 import com.strayalphaca.travel_diary.data.login.model.IssueAuthCodeBody
 import com.strayalphaca.travel_diary.data.login.model.LoginRequestBody
