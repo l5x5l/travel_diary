@@ -26,7 +26,8 @@ fun SettingsHomeScreenContainer(
     navigateToScreenLock : () -> Unit = {},
     navigateToWithdrawal : () -> Unit = {},
     navigateToLogin : () -> Unit = {},
-    navigateToIntro : () -> Unit = {}
+    navigateToIntro : () -> Unit = {},
+    navigateToChangePassword : () -> Unit = {}
 ) {
     val isLogin by viewModel.isLogin.collectAsState()
     val showLogoutCheckDialog by viewModel.logoutCheckDialogVisible.collectAsState()
@@ -62,6 +63,7 @@ fun SettingsHomeScreenContainer(
         navigateToScreenLock = navigateToScreenLock,
         navigateToWithdrawal = navigateToWithdrawal,
         navigateToLogin = navigateToLogin,
+        navigateToChangePassword = navigateToChangePassword,
         logoutClick = viewModel::showLogoutCheckDialog,
         isLogin = isLogin
     )
@@ -74,6 +76,7 @@ fun SettingsHomeScreen(
     navigateToScreenLock : () -> Unit = {},
     navigateToWithdrawal : () -> Unit = {},
     navigateToLogin : () -> Unit = {},
+    navigateToChangePassword : () -> Unit = {},
     logoutClick : () -> Unit = {},
     isLogin : Boolean = false
 ) {
@@ -87,6 +90,7 @@ fun SettingsHomeScreen(
         // 로그인 상태에 따라 로그인/로그아웃 전환 필요
         if (isLogin) {
             TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.push_alarm), onClick = navigateToPushAlarm)
+            TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.change_password), onClick = navigateToChangePassword)
             TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.logout), onClick = logoutClick)
             TextButton(modifier = Modifier.fillMaxWidth(), text = stringResource(id = R.string.withdrawal), onClick = navigateToWithdrawal)
         } else {
