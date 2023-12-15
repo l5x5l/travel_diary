@@ -35,8 +35,14 @@ class DemoDataSourceImpl : DemoDataSource {
     }
 
     override fun getDiaryListByMonth(year: Int, month: Int): List<DiaryDto> {
-        val startDate = Calendar.getInstance().apply{ set(Calendar.DAY_OF_MONTH, 1) }
+        val startDate = Calendar.getInstance().apply{
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month - 1)
+            set(Calendar.DAY_OF_MONTH, 1)
+        }
         val endDate = Calendar.getInstance().apply{
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month - 1)
             set(Calendar.DAY_OF_MONTH, 1)
             add(Calendar.MONTH, 1)
         }
