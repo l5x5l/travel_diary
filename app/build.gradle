@@ -64,6 +64,7 @@ dependencies {
     implementation project(":data:diary")
     implementation project(":data:login")
     implementation project(":data:auth")
+    implementation project(":core:data")
 
     implementation libs.android.ktx
     implementation libs.android.appcompat
