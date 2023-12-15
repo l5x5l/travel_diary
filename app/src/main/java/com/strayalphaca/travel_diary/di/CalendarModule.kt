@@ -1,5 +1,6 @@
 package com.strayalphaca.travel_diary.di
 
+import com.strayalphaca.travel_diary.core.data.demo_data_source.DemoDataSource
 import com.strayalphaca.travel_diary.data.calendar.data_source.CalendarDataSource
 import com.strayalphaca.travel_diary.data.calendar.data_source.CalendarTestDataSource
 import com.strayalphaca.travel_diary.data.calendar.data_source.RemoteCalendarDataSource
@@ -31,13 +32,14 @@ object CalendarProvideModule {
     @Provides
     fun provideCalendarDataSource(
         @BaseClient retrofit : Retrofit,
-        authRepository: AuthRepository
+        authRepository: AuthRepository,
+        demoDataSource: DemoDataSource
     ) : CalendarDataSource {
         val hasToken = authRepository.getAccessToken() != null
         return if (hasToken) {
             RemoteCalendarDataSource(retrofit)
         } else {
-            CalendarTestDataSource()
+            CalendarTestDataSource(demoDataSource)
         }
     }
 }
