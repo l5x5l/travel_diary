@@ -1,5 +1,6 @@
 package com.strayalphaca.travel_diary.di
 
+import com.strayalphaca.travel_diary.core.data.demo_data_source.DemoDataSource
 import com.strayalphaca.travel_diary.data.map.data_store.MapDataStore
 import com.strayalphaca.travel_diary.data.map.data_store.MapDataStoreImpl
 import com.strayalphaca.travel_diary.data.map.repository.RemoteMapRepository
@@ -20,13 +21,14 @@ object MapModule {
     fun provideMapRepository(
         mapDataStore: MapDataStore,
         @BaseClient retrofit: Retrofit,
-        authRepository: AuthRepository
+        authRepository: AuthRepository,
+        demoDataSource: DemoDataSource
     ) : MapRepository {
         val hasToken = authRepository.getAccessToken() != null
         return if (hasToken) {
             RemoteMapRepository(retrofit, mapDataStore)
         } else {
-            TestMapRepository(mapDataStore)
+            TestMapRepository(mapDataStore, demoDataSource)
         }
     }
 

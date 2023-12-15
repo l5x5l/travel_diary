@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.data.diary.data_source
 
-import com.strayalphaca.data.all.model.DiaryDto
-import com.strayalphaca.data.all.model.DiaryItemDto
+import com.strayalphaca.travel_diary.core.data.model.DiaryDto
+import com.strayalphaca.travel_diary.core.data.model.DiaryItemDto
 import com.strayalphaca.domain.model.BaseResponse
 
 interface DiaryDataSource {

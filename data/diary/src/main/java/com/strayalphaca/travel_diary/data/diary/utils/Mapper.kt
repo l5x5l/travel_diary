@@ -1,9 +1,9 @@
 package com.strayalphaca.travel_diary.data.diary.utils
 
-import com.strayalphaca.data.all.model.DiaryDto
-import com.strayalphaca.data.all.model.DiaryItemDto
-import com.strayalphaca.data.all.model.MediaFileInfoDto
-import com.strayalphaca.data.all.model.VoiceFileInDiaryDto
+import com.strayalphaca.travel_diary.core.data.model.DiaryDto
+import com.strayalphaca.travel_diary.core.data.model.DiaryItemDto
+import com.strayalphaca.travel_diary.core.data.model.MediaFileInfoDto
+import com.strayalphaca.travel_diary.core.data.model.VoiceFileInDiaryDto
 import com.strayalphaca.domain.all.DiaryDate
 import com.strayalphaca.travel_diary.data.diary.model.UploadResponseBody
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail

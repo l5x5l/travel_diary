@@ -34,7 +34,7 @@ dependencies {
 
     implementation project(":domain")
     implementation project(":domain:auth")
-    implementation project(":data")
+    implementation project(":core:data")
 
     implementation libs.android.ktx
     implementation libs.android.appcompat

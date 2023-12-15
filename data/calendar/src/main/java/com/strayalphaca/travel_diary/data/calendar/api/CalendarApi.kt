@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.data.calendar.api
 
-import com.strayalphaca.data.all.model.ListResponseData
+import com.strayalphaca.travel_diary.core.data.model.ListResponseData
 import com.strayalphaca.travel_diary.data.calendar.models.CalendarDiaryDto
 import retrofit2.Response
 import retrofit2.http.GET

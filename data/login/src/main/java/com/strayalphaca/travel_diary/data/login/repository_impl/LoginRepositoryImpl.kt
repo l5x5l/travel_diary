@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.data.login.repository_impl
 
 import com.strayalphaca.travel_diary.data.login.data_source.LoginDataSource
-import com.strayalphaca.data.all.utils.mapBaseResponse
+import com.strayalphaca.travel_diary.core.data.utils.mapBaseResponse
 import com.strayalphaca.travel_diary.data.login.utils.tokenDtoToToken
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
 import com.strayalphaca.domain.model.BaseResponse

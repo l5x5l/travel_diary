@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.data.calendar.models
 
-import com.strayalphaca.data.all.model.ImageDto
+import com.strayalphaca.travel_diary.core.data.model.ImageDto
 import com.strayalphaca.domain.all.DiaryDate
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 

@@ -1,8 +1,8 @@
 package com.strayalphaca.travel_diary.data.diary.api
 
-import com.strayalphaca.data.all.model.DiaryDto
-import com.strayalphaca.data.all.model.DiaryItemDto
-import com.strayalphaca.data.all.model.ListResponseData
+import com.strayalphaca.travel_diary.core.data.model.DiaryDto
+import com.strayalphaca.travel_diary.core.data.model.DiaryItemDto
+import com.strayalphaca.travel_diary.core.data.model.ListResponseData
 import com.strayalphaca.travel_diary.data.diary.model.DiaryTotalResponseBody
 import com.strayalphaca.travel_diary.data.diary.model.ModifyDiaryRequestBody
 import com.strayalphaca.travel_diary.data.diary.model.UploadDiaryRequestBody

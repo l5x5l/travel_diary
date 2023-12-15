@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.data.diary.repository_impl
 
-import com.strayalphaca.data.all.utils.mapBaseResponse
+import com.strayalphaca.travel_diary.core.data.utils.mapBaseResponse
 import com.strayalphaca.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.diary.data_source.DiaryDataSource
 import com.strayalphaca.travel_diary.data.diary.utils.diaryDtoToDiaryDetail
@@ -30,7 +30,7 @@ class DiaryRepositoryImpl @Inject constructor(
         return data.map { diaryItemDto ->
             DiaryItem(
                 id = diaryItemDto.id,
-                imageUrl = diaryItemDto.image?.shortLink,
+                imageUrl = diaryItemDto.image?.shortLink ?: diaryItemDto.image?.uploadedLink,
                 cityName = City.findCity(cityId).name
             )
         }
@@ -45,8 +45,8 @@ class DiaryRepositoryImpl @Inject constructor(
         return data.map { diaryItemDto ->
             DiaryItem(
                 id = diaryItemDto.id,
-                imageUrl = diaryItemDto.image?.shortLink,
-                cityName = "groupId $cityGroupId"
+                imageUrl = diaryItemDto.image?.shortLink ?: diaryItemDto.image?.uploadedLink,
+                cityName = City.findCity(diaryItemDto.city.id).name
             )
         }
     }
