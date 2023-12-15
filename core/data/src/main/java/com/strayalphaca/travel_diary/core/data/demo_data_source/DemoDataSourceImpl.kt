@@ -54,8 +54,11 @@ class DemoDataSourceImpl : DemoDataSource {
     }
 
     override fun getTitleDiaryListByProvinceId(provinceId: Int): List<DiaryItemDto> {
+        val provinceGroup = getProvinceGroup(provinceId)
         return dataList
-            .filter { getProvinceIdByCityId(it.cityId) == provinceId }
+            .filter {
+                getProvinceGroup(getProvinceIdByCityId(it.cityId)) == provinceGroup
+            }
             .groupBy { getCityGroupIdByCityId(it.cityId) }
             .values
             .map { it[0].toDiaryItemDto() }
@@ -180,6 +183,17 @@ private fun getCityGroupIdByCityId(cityId : Int?) : Int {
         156 -> 39
         235 -> 63
         else -> 0
+    }
+}
+
+private fun getProvinceGroup(provinceId : Int) : Int {
+    return when (provinceId) {
+        1, 4, 9 -> 1
+        2, 7, 16 -> 2
+        3, 15 -> 3
+        5, 14 -> 5
+        6, 8, 12 -> 6
+        else -> provinceId
     }
 }
 
