@@ -56,7 +56,7 @@ dependencies {
     implementation project(":domain:calendar")
     implementation project(":domain:login")
     implementation project(":domain:auth")
-    implementation project(":data")
+    implementation project(":data:lock")
     implementation project(":data:calendar")
     implementation project(":data:alarm")
     implementation project(":data:map")

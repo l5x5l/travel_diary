@@ -34,7 +34,6 @@ dependencies {
     implementation project(":domain")
     implementation project(":domain:map")
     implementation project(":domain:diary")
-    implementation project(":data")
     implementation project(":core:data")
 
     implementation libs.android.ktx

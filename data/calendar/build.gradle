@@ -33,7 +33,6 @@ android {
 dependencies {
     implementation project(":domain")
     implementation project(":domain:calendar")
-    implementation project(":data")
     implementation project(":core:data")
 
     implementation libs.android.ktx

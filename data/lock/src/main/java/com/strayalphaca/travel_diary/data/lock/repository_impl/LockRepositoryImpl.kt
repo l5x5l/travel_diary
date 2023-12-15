@@ -1,6 +1,6 @@
-package com.strayalphaca.data.lock.repository_impl
+package com.strayalphaca.travel_diary.data.lock.repository_impl
 
-import com.strayalphaca.data.lock.data_source.LockDataSource
+import com.strayalphaca.travel_diary.data.lock.data_source.LockDataSource
 import com.strayalphaca.domain.lock.repository.LockRepository
 import com.strayalphaca.domain.model.BaseResponse
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.strayalphaca.data.lock.data_source
+package com.strayalphaca.travel_diary.data.lock.data_source
 
 interface LockDataSource {
     suspend fun getPassword() : String?
