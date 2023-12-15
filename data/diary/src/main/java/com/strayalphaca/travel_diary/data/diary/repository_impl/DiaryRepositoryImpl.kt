@@ -30,7 +30,7 @@ class DiaryRepositoryImpl @Inject constructor(
         return data.map { diaryItemDto ->
             DiaryItem(
                 id = diaryItemDto.id,
-                imageUrl = diaryItemDto.image?.shortLink,
+                imageUrl = diaryItemDto.image?.shortLink ?: diaryItemDto.image?.uploadedLink,
                 cityName = City.findCity(cityId).name
             )
         }
@@ -45,8 +45,8 @@ class DiaryRepositoryImpl @Inject constructor(
         return data.map { diaryItemDto ->
             DiaryItem(
                 id = diaryItemDto.id,
-                imageUrl = diaryItemDto.image?.shortLink,
-                cityName = "groupId $cityGroupId"
+                imageUrl = diaryItemDto.image?.shortLink ?: diaryItemDto.image?.uploadedLink,
+                cityName = City.findCity(diaryItemDto.city.id).name
             )
         }
     }
