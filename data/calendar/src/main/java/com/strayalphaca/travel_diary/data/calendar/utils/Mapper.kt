@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.data.calendar.utils
 
 import com.strayalphaca.travel_diary.core.data.model.DiaryDto
-import com.strayalphaca.domain.all.DiaryDate
+import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 
 fun diaryDtoToDiaryInCalendar(diaryDto: DiaryDto) : DiaryInCalendar {

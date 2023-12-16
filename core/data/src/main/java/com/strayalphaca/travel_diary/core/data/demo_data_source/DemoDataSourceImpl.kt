@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.core.data.demo_data_source
 
-import com.strayalphaca.domain.all.DiaryDate
+import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
 import com.strayalphaca.travel_diary.core.data.model.CityDto
 import com.strayalphaca.travel_diary.core.data.model.DiaryDto
 import com.strayalphaca.travel_diary.core.data.model.DiaryItemDto

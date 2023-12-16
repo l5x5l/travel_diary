@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.strayalphaca.domain.all.DiaryDate
+import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
 import com.strayalphaca.presentation.components.template.dialog.MonthPickerDialog
 import com.strayalphaca.presentation.screens.home.calendar.component.CalendarUi
 import com.strayalphaca.presentation.screens.home.calendar.component.ToolButtons

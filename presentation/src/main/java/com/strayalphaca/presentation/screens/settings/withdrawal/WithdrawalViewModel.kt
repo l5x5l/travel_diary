@@ -3,7 +3,7 @@ package com.strayalphaca.presentation.screens.settings.withdrawal
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseWithdrawal
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryCount
 import com.strayalphaca.travel_diary.domain.auth.usecase.UseCaseClearToken
 import dagger.hilt.android.lifecycle.HiltViewModel

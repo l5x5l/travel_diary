@@ -2,7 +2,7 @@ package com.strayalphaca.travel_diary.diary.use_case
 
 import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
 import com.strayalphaca.travel_diary.diary.repository.DiaryRepository
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.diary.model.DiaryErrorCodes
 import javax.inject.Inject
 

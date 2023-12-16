@@ -32,7 +32,7 @@ android {
 
 dependencies {
 
-    implementation project(":domain")
+    implementation project(":core:domain")
     implementation project(":domain:file")
     implementation project(":core:data")
 

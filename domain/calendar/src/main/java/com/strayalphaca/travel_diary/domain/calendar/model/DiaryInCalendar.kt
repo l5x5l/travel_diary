@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.domain.calendar.model
 
-import com.strayalphaca.domain.all.DiaryDate
+import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
 
 data class DiaryInCalendar(
     val id : String,

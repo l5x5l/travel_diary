@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.diary.use_case
 
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.diary.repository.DiaryRepository
 import javax.inject.Inject
 

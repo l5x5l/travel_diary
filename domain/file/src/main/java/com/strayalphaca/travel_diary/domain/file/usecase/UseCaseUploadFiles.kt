@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.domain.file.usecase
 
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.domain.file.model.FileInfo
 import com.strayalphaca.travel_diary.domain.file.repository.FileRepository
 import kotlinx.coroutines.Dispatchers

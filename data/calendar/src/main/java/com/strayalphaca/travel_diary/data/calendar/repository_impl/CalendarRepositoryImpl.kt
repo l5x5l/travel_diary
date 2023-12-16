@@ -2,7 +2,7 @@ package com.strayalphaca.travel_diary.data.calendar.repository_impl
 
 import com.strayalphaca.travel_diary.data.calendar.data_source.CalendarDataSource
 import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.calendar.data_store.CalendarDataStore
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.model.MonthCalendar

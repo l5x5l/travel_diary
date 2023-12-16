@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.domain.calendar.repository
 
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.model.MonthCalendar
 import kotlinx.coroutines.flow.Flow

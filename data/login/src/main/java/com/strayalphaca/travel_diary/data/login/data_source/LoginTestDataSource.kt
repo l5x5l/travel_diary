@@ -2,7 +2,7 @@ package com.strayalphaca.travel_diary.data.login.data_source
 
 import android.util.Log
 import com.strayalphaca.travel_diary.data.login.model.TokensDto
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 

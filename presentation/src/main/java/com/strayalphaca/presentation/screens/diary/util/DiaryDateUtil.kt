@@ -1,7 +1,7 @@
 package com.strayalphaca.presentation.screens.diary.util
 
 import android.os.Build
-import com.strayalphaca.domain.all.DiaryDate
+import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
 
 fun DiaryDate.Companion.getInstanceFromDateString(
     dateString : String, dateFormat : String = "yyyy-MM-dd"

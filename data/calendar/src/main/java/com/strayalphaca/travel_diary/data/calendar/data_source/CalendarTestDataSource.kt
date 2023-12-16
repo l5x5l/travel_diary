@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.data.calendar.data_source
 
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.core.data.demo_data_source.DemoDataSource
 import com.strayalphaca.travel_diary.core.data.model.ImageDto
 import com.strayalphaca.travel_diary.data.calendar.models.CalendarDiaryDto

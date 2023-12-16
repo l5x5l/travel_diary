@@ -2,7 +2,7 @@ package com.strayalphaca.presentation.screens.login_home.reissue_password
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.models.SignupData
 import com.strayalphaca.presentation.models.Timer

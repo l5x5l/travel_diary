@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.core.data.utils
 
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import retrofit2.Response
 
 fun<T, G> responseToBaseResponseWithMapping(

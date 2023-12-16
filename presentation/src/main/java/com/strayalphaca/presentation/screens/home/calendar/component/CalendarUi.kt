@@ -9,7 +9,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.strayalphaca.domain.all.DiaryDate
+import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
 import com.strayalphaca.presentation.components.block.CalendarItemEmptyView
 import com.strayalphaca.presentation.components.block.CalendarItemView
 import com.strayalphaca.presentation.components.template.calendar_view.CalendarView

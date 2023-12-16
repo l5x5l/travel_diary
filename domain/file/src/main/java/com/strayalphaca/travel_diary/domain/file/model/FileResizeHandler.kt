@@ -4,4 +4,5 @@ import java.io.File
 
 interface FileResizeHandler {
     fun resizeImageFile(file : File, maxByteSize : Int) : File
+    fun cutAudioFile(file : File, startSecond : Int, endSecond : Int) : File
 }

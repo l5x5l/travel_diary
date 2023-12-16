@@ -3,7 +3,7 @@ package com.strayalphaca.presentation.screens.login_home.signup_password
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseSignup
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.presentation.components.atom.base_button.BaseButtonState
 import com.strayalphaca.presentation.components.block.EditTextState
 import com.strayalphaca.presentation.models.SignupData

@@ -2,8 +2,8 @@ package com.strayalphaca.presentation.screens.lock
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.strayalphaca.domain.lock.use_case.UseCaseCheckPassword
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.domain.lock.use_case.UseCaseCheckPassword
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.lock.model.LockScreenEvent
 import com.strayalphaca.presentation.screens.lock.model.LockScreenSideEffect
 import com.strayalphaca.presentation.screens.lock.model.LockScreenState

@@ -1,8 +1,8 @@
 package com.strayalphaca.travel_diary.data.lock.repository_impl
 
 import com.strayalphaca.travel_diary.data.lock.data_source.LockDataSource
-import com.strayalphaca.domain.lock.repository.LockRepository
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.domain.lock.repository.LockRepository
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import javax.inject.Inject
 
 class LockRepositoryImpl @Inject constructor(

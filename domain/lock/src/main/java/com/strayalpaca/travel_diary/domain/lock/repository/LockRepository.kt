@@ -1,6 +1,6 @@
-package com.strayalphaca.domain.lock.repository
+package com.strayalpaca.travel_diary.domain.lock.repository
 
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 
 interface LockRepository {
     suspend fun checkPassword(password : String) : BaseResponse<Nothing>

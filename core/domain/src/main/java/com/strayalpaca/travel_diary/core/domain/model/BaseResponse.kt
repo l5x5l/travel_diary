@@ -1,4 +1,4 @@
-package com.strayalphaca.domain.model
+package com.strayalpaca.travel_diary.core.domain.model
 
 sealed class BaseResponse<out T> {
     data class Success<T>(

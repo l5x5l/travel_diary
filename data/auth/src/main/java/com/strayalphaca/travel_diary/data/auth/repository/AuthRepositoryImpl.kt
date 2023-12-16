@@ -3,7 +3,7 @@ package com.strayalphaca.travel_diary.data.auth.repository
 import com.strayalphaca.travel_diary.core.data.utils.voidResponseToBaseResponse
 import com.strayalphaca.travel_diary.data.auth.api.AuthApi
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.auth.datastore.AuthDataStore
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Retrofit

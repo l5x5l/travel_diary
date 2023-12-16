@@ -4,7 +4,7 @@ import com.strayalphaca.travel_diary.data.login.data_source.LoginDataSource
 import com.strayalphaca.travel_diary.core.data.utils.mapBaseResponse
 import com.strayalphaca.travel_diary.data.login.utils.tokenDtoToToken
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
 import javax.inject.Inject
 import javax.inject.Singleton

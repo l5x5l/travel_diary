@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.data.login.data_source
 
 import com.strayalphaca.travel_diary.data.login.model.TokensDto
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 
 interface LoginDataSource {
     suspend fun postSignup() : BaseResponse<String>

@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-    implementation project(":domain")
+    implementation project(":core:domain")
     implementation project(":domain:auth")
     implementation project(":domain:alarm")
     implementation project(":domain:calendar")
@@ -48,6 +48,7 @@ dependencies {
     implementation project(':domain:diary')
     implementation project(":domain:file")
     implementation project(":domain:login")
+    implementation project(":domain:lock")
 
     implementation libs.android.ktx
     implementation libs.android.appcompat

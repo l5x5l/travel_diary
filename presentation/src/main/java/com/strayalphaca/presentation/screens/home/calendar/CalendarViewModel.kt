@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseCheckWrittenOnToday
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseGetCalendarDiary
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.presentation.utils.collectLatestInScope
 import com.strayalphaca.travel_diary.domain.calendar.utils.fillEmptyCellToCalendarData
 import dagger.hilt.android.lifecycle.HiltViewModel

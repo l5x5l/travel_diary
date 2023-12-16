@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.data.calendar.data_source
 
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.calendar.models.CalendarDiaryDto
 
 interface CalendarDataSource {

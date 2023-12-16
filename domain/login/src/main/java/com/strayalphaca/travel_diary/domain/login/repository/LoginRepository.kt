@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.domain.login.repository
 
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 
 interface LoginRepository {
     suspend fun emailLogin(email : String, password : String) : BaseResponse<Tokens>
