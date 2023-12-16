@@ -18,7 +18,6 @@ dependencyResolutionManagement {
 rootProject.name = "travel_diary"
 include ':app'
 include ':presentation'
-include ':domain'
 include ':domain:map'
 include ':data:map'
 include ':domain:file'
