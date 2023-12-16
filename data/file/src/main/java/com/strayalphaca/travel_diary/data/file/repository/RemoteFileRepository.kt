@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.data.file.repository
 
 import com.strayalphaca.travel_diary.core.data.utils.responseToBaseResponseWithMapping
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.file.api.FileApi
 import com.strayalphaca.travel_diary.domain.file.model.FileInfo
 import com.strayalphaca.travel_diary.domain.file.model.FileType

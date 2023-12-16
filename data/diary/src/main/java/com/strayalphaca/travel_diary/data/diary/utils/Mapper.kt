@@ -4,7 +4,7 @@ import com.strayalphaca.travel_diary.core.data.model.DiaryDto
 import com.strayalphaca.travel_diary.core.data.model.DiaryItemDto
 import com.strayalphaca.travel_diary.core.data.model.MediaFileInfoDto
 import com.strayalphaca.travel_diary.core.data.model.VoiceFileInDiaryDto
-import com.strayalphaca.domain.all.DiaryDate
+import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
 import com.strayalphaca.travel_diary.data.diary.model.UploadResponseBody
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryItem

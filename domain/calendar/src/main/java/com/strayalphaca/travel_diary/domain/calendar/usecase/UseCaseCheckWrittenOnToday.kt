@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.domain.calendar.usecase
 
 import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import javax.inject.Inject
 
 class UseCaseCheckWrittenOnToday @Inject constructor(

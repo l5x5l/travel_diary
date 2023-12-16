@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.core.data.utils
 
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 
 fun <T, K> mapBaseResponse(response : BaseResponse<T>, mapper : (T) -> K) : BaseResponse<K> {
     return when (response) {

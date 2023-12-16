@@ -2,7 +2,7 @@ package com.strayalphaca.presentation.screens.login_home.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.domain.auth.usecase.UseCaseSaveToken
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseLogin

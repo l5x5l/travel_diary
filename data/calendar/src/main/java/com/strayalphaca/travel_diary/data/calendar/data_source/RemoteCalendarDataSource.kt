@@ -1,8 +1,8 @@
 package com.strayalphaca.travel_diary.data.calendar.data_source
 
 import com.strayalphaca.travel_diary.core.data.utils.responseToBaseResponseWithMapping
-import com.strayalphaca.domain.all.DiaryDate
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.calendar.api.CalendarApi
 import com.strayalphaca.travel_diary.data.calendar.models.CalendarDiaryDto
 import retrofit2.Retrofit

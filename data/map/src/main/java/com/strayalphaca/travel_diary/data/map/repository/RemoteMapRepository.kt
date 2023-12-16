@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.data.map.repository
 
 import com.strayalphaca.travel_diary.core.data.utils.responseToBaseResponseWithMapping
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.map.api.MapApi
 import com.strayalphaca.travel_diary.data.map.data_store.MapDataStore
 import com.strayalphaca.travel_diary.map.model.Location

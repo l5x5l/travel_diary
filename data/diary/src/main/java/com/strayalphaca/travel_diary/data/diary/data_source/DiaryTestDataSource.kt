@@ -2,7 +2,7 @@ package com.strayalphaca.travel_diary.data.diary.data_source
 
 import com.strayalphaca.travel_diary.core.data.model.DiaryDto
 import com.strayalphaca.travel_diary.core.data.model.DiaryItemDto
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.core.data.demo_data_source.DemoDataSource
 import kotlinx.coroutines.delay
 import javax.inject.Inject

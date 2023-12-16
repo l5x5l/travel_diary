@@ -9,7 +9,7 @@ import com.strayalphaca.travel_diary.data.login.model.SignUpRequestBody
 import com.strayalphaca.travel_diary.data.login.utils.tokenDtoToToken
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
 import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.login.utils.extractIdFromSignupResponse
 import retrofit2.Retrofit
 import javax.inject.Inject

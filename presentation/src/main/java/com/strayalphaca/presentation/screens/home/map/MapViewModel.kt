@@ -2,7 +2,7 @@ package com.strayalphaca.presentation.screens.home.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.presentation.screens.home.map.model.MapScreenEvent
 import com.strayalphaca.presentation.screens.home.map.model.MapScreenState
 import com.strayalphaca.presentation.utils.collectLatestInScope

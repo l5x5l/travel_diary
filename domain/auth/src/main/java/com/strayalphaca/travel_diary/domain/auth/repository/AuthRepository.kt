@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.domain.auth.repository
 
-import com.strayalphaca.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {

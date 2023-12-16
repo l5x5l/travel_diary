@@ -3,7 +3,7 @@ package com.strayalphaca.travel_diary.di
 import com.strayalphaca.travel_diary.data.lock.data_source.LockDataSource
 import com.strayalphaca.travel_diary.data.lock.data_source.LockTestDataSource
 import com.strayalphaca.travel_diary.data.lock.repository_impl.LockRepositoryImpl
-import com.strayalphaca.domain.lock.repository.LockRepository
+import com.strayalpaca.travel_diary.domain.lock.repository.LockRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.data.calendar.models
 
 import com.strayalphaca.travel_diary.core.data.model.ImageDto
-import com.strayalphaca.domain.all.DiaryDate
+import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 
 data class CalendarDiaryDto(

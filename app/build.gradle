@@ -48,7 +48,7 @@ android {
 
 dependencies {
     implementation project(":presentation")
-    implementation project(":domain")
+    implementation project(":core:domain")
     implementation project(":domain:alarm")
     implementation project(":domain:map")
     implementation project(":domain:file")
@@ -56,6 +56,7 @@ dependencies {
     implementation project(":domain:calendar")
     implementation project(":domain:login")
     implementation project(":domain:auth")
+    implementation project(":domain:lock")
     implementation project(":data:lock")
     implementation project(":data:calendar")
     implementation project(":data:alarm")
