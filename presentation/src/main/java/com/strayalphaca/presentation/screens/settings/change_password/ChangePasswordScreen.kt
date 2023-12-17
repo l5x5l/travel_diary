@@ -63,7 +63,7 @@ fun ChangePasswordScreen(
             value = newPassword,
             onValueChange = viewModel::inputNewPassword,
             state = if(screenState.buttonEnable) EditTextState.ACTIVE else EditTextState.INACTIVE,
-            isError = screenState.errorMessage.isNotEmpty(),
+            showErrorText = screenState.errorMessage.isNotEmpty(),
             errorText = screenState.errorMessage
         )
 

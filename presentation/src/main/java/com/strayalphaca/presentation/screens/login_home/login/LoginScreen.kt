@@ -21,7 +21,6 @@ import com.strayalphaca.presentation.components.atom.text_button.TextButton
 import com.strayalphaca.presentation.components.block.EditTextWithTitle
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
 import com.strayalphaca.presentation.components.block.EditTextType
 import com.strayalphaca.presentation.utils.collectAsEffect
 
@@ -81,6 +80,8 @@ fun LoginScreen(
                     value = password,
                     onValueChange = viewModel::inputPassword,
                     type = EditTextType.PASSWORD,
+                    showErrorText = true,
+                    errorText = errorMessage
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -98,11 +99,6 @@ fun LoginScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        text = errorMessage,
-                        style = MaterialTheme.typography.body2.copy(color = Color.Red)
-                    )
 
                     Spacer(modifier = Modifier.weight(1f))
 
