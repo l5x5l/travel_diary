@@ -41,7 +41,7 @@ fun EditTextWithTitle(
     placeHolder : String,
     value : String,
     errorText : String = "",
-    isError : Boolean = false,
+    showErrorText : Boolean = false,
     state : EditTextState = EditTextState.ACTIVE,
     type : EditTextType = EditTextType.NORMAL,
     onValueChange : (newValue : String) -> Unit = {}
@@ -79,7 +79,7 @@ fun EditTextWithTitle(
                 .height(1.dp)
                 .background(MaterialTheme.colors.onBackground)
         )
-        if (isError) {
+        if (showErrorText) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = errorText, style = MaterialTheme.typography.caption.copy(color = MaterialTheme.colors.error))
         }
