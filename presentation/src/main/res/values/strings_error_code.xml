@@ -3,7 +3,13 @@
     <string name="server_side_error">통신이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.</string>
     <string name="unknown_error">알수없는 에러가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
 
-    <string name="login_empty_email_or_password">비밀번호와 이메일을 모두 입력해주세요.</string>
-    <string name="login_invalid_email_format">이메일 형식을 맞춰 입력해주세요.</string>
-    <string name="login_non_exist_email_or_password">존재하지 않은 이메일/비밀번호입니다.</string>
+    <string name="login_error_empty_email_or_password">비밀번호와 이메일을 모두 입력해주세요.</string>
+    <string name="login_error_invalid_email_format">이메일 형식을 맞춰 입력해주세요.</string>
+    <string name="login_error_non_exist_email_or_password">존재하지 않은 이메일/비밀번호입니다.</string>
+
+    <string name="login_error_exist_email">이미 가입된 이메일입니다.</string>
+
+    <string name="login_error_empty_password">비밀번호를 입력해 주세요.</string>
+    <string name="login_error_invalid_auth_code_format">인증번호 4자리를 입력해 주세요.</string>
+    <string name="login_error_invalid_auth_code">인증번호가 일치하지 않습니다.</string>
 </resources>
