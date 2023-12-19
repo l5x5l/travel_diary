@@ -11,4 +11,12 @@ sealed class BaseResponse<out T> {
     ) : BaseResponse<Nothing>()
 
     object EmptySuccess : BaseResponse<Nothing>()
+
+    fun mapErrorCodeToMessageIfFailure(errorCodeMapper : (Int) -> String) : BaseResponse<T> {
+        return if (this is Failure) {
+            this.copy(errorMessage = errorCodeMapper(errorCode))
+        } else {
+            this
+        }
+    }
 }
