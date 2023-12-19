@@ -12,6 +12,7 @@ import com.strayalphaca.travel_diary.data.login.repository_impl.RemoteLoginRepos
 import com.strayalphaca.travel_diary.domain.login.di.AuthCodeErrorCodeMapperProvide
 import com.strayalphaca.travel_diary.domain.login.di.LoginErrorCodeMapperProvide
 import com.strayalphaca.travel_diary.domain.login.di.SignupErrorCodeMapperProvide
+import com.strayalphaca.travel_diary.domain.login.di.WithdrawalErrorCodeMapperProvide
 import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
 import dagger.Module
 import dagger.Provides
@@ -55,5 +56,13 @@ object LoginModule {
         @ApplicationContext context : Context
     ) : ErrorCodeMapper {
         return DefaultErrorCodeMapper(AuthCodeErrorCodeMapper(context), context)
+    }
+
+    @WithdrawalErrorCodeMapperProvide
+    @Provides
+    fun provideWithdrawalErrorCodeMapper(
+        @ApplicationContext context : Context
+    ) : ErrorCodeMapper {
+        return DefaultErrorCodeMapper(null, context)
     }
 }

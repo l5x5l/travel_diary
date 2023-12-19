@@ -13,3 +13,7 @@ annotation class SignupErrorCodeMapperProvide
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class AuthCodeErrorCodeMapperProvide
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class WithdrawalErrorCodeMapperProvide
