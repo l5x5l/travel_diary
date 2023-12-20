@@ -42,6 +42,9 @@
     <string name="push_alarm_click_event">푸시 알림 클릭 이벤트</string>
     <string name="sub_message_push_alarm_click_event">푸시 알람을 클릭하면 아래 선택한 화면으로 이동해요</string>
 
+    <string name="description_change_password_method">변경 방법 안내</string>
+    <string name="sub_message_description_change_password_method">기존 비밀번호와 새 비밀번호를 입력한 다음,\n”비밀번호 변경하기” 버튼을 클릭해주세요.</string>
+
     <string name="calendar_page">달력 페이지</string>
     <string name="map_page">지도 페이지</string>
     <string name="diary_write_page">일기 작성</string>
