@@ -1,5 +1,6 @@
 package com.strayalphaca.travel_diary.data.login.api
 
+import com.strayalphaca.travel_diary.data.login.model.ChangePasswordRequestBody
 import com.strayalphaca.travel_diary.data.login.model.IssueAuthCodeBody
 import com.strayalphaca.travel_diary.data.login.model.LoginRequestBody
 import com.strayalphaca.travel_diary.data.login.model.SignUpRequestBody
@@ -9,6 +10,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -27,4 +29,7 @@ interface LoginApi {
 
     @DELETE("users")
     suspend fun withDraw() : Response<Unit>
+
+    @PATCH("auth/password")
+    suspend fun changePassword(@Body params : ChangePasswordRequestBody) : Response<Unit>
 }

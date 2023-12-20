@@ -10,6 +10,7 @@ import com.strayalphaca.travel_diary.data.login.utils.tokenDtoToToken
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
 import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
+import com.strayalphaca.travel_diary.data.login.model.ChangePasswordRequestBody
 import com.strayalphaca.travel_diary.data.login.utils.extractIdFromSignupResponse
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -55,11 +56,12 @@ class RemoteLoginRepository @Inject constructor(
         return BaseResponse.EmptySuccess
     }
 
-    // todo - 비밀번호 변경 api 구현시 연동
     override suspend fun changePassword(
         prevPassword: String,
         newPassword: String
     ): BaseResponse<Nothing> {
-        return BaseResponse.EmptySuccess
+        val requestBody = ChangePasswordRequestBody(prevPassword = prevPassword, newPassword = newPassword)
+        val response = loginRetrofit.changePassword(requestBody)
+        return voidResponseToBaseResponse(response)
     }
 }
