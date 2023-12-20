@@ -16,7 +16,7 @@ import retrofit2.http.Query
 
 interface LoginApi {
     @GET("auth/code")
-    suspend fun checkAuthCode(@Query("email") email : String, @Query("code") code : String) : Response<Unit>
+    suspend fun checkAuthCode(@Query("email") email : String, @Query("code") code : String, @Query("type") type : String) : Response<Unit>
 
     @POST("auth/code")
     suspend fun issueAuthCode(@Body params : IssueAuthCodeBody) : Response<Unit>

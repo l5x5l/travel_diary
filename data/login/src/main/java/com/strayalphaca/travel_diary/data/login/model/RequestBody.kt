@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.data.login.model
 
-data class IssueAuthCodeBody(val email : String)
+data class IssueAuthCodeBody(val email : String, val type : String)
 
 data class SignUpRequestBody(val email : String, val password : String)
 

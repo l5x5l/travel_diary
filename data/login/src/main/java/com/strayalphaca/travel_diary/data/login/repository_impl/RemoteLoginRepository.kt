@@ -12,6 +12,7 @@ import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.login.model.ChangePasswordRequestBody
 import com.strayalphaca.travel_diary.data.login.utils.extractIdFromSignupResponse
+import com.strayalphaca.travel_diary.domain.login.model.AuthCodeCaseType
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -36,13 +37,13 @@ class RemoteLoginRepository @Inject constructor(
         )
     }
 
-    override suspend fun checkAuthCode(email: String, authCode: String): BaseResponse<Nothing> {
-        val response = loginRetrofit.checkAuthCode(email, authCode)
+    override suspend fun checkAuthCode(email: String, authCode: String, type : AuthCodeCaseType): BaseResponse<Nothing> {
+        val response = loginRetrofit.checkAuthCode(email, authCode, type.name)
         return voidResponseToBaseResponse(response)
     }
 
-    override suspend fun issueAuthCode(email: String): BaseResponse<Nothing> {
-        val response = loginRetrofit.issueAuthCode(IssueAuthCodeBody(email))
+    override suspend fun issueAuthCode(email: String, type : AuthCodeCaseType): BaseResponse<Nothing> {
+        val response = loginRetrofit.issueAuthCode(IssueAuthCodeBody(email, type.name))
         return voidResponseToBaseResponse(response)
     }
 
