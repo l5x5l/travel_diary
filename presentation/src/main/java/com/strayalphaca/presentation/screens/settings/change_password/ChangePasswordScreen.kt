@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,6 +21,7 @@ import com.strayalphaca.presentation.components.atom.base_button.BaseButtonState
 import com.strayalphaca.presentation.components.block.EditTextState
 import com.strayalphaca.presentation.components.block.EditTextType
 import com.strayalphaca.presentation.components.block.EditTextWithTitle
+import com.strayalphaca.presentation.ui.theme.Gray4
 import com.strayalphaca.presentation.utils.collectAsEffect
 
 @Composable
@@ -42,6 +45,14 @@ fun ChangePasswordScreen(
             .fillMaxWidth()
             .padding(horizontal = 32.dp, vertical = 12.dp)
     ) {
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(text = stringResource(id = R.string.description_change_password_method), style = MaterialTheme.typography.body1)
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(text = stringResource(id = R.string.sub_message_description_change_password_method), style = MaterialTheme.typography.caption, color = Gray4)
 
         Spacer(modifier = Modifier.height(48.dp))
 
