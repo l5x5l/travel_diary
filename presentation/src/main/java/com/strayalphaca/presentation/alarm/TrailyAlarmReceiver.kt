@@ -1,6 +1,5 @@
 package com.strayalphaca.presentation.alarm
 
-import android.app.Activity
 import android.app.AlarmManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -18,12 +17,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.reflect.KClass
 
 @AndroidEntryPoint
 class TrailyAlarmReceiver : BroadcastReceiver() {
     private val notificationManager = NotificationManager()
-    @Inject lateinit var rootActivity : KClass<out Activity>
     @Inject lateinit var useCaseGetAlarmInfo: UseCaseGetAlarmInfo
     @Inject lateinit var trailyAlarmManager: TrailyAlarmManager
 
@@ -39,7 +36,6 @@ class TrailyAlarmReceiver : BroadcastReceiver() {
                     title = context.getString(R.string.notification_title),
                     text = context.getString(R.string.notification_text),
                     notificationId = NOTIFICATION_ID,
-                    target = rootActivity,
                     deepLink = intent.getStringExtra("deepLink")
                 )
 
