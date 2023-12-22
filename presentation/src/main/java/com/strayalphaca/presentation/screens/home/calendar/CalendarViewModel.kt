@@ -6,6 +6,8 @@ import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseCheckWrittenOnToday
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseGetCalendarDiary
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
+import com.strayalphaca.presentation.models.deeplink_handler.DeepLinkEvent
+import com.strayalphaca.presentation.models.deeplink_handler.NotificationDeepLinkHandler
 import com.strayalphaca.presentation.utils.collectLatestInScope
 import com.strayalphaca.travel_diary.domain.calendar.utils.fillEmptyCellToCalendarData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
     private val useCaseGetCalendarDiary: UseCaseGetCalendarDiary,
-    private val useCaseCheckWrittenOnToday: UseCaseCheckWrittenOnToday
+    private val useCaseCheckWrittenOnToday: UseCaseCheckWrittenOnToday,
+    deepLinkHandler: NotificationDeepLinkHandler
 ) : ViewModel() {
     private val events = Channel<CalendarViewEvent>()
     val state : StateFlow<CalendarScreenState> = events.receiveAsFlow()
@@ -42,6 +45,11 @@ class CalendarViewModel @Inject constructor(
             events.send(CalendarViewEvent.SuccessLoadDiaryData(it.year, it.month, diaryList))
         }
 
+        deepLinkHandler.deepLinkEvent.collectLatestInScope(viewModelScope) {
+            if (it == DeepLinkEvent.WRITE_DIARY) {
+                checkTodayWrite()
+            }
+        }
     }
 
     fun tryGetDiaryData(year : Int, month : Int) {

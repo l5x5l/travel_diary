@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,26 +30,26 @@ import com.strayalphaca.presentation.screens.video.VideoContainer
 import com.strayalphaca.presentation.screens.video.VideoViewModel
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import com.strayalphaca.presentation.utils.collectAsEffect
-import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class RootActivity : ComponentActivity() {
 
-    @Inject lateinit var authRepository: AuthRepository
+    private val viewModel : RootViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        intent?.data?.let { uri ->
+            viewModel.handleLink(uri.toString())
+        }
 
         setContent {
             TravelDiaryTheme {
                 val navHostController = rememberNavController()
 
-                authRepository.invalidRefreshToken().collectAsEffect {
-                    if (it) {
-                        navHostController.navigateToIntroTop()
-                    }
+                viewModel.invalidRefreshToken.collectAsEffect { tokenErrorOccur ->
+                    if (tokenErrorOccur) navHostController.navigateToIntroTop()
                 }
 
                 RootNavHost(navController = navHostController)
