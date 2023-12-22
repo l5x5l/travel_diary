@@ -36,7 +36,7 @@ fun CityPickerDialog(
 ) {
     var selectedLocation : Int? by remember { mutableStateOf(currentSelectedLocationId) }
     val cityList : List<City> by remember {
-        mutableStateOf(City.getSameGroupCityList(cityGroupId))
+        mutableStateOf(City.getSameGroupCityList(cityGroupId).sortedBy { it.name })
     }
     val lazyColumnListState = rememberLazyGridState()
 
