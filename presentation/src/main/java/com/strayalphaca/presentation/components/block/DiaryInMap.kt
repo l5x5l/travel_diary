@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -18,9 +17,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.strayalphaca.presentation.ui.theme.Tape
+import com.strayalphaca.presentation.utils.pxToDp
 
 @Composable
-fun DiaryInMap(modifier: Modifier, onClick : (Int) -> Unit, thumbnailUrl : String?, id : Int) {
+fun DiaryInMap(modifier: Modifier, onClick : (Int) -> Unit, thumbnailUrl : String?, id : Int, widthPx : Int) {
     Surface(
         modifier = modifier
             .padding(2.dp)
@@ -31,7 +31,7 @@ fun DiaryInMap(modifier: Modifier, onClick : (Int) -> Unit, thumbnailUrl : Strin
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(2.dp)
+                .padding((widthPx * 0.05f).toInt().pxToDp())
         ) {
             if (thumbnailUrl == null) {
                 Box(
@@ -44,10 +44,12 @@ fun DiaryInMap(modifier: Modifier, onClick : (Int) -> Unit, thumbnailUrl : Strin
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(0.8f)
                         .background(Tape)
                 ) {
                     AsyncImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(0.8f),
                         model = thumbnailUrl,
                         contentDescription = "thumbnail_image",
                         contentScale = ContentScale.Crop
@@ -56,7 +58,10 @@ fun DiaryInMap(modifier: Modifier, onClick : (Int) -> Unit, thumbnailUrl : Strin
 
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(3f)
+            )
         }
     }
 }
