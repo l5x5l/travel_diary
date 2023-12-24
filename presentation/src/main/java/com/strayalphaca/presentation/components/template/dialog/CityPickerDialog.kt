@@ -5,10 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -34,8 +36,9 @@ fun CityPickerDialog(
 ) {
     var selectedLocation : Int? by remember { mutableStateOf(currentSelectedLocationId) }
     val cityList : List<City> by remember {
-        mutableStateOf(City.getSameGroupCityList(cityGroupId))
+        mutableStateOf(City.getSameGroupCityList(cityGroupId).sortedBy { it.name })
     }
+    val lazyColumnListState = rememberLazyGridState()
 
     TapeDialog(onDismissRequest = onDismissRequest) {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -47,8 +50,9 @@ fun CityPickerDialog(
             )
 
             LazyVerticalGrid(
-                modifier = Modifier.padding(horizontal = 28.dp),
-                columns = GridCells.Adaptive(minSize = 120.dp)
+                modifier = Modifier.padding(horizontal = 28.dp).heightIn(max = 480.dp),
+                columns = GridCells.Adaptive(minSize = 120.dp),
+                state = lazyColumnListState
             ) {
                 items(cityList) { city ->
                     Text(

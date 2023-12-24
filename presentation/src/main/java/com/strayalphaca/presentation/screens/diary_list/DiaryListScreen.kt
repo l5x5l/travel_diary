@@ -181,7 +181,7 @@ fun DiaryListScreen(
                         if (diaryList.isNotEmpty()) {
                             LazyVerticalGrid(
                                 state = lazyColumnListState,
-                                columns = GridCells.Fixed(2),
+                                columns = GridCells.Adaptive(minSize = 140.dp),
                                 contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
                                 content = {
                                     items(
@@ -199,7 +199,7 @@ fun DiaryListScreen(
                                         )
                                     }
 
-                                    item(span = { GridItemSpan(2)}) {
+                                    item(span = { GridItemSpan( this.maxLineSpan )}) {
                                         when (pagingState) {
                                             SimplePagingState.LAST -> {
                                                 EndOfPageView(

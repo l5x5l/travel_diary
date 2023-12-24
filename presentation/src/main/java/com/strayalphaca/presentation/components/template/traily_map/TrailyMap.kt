@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,9 @@ fun TrailyMap(
     var imageSize by remember { mutableStateOf(IntSize.Zero) }
     var boxRatio by remember { mutableStateOf(2f) }
     val imageRatio = getMapImageRatioById(locationId)
+    val diaryWidth by remember(imageSize) {
+        derivedStateOf { (imageSize.width * 0.15f).toInt() }
+    }
 
     Box(
         modifier
@@ -87,17 +91,20 @@ fun TrailyMap(
                 locationDiaryList.forEach { locationDiary ->
                     DiaryInMap(
                         modifier = Modifier
-                            .width(40.dp)
+                            .width(
+                                diaryWidth.pxToDp()
+                            )
                             .offset(
                                 x = getOffsetX(
                                     locationDiary.location,
                                     imageSize.width
-                                ).pxToDp() - 20.dp,
+                                ).pxToDp() - (diaryWidth / 2).pxToDp(),
                                 y = getOffsetY(locationDiary.location, imageSize.height).pxToDp()
                             ),
                         onClick = onClickDiary,
                         thumbnailUrl = locationDiary.thumbnailUri,
-                        id = locationDiary.location.id.id
+                        id = locationDiary.location.id.id,
+                        widthPx = diaryWidth
                     )
                 }
             }
