@@ -266,6 +266,15 @@ sealed class City(val id : Int, val name : String, val provinceId : Int, val gro
             return listOfCity().filter { it.objectInstance?.group == group }.mapNotNull { it.objectInstance }
         }
 
+        fun getGroupName(groupId : Int) : String {
+            return when (groupId) {
+                in 1..8 -> {
+                    Province.findProvince(groupId).name
+                }
+                else -> getSameGroupCityList(groupId).joinToString(",") { it.name }
+            }
+        }
+
         fun findCity(cityId : Int) : City {
             return listOfCity().find { it.objectInstance?.id == cityId }?.objectInstance
                 ?: throw IllegalArgumentException("Cannot found city which id is : $cityId")

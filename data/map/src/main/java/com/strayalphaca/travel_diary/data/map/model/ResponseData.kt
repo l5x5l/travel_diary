@@ -36,7 +36,7 @@ data class MapProvinceResponseBody(
             thumbnailUri = image?.thumbnailUri(),
             location = Location(
                 id = LocationId(groupId),
-                name = City.getSameGroupCityList(groupId).joinToString { "," },
+                name = City.getGroupName(groupId),
                 provinceId = LocationId(provinceId),
                 type = LocationType.CITY_GROUP
             )
