@@ -41,7 +41,7 @@ fun CityPickerDialog(
     val lazyColumnListState = rememberLazyGridState()
 
     TapeDialog(onDismissRequest = onDismissRequest) {
-        Column(modifier = Modifier.fillMaxWidth().heightIn(max = 480.dp)) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(
                 modifier = Modifier.padding(vertical = 16.dp, horizontal = 28.dp),
                 text = stringResource(id = R.string.select_location),
@@ -50,7 +50,7 @@ fun CityPickerDialog(
             )
 
             LazyVerticalGrid(
-                modifier = Modifier.padding(horizontal = 28.dp).weight(1f),
+                modifier = Modifier.padding(horizontal = 28.dp).heightIn(max = 480.dp),
                 columns = GridCells.Adaptive(minSize = 120.dp),
                 state = lazyColumnListState
             ) {
