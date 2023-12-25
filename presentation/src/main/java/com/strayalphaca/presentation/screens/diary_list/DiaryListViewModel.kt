@@ -59,12 +59,7 @@ class DiaryListViewModel @Inject constructor(
     fun setCity(cityId : Int?) {
         selectedCityId = cityId
         if (cityId == null) {
-            _locationTitle.value =
-                City
-                    .getSameGroupCityList(cityGroupId)
-                    .joinToString(separator = ",") { city ->
-                        city.name
-                    }
+            _locationTitle.value = City.getGroupName(cityGroupId)
 
             diaryListSimplePaging = DiaryListSimplePaging(
                 getDiaryList = useCaseGetDiaryList::getByCityGroupId,
