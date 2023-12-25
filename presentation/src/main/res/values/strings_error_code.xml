@@ -15,4 +15,6 @@
 
     <string name="diary_error_empty_diary_content">내용을 입력해주세요.</string>
     <string name="diary_error_exist_today_diary">오늘은 이미 일지를 작성했어요.</string>
+
+    <string name="auth_error_401">인증 관련 에러가 발생하여 로그인 화면으로 이동합니다.</string>
 </resources>

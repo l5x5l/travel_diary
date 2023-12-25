@@ -2,6 +2,7 @@ package com.strayalphaca.travel_diary
 
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -43,12 +44,12 @@ class RootActivity : ComponentActivity() {
         intent?.data?.let { uri ->
             viewModel.handleLink(uri.toString())
         }
-
         setContent {
             TravelDiaryTheme {
                 val navHostController = rememberNavController()
 
                 viewModel.invalidRefreshToken.collectAsEffect { tokenErrorOccur ->
+                    Toast.makeText(this, getString(com.strayalphaca.presentation.R.string.auth_error_401), Toast.LENGTH_SHORT).show()
                     if (tokenErrorOccur) navHostController.navigateToIntroTop()
                 }
 
