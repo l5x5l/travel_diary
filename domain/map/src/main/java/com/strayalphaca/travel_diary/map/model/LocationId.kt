@@ -76,7 +76,7 @@ value class LocationId(val id : Int) {
                 Position(x = 0.443f, y = getYPositionRatioByLocalImage(0.708f, gyeongbuk))
             }
             4 -> { // 인천
-                Position(x = 0.229f, y = getYPositionRatioByLocalImage(0.529f, gyeonggi))
+                Position(x = 0.118f, y = getYPositionRatioByLocalImage(0.529f, gyeonggi))
             }
             5 -> { // 광주
                 Position(x = 0.374f, y = getYPositionRatioByLocalImage(0.365f, jeonnam))
