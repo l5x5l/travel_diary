@@ -7,6 +7,7 @@ import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.models.SignupData
 import com.strayalphaca.presentation.models.Timer
 import com.strayalphaca.presentation.utils.toTimerFormat
+import com.strayalphaca.travel_diary.domain.login.model.AuthCodeCaseType
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseCheckAuthCode
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseIssueAuthCode
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseResetPassword
@@ -68,7 +69,7 @@ class ResetPasswordViewModel @Inject constructor(
     fun tryReIssueAuthCode() {
         viewModelScope.launch {
             _viewState.value = ResetPasswordViewState.ReIssuingAuthCode
-            val response = useCaseIssueAuthCode(email.value)
+            val response = useCaseIssueAuthCode(email = email.value, type = AuthCodeCaseType.RESET_PASSWORD)
 
             // 인증번호 재발급 성공시 타이머 초기화
             if (response is BaseResponse.EmptySuccess) {
@@ -85,7 +86,7 @@ class ResetPasswordViewModel @Inject constructor(
     fun tryCheckAndIssueAuthCode() {
         viewModelScope.launch {
             _viewState.value = ResetPasswordViewState.IssuingAuthCode
-            val response = useCaseIssueAuthCode(email.value)
+            val response = useCaseIssueAuthCode(email = email.value, type = AuthCodeCaseType.RESET_PASSWORD)
 
             // 인증번호 발급 성공시 타이머 실행
             if (response is BaseResponse.EmptySuccess) {
@@ -102,7 +103,7 @@ class ResetPasswordViewModel @Inject constructor(
     fun tryCheckAuthCode() {
         viewModelScope.launch {
             _viewState.value = ResetPasswordViewState.CheckingAuthCode
-            val authCodeCheckResponse = useCaseCheckAuthCode(email.value, authCode.value)
+            val authCodeCheckResponse = useCaseCheckAuthCode(email = email.value, authCode = authCode.value, type = AuthCodeCaseType.RESET_PASSWORD)
 
             if (authCodeCheckResponse is BaseResponse.Failure) {
                 _showToastEvent.emit(authCodeCheckResponse.errorMessage)

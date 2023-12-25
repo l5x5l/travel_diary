@@ -5,6 +5,7 @@ import com.strayalphaca.travel_diary.core.data.utils.mapBaseResponse
 import com.strayalphaca.travel_diary.data.login.utils.tokenDtoToToken
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
+import com.strayalphaca.travel_diary.domain.login.model.AuthCodeCaseType
 import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,11 +24,11 @@ class LoginRepositoryImpl @Inject constructor(
         return loginDataSource.postSignup()
     }
 
-    override suspend fun checkAuthCode(email : String, authCode: String): BaseResponse<Nothing> {
+    override suspend fun checkAuthCode(email : String, authCode: String, type : AuthCodeCaseType): BaseResponse<Nothing> {
         return loginDataSource.getAuthCode(email, authCode)
     }
 
-    override suspend fun issueAuthCode(email : String): BaseResponse<Nothing> {
+    override suspend fun issueAuthCode(email : String, type : AuthCodeCaseType): BaseResponse<Nothing> {
         return loginDataSource.postAuthCode(email)
     }
 

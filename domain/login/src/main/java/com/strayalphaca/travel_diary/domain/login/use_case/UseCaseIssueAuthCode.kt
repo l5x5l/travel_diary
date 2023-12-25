@@ -4,6 +4,7 @@ import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalpaca.travel_diary.core.domain.model.ErrorCodeMapper
 import com.strayalphaca.travel_diary.domain.login.di.AuthCodeErrorCodeMapperProvide
+import com.strayalphaca.travel_diary.domain.login.model.AuthCodeCaseType
 import com.strayalphaca.travel_diary.domain.login.model.LoginErrorCodes
 import com.strayalphaca.travel_diary.domain.login.utils.isEmailFormat
 import com.strayalphaca.travel_diary.domain.login.utils.removeWhiteSpace
@@ -13,14 +14,14 @@ class UseCaseIssueAuthCode @Inject constructor(
     private val repository: LoginRepository,
     @AuthCodeErrorCodeMapperProvide private val errorCodeMapper: ErrorCodeMapper
 ) {
-    suspend operator fun invoke(email : String) : BaseResponse<Nothing> {
+    suspend operator fun invoke(email : String, type : AuthCodeCaseType = AuthCodeCaseType.REGISTER) : BaseResponse<Nothing> {
         val emailWithoutSpace = email.removeWhiteSpace()
         if (!isEmailFormat(emailWithoutSpace)) {
             val errorCode = LoginErrorCodes.INVALID_EMAIL_FORMAT
             return BaseResponse.Failure(errorCode = errorCode, errorMessage = errorCodeMapper.mapCodeToString(errorCode))
         }
 
-        val response = repository.issueAuthCode(emailWithoutSpace)
+        val response = repository.issueAuthCode(emailWithoutSpace, type)
         return response.mapErrorCodeToMessageIfFailure(errorCodeMapper::mapCodeToString)
     }
 }
