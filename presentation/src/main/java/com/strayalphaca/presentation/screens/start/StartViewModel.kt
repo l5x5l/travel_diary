@@ -2,11 +2,11 @@ package com.strayalphaca.presentation.screens.start
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
+import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.travel_diary.domain.auth.usecase.UseCaseGetAccessToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,8 +15,8 @@ class StartViewModel @Inject constructor(
     private val useCaseGetAccessToken: UseCaseGetAccessToken
 ) : ViewModel() {
 
-    private val _navigationEvent = MutableSharedFlow<StartScreenNavDestination>()
-    val navigationEvent = _navigationEvent.asSharedFlow()
+    private val _navigationEvent = MutableEventFlow<StartScreenNavDestination>()
+    val navigationEvent = _navigationEvent.asEventFlow()
 
     init {
         checkHasAccessToken()

@@ -3,14 +3,14 @@ package com.strayalphaca.presentation.screens.settings.change_password
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
+import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
+import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseChangePassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.runningFold
@@ -28,8 +28,8 @@ class ChangePasswordViewModel @Inject constructor(
     private val _newPassword = MutableStateFlow("")
     val newPassword = _newPassword.asStateFlow()
 
-    private val _changePasswordSuccess = MutableSharedFlow<Boolean>()
-    val changePasswordSuccess = _changePasswordSuccess.asSharedFlow()
+    private val _changePasswordSuccess = MutableEventFlow<Boolean>()
+    val changePasswordSuccess = _changePasswordSuccess.asEventFlow()
 
     private val events = Channel<ChangePasswordScreenEvent>()
     val state: StateFlow<ChangePasswordScreenState> = events.receiveAsFlow()

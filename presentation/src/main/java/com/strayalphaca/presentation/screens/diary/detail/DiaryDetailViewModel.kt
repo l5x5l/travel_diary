@@ -7,6 +7,8 @@ import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseDeleteDiary
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryDetail
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
+import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
+import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseHandleCachedCalendarDiary
 import com.strayalphaca.travel_diary.map.usecase.UseCaseRefreshCachedMap
@@ -40,8 +42,8 @@ class DiaryDetailViewModel @Inject constructor(
 
     private val id = savedStateHandle.getStateFlow("diary_id", "")
 
-    private val _goBackNavigationEvent = MutableSharedFlow<Boolean>()
-    val goBackNavigationEvent = _goBackNavigationEvent.asSharedFlow()
+    private val _goBackNavigationEvent = MutableEventFlow<Boolean>()
+    val goBackNavigationEvent = _goBackNavigationEvent.asEventFlow()
 
     fun tryRefresh() {
         viewModelScope.launch {

@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseWithdrawal
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
+import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
+import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryCount
 import com.strayalphaca.travel_diary.domain.auth.usecase.UseCaseClearToken
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,11 +29,11 @@ class WithdrawalViewModel @Inject constructor(
     private val _deleteLoading = MutableStateFlow(false)
     val deleteLoading = _deleteLoading.asStateFlow()
 
-    private val _toastMessage = MutableSharedFlow<String>()
-    val toastMessage = _toastMessage.asSharedFlow()
+    private val _toastMessage = MutableEventFlow<String>()
+    val toastMessage = _toastMessage.asEventFlow()
 
-    private val _withdrawalSuccess = MutableSharedFlow<Boolean>()
-    val withdrawalSuccess = _withdrawalSuccess.asSharedFlow()
+    private val _withdrawalSuccess = MutableEventFlow<Boolean>()
+    val withdrawalSuccess = _withdrawalSuccess.asEventFlow()
 
     private val _showCheckDialog = MutableStateFlow(false)
     val showCheckDialog = _showCheckDialog.asStateFlow()

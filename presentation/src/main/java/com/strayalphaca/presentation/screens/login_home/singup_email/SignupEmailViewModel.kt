@@ -8,11 +8,11 @@ import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.models.SignupData
 import com.strayalphaca.presentation.models.Timer
+import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
+import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.presentation.utils.toTimerFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,11 +31,11 @@ class SignupEmailViewModel @Inject constructor(
     private val _authCode = MutableStateFlow("")
     val authCode = _authCode.asStateFlow()
 
-    private val _moveToPasswordEvent = MutableSharedFlow<Boolean>()
-    val moveToPasswordEvent = _moveToPasswordEvent.asSharedFlow()
+    private val _moveToPasswordEvent = MutableEventFlow<Boolean>()
+    val moveToPasswordEvent = _moveToPasswordEvent.asEventFlow()
 
-    private val _showToastEvent = MutableSharedFlow<String>()
-    val showToastEvent = _showToastEvent.asSharedFlow()
+    private val _showToastEvent = MutableEventFlow<String>()
+    val showToastEvent = _showToastEvent.asEventFlow()
 
     private val _timerValue = MutableStateFlow("")
     val timerValue = _timerValue.asStateFlow()

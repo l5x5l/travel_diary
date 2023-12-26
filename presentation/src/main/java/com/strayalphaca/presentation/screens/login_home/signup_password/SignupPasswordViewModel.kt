@@ -7,10 +7,10 @@ import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.presentation.components.atom.base_button.BaseButtonState
 import com.strayalphaca.presentation.components.block.EditTextState
 import com.strayalphaca.presentation.models.SignupData
+import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
+import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,8 +28,8 @@ class SignupPasswordViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow("")
     val errorMessage = _errorMessage.asStateFlow()
 
-    private val _signUpSuccessEvent = MutableSharedFlow<Boolean>()
-    val signupSuccessEvent = _signUpSuccessEvent.asSharedFlow()
+    private val _signUpSuccessEvent = MutableEventFlow<Boolean>()
+    val signupSuccessEvent = _signUpSuccessEvent.asEventFlow()
 
     fun inputPassword(password : String) {
         _password.value = password
