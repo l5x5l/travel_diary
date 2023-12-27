@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalpaca.travel_diary.domain.lock.use_case.UseCaseCheckPassword
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
+import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
+import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.presentation.screens.lock.model.LockScreenEvent
 import com.strayalphaca.presentation.screens.lock.model.LockScreenSideEffect
 import com.strayalphaca.presentation.screens.lock.model.LockScreenState
@@ -23,8 +25,8 @@ class LockViewModel @Inject constructor(
         .runningFold(LockScreenState(), ::reduce)
         .stateIn(viewModelScope, SharingStarted.Eagerly, LockScreenState())
 
-    private val _sideEffect = MutableSharedFlow<LockScreenSideEffect>()
-    val sideEffect = _sideEffect.asSharedFlow()
+    private val _sideEffect = MutableEventFlow<LockScreenSideEffect>()
+    val sideEffect = _sideEffect.asEventFlow()
 
     fun inputPassword(inputPassword : String) {
         viewModelScope.launch {

@@ -3,14 +3,14 @@ package com.strayalphaca.presentation.screens.settings.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.presentation.alarm.TrailyAlarmManager
+import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
+import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.travel_diary.domain.alarm.model.AlarmInfo
 import com.strayalphaca.travel_diary.domain.alarm.usecase.UseCaseSetAlarmInfo
 import com.strayalphaca.travel_diary.domain.auth.usecase.UseCaseClearToken
 import com.strayalphaca.travel_diary.domain.auth.usecase.UseCaseGetAccessToken
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,8 +28,8 @@ class SettingsHomeViewModel @Inject constructor(
     private val _logoutCheckDialogVisible = MutableStateFlow(false)
     val logoutCheckDialogVisible = _logoutCheckDialogVisible.asStateFlow()
 
-    private val _navigateToIntroEvent = MutableSharedFlow<Boolean>()
-    val navigateToIntroEvent = _navigateToIntroEvent.asSharedFlow()
+    private val _navigateToIntroEvent = MutableEventFlow<Boolean>()
+    val navigateToIntroEvent = _navigateToIntroEvent.asEventFlow()
 
     fun showLogoutCheckDialog() {
         _logoutCheckDialogVisible.value = true

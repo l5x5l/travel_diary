@@ -8,6 +8,8 @@ import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseGetCalendarD
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.presentation.models.deeplink_handler.DeepLinkEvent
 import com.strayalphaca.presentation.models.deeplink_handler.NotificationDeepLinkHandler
+import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
+import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.presentation.utils.collectLatestInScope
 import com.strayalphaca.travel_diary.domain.calendar.utils.fillEmptyCellToCalendarData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,11 +30,11 @@ class CalendarViewModel @Inject constructor(
         .runningFold(CalendarScreenState(), ::reduce)
         .stateIn(viewModelScope, SharingStarted.Eagerly, CalendarScreenState())
 
-    private val _goDiaryWriteNavigationEvent = MutableSharedFlow<Boolean>()
-    val goDiaryWriteNavigationEvent = _goDiaryWriteNavigationEvent.asSharedFlow()
+    private val _goDiaryWriteNavigationEvent = MutableEventFlow<Boolean>()
+    val goDiaryWriteNavigationEvent = _goDiaryWriteNavigationEvent.asEventFlow()
 
-    private val _toastMessage = MutableSharedFlow<String>()
-    val toastMessage = _toastMessage.asSharedFlow()
+    private val _toastMessage = MutableEventFlow<String>()
+    val toastMessage = _toastMessage.asEventFlow()
 
     init {
         tryGetDiaryData(

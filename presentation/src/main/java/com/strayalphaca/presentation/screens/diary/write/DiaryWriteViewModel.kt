@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
+import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
+import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
 import com.strayalphaca.presentation.screens.diary.model.MediaFileInDiary
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
@@ -57,8 +59,8 @@ class DiaryWriteViewModel @Inject constructor(
     private val _writingContent = MutableStateFlow("")
     val writingContent = _writingContent.asStateFlow()
 
-    private val _goBackNavigationEvent = MutableSharedFlow<Boolean>()
-    val goBackNavigationEvent = _goBackNavigationEvent.asSharedFlow()
+    private val _goBackNavigationEvent = MutableEventFlow<Boolean>()
+    val goBackNavigationEvent = _goBackNavigationEvent.asEventFlow()
 
     private val _musicProgress = MutableStateFlow(0f)
     val musicProgress = _musicProgress.asStateFlow()
