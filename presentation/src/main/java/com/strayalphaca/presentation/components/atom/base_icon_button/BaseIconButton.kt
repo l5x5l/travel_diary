@@ -11,21 +11,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.strayalphaca.presentation.ui.theme.Gray4
 
 @Composable
 fun BaseIconButton(
     modifier : Modifier = Modifier,
     iconResourceId : Int,
     onClick : () -> Unit = {},
-    contentDescription : String ?= null
+    contentDescription : String ?= null,
+    enabled : Boolean = true
 ) {
-    val iconTint = MaterialTheme.colors.onSurface
+    val iconTint = if (enabled) MaterialTheme.colors.onSurface else Gray4
 
     Box(
         modifier = modifier,
     ) {
-        IconButton(onClick = onClick) {
-
+        IconButton(
+            onClick = onClick,
+            enabled = enabled
+        ) {
             Icon(
                 painter = painterResource(id = iconResourceId),
                 contentDescription = contentDescription,

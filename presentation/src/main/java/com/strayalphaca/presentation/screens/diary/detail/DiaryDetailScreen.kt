@@ -138,20 +138,16 @@ fun DiaryDetailScreen(
             ) {
                 BaseIconButton(
                     iconResourceId = R.drawable.ic_back,
-                    onClick = {
-                        if (state.deleteLoading) return@BaseIconButton
-                        goBack()
-                    }
+                    onClick = { goBack() },
+                    enabled = !state.deleteLoading
                 )
 
                 if (state.diaryDetail != null) {
                     Box {
                         BaseIconButton(
                             iconResourceId = R.drawable.ic_more,
-                            onClick = {
-                                if (state.deleteLoading) return@BaseIconButton
-                                dropdownExpanded = !dropdownExpanded
-                            }
+                            onClick = { dropdownExpanded = !dropdownExpanded },
+                            enabled = !state.deleteLoading
                         )
 
                         DropdownMenu(
