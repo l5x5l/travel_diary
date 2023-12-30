@@ -1,6 +1,7 @@
 package com.strayalphaca.presentation.screens.diary.write
 
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -158,10 +159,6 @@ class DiaryWriteViewModel @Inject constructor(
                 events.send(DiaryWriteEvent.ShowSelectFeelingView)
             }
         }
-    }
-
-    private fun releaseMusicPlayer() {
-        musicPlayer.release()
     }
 
     fun playMusic() {
@@ -329,6 +326,11 @@ class DiaryWriteViewModel @Inject constructor(
         releaseMusicPlayer()
     }
 
+    private fun releaseMusicPlayer() {
+        musicPlayerJob?.cancel()
+        musicPlayer.release()
+    }
+
     private fun reduce(state: DiaryWriteState, events: DiaryWriteEvent): DiaryWriteState {
         return when (events) {
             DiaryWriteEvent.DiaryLoading -> {
@@ -338,6 +340,7 @@ class DiaryWriteViewModel @Inject constructor(
                 state.copy(buttonActive = true, showLoadingError = true, showInitLoading = false)
             }
             is DiaryWriteEvent.DiaryLoadingSuccess -> {
+                events.diaryDetail.voiceFile?.fileLink?.let { musicPlayer.setMusic(it.toUri(), false) }
                 state.copy(
                     buttonActive = true,
                     showLoadingError = false,
