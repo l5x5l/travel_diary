@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
 }
 
 Properties properties = new Properties()
@@ -100,6 +101,10 @@ dependencies {
 
     // okhttp
     implementation libs.bundles.okhttp3
+
+    // firebase analytics
+    implementation(platform(libs.firebase.bom))
+    implementation libs.firebase.analytics
 }
 
 kapt {
