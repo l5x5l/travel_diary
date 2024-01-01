@@ -7,11 +7,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailContainer
 import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailViewModel
@@ -31,12 +36,16 @@ import com.strayalphaca.presentation.screens.video.VideoContainer
 import com.strayalphaca.presentation.screens.video.VideoViewModel
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import com.strayalphaca.presentation.utils.collectAsEffect
+import com.strayalphaca.travel_diary.core.presentation.logger.ScreenLogEvent
+import com.strayalphaca.travel_diary.core.presentation.logger.ScreenLogger
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RootActivity : ComponentActivity() {
 
     private val viewModel : RootViewModel by viewModels()
+    @Inject lateinit var screenLogger : ScreenLogger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +56,14 @@ class RootActivity : ComponentActivity() {
         setContent {
             TravelDiaryTheme {
                 val navHostController = rememberNavController()
+                val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+                val currentDestination by remember(navBackStackEntry) { derivedStateOf { navBackStackEntry?.destination } }
+
+                LaunchedEffect(currentDestination) {
+                    currentDestination?.route?.let { route ->
+                        screenLogger.log(ScreenLogEvent(route))
+                    }
+                }
 
                 viewModel.invalidRefreshToken.collectAsEffect { tokenErrorOccur ->
                     Toast.makeText(this, getString(com.strayalphaca.presentation.R.string.auth_error_401), Toast.LENGTH_SHORT).show()

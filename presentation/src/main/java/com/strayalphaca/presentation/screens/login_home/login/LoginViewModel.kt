@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
 import com.strayalphaca.presentation.models.event_flow.asEventFlow
+import com.strayalphaca.travel_diary.core.presentation.logger.UserEventLogger
+import com.strayalphaca.travel_diary.core.presentation.logger.UserLogEvent
 import com.strayalphaca.travel_diary.domain.auth.usecase.UseCaseSaveToken
 import com.strayalphaca.travel_diary.domain.login.model.Tokens
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseLogin
@@ -17,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val useCaseLogin: UseCaseLogin,
-    private val useCaseSaveToken: UseCaseSaveToken
+    private val useCaseSaveToken: UseCaseSaveToken,
+    private val userEventLogger: UserEventLogger
 ) : ViewModel() {
     private val _email = MutableStateFlow("")
     val email = _email.asStateFlow()
@@ -52,6 +55,7 @@ class LoginViewModel @Inject constructor(
             } else {
                 response as BaseResponse.Success<Tokens>
                 useCaseSaveToken(response.data.accessToken, response.data.refreshToken)
+                userEventLogger.log(UserLogEvent.Login)
                 _loginSuccess.emit(true)
             }
             _networkLoading.value = false

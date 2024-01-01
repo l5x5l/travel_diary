@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 Properties properties = new Properties()
@@ -48,6 +50,7 @@ android {
 
 dependencies {
     implementation project(":presentation")
+    implementation project(":core:presentation")
     implementation project(":core:domain")
     implementation project(":domain:alarm")
     implementation project(":domain:map")
@@ -100,6 +103,11 @@ dependencies {
 
     // okhttp
     implementation libs.bundles.okhttp3
+
+    // firebase analytics
+    implementation(platform(libs.firebase.bom))
+    implementation libs.firebase.analytics
+    implementation libs.firebase.crashlytics
 }
 
 kapt {

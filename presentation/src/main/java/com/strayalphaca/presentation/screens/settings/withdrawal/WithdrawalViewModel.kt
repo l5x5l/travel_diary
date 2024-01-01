@@ -6,6 +6,8 @@ import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseWithdrawal
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
 import com.strayalphaca.presentation.models.event_flow.asEventFlow
+import com.strayalphaca.travel_diary.core.presentation.logger.UserEventLogger
+import com.strayalphaca.travel_diary.core.presentation.logger.UserLogEvent
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryCount
 import com.strayalphaca.travel_diary.domain.auth.usecase.UseCaseClearToken
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +20,8 @@ import javax.inject.Inject
 class WithdrawalViewModel @Inject constructor(
     private val useCaseWithdrawal: UseCaseWithdrawal,
     private val useCaseGetDiaryCount: UseCaseGetDiaryCount,
-    private val useCaseClearToken: UseCaseClearToken
+    private val useCaseClearToken: UseCaseClearToken,
+    private val userEventLogger: UserEventLogger
 ) : ViewModel() {
     private val _totalDiaryCount = MutableStateFlow(0)
     val totalDiaryCount = _totalDiaryCount.asStateFlow()
@@ -57,6 +60,7 @@ class WithdrawalViewModel @Inject constructor(
                 useCaseClearToken()
                 _deleteLoading.value = false
                 _withdrawalSuccess.emit(true)
+                userEventLogger.log(UserLogEvent.Withdrawal)
             } else {
                 val errorMessage = (res as BaseResponse.Failure).errorMessage
                 _deleteLoading.value = false

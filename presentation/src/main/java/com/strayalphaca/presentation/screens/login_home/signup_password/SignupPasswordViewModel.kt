@@ -9,6 +9,8 @@ import com.strayalphaca.presentation.components.block.EditTextState
 import com.strayalphaca.presentation.models.SignupData
 import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
 import com.strayalphaca.presentation.models.event_flow.asEventFlow
+import com.strayalphaca.travel_diary.core.presentation.logger.UserEventLogger
+import com.strayalphaca.travel_diary.core.presentation.logger.UserLogEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignupPasswordViewModel @Inject constructor(
-    private val useCaseSignup: UseCaseSignup
+    private val useCaseSignup: UseCaseSignup,
+    private val userEventLogger: UserEventLogger
 ) : ViewModel() {
     private val _password = MutableStateFlow("")
     val password = _password.asStateFlow()
@@ -46,6 +49,7 @@ class SignupPasswordViewModel @Inject constructor(
 
             if (response is BaseResponse.Success<*>) {
                 SignupData.clearInstance()
+                userEventLogger.log(UserLogEvent.Signup)
                 _signUpSuccessEvent.emit(true)
             }
             if (response is BaseResponse.Failure) {
