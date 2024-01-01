@@ -15,6 +15,8 @@ import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import com.strayalphaca.presentation.screens.diary.util.getInstanceFromDateString
 import com.strayalphaca.presentation.utils.UriHandler
 import com.strayalphaca.presentation.utils.mapIf
+import com.strayalphaca.travel_diary.core.presentation.logger.UserEventLogger
+import com.strayalphaca.travel_diary.core.presentation.logger.UserLogEvent
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
 import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
@@ -50,7 +52,8 @@ class DiaryWriteViewModel @Inject constructor(
     private val useCaseModifyDiary: UseCaseModifyDiary,
     private val musicPlayer: MusicPlayer,
     private val uriHandler: UriHandler,
-    private val fileResizeHandler: FileResizeHandler
+    private val fileResizeHandler: FileResizeHandler,
+    private val userEventLogger: UserEventLogger
 ) : ViewModel() {
     private val events = Channel<DiaryWriteEvent>()
     val state: StateFlow<DiaryWriteState> = events.receiveAsFlow()
@@ -321,6 +324,18 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
+    private fun logDiaryWriteOrModifyEvent() {
+        val isModify = diaryId != null
+        val imageCount = state.value.imageFiles.size
+        val hasVoiceFile = state.value.voiceFile != null
+        val locationName = state.value.cityName ?: "null"
+        if (isModify) {
+            userEventLogger.log(UserLogEvent.ModifyDiary(imageCount = imageCount, voiceFileExist = hasVoiceFile, locationName = locationName))
+        } else {
+            userEventLogger.log(UserLogEvent.CreateDiary(imageCount = imageCount, voiceFileExist = hasVoiceFile, locationName = locationName))
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         releaseMusicPlayer()
@@ -363,6 +378,7 @@ class DiaryWriteViewModel @Inject constructor(
             is DiaryWriteEvent.DiaryWriteSuccess -> {
                 callGoBackNavigationEvent()
                 saveWriteDiaryToCachedDataStore(events.id)
+                logDiaryWriteOrModifyEvent()
                 state.copy(buttonActive = true)
             }
             is DiaryWriteEvent.AddVoiceFile -> {

@@ -19,4 +19,5 @@ sealed class UserLogEvent(val eventName : String) {
     object Logout : UserLogEvent("logout")
     object Withdrawal : UserLogEvent("withdrawal")
     class ChangeMonth(val year : Int, val month : Int) : UserLogEvent("change_month")
+    class SetPushAlarm(val hour : Int, val minute : Int, val route : String) : UserLogEvent("set_push_alarm")
 }

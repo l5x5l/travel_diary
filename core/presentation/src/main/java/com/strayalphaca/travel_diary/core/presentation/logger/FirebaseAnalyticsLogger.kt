@@ -53,6 +53,13 @@ class FirebaseAnalyticsLogger @Inject constructor() : ScreenLogger, UserEventLog
                     "location_name" to event.locationName
                 )
             }
+            is UserLogEvent.SetPushAlarm -> {
+                bundleOf(
+                    "hour" to event.hour,
+                    "minute" to event.minute,
+                    "route" to event.route
+                )
+            }
             else -> {
                 bundleOf()
             }

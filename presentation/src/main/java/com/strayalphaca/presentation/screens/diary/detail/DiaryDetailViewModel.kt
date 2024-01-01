@@ -11,6 +11,8 @@ import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
 import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
+import com.strayalphaca.travel_diary.core.presentation.logger.UserEventLogger
+import com.strayalphaca.travel_diary.core.presentation.logger.UserLogEvent
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseHandleCachedCalendarDiary
 import com.strayalphaca.travel_diary.map.usecase.UseCaseRefreshCachedMap
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +30,8 @@ class DiaryDetailViewModel @Inject constructor(
     private val useCaseRefreshCachedMap: UseCaseRefreshCachedMap,
     private val useCaseGetDiaryDetail: UseCaseGetDiaryDetail,
     private val useCaseDeleteDiary : UseCaseDeleteDiary,
-    private val musicPlayer: MusicPlayer
+    private val musicPlayer: MusicPlayer,
+    private val userEventLogger: UserEventLogger
 ) : ViewModel() {
 
     private val event = Channel<DiaryDetailEvent>()
@@ -173,6 +176,7 @@ class DiaryDetailViewModel @Inject constructor(
             DiaryDetailEvent.DeleteDiarySuccess -> {
                 deleteDiaryToCachedDataStore()
                 occurNavigationBack()
+                userEventLogger.log(UserLogEvent.RemoveDiary)
                 state.copy(deleteLoading = false)
             }
             is DiaryDetailEvent.SetShowDeleteDialog -> {
