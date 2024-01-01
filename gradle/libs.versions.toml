@@ -86,6 +86,7 @@ exifinterface = { group = "androidx.exifinterface", name = "exifinterface", vers
 
 firebase_bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase_bom" }
 firebase_analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase_crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 
 [bundles]
 okhttp3 = ["okhttp3-okhttp", "okhttp3-logging-interceptor"]
