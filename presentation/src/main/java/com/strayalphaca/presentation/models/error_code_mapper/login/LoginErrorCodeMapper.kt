@@ -17,7 +17,7 @@ class LoginErrorCodeMapper constructor(
             INVALID_EMAIL_FORMAT -> {
                 context.getString(R.string.login_error_invalid_email_format)
             }
-            409 -> {
+            409, 401 -> {
                 context.getString(R.string.login_error_non_exist_email_or_password)
             }
             else -> {
