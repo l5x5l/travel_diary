@@ -25,8 +25,11 @@ import retrofit2.Retrofit
 @InstallIn(SingletonComponent::class)
 object LoginModule {
     @Provides
-    fun provideLoginRepository(@BaseClient retrofit: Retrofit) : LoginRepository  {
-        return RemoteLoginRepository(retrofit)
+    fun provideLoginRepository(
+        @BaseClient baseRetrofit: Retrofit,
+        @NoHeaderClient noHeaderRetrofit: Retrofit
+    ): LoginRepository {
+        return RemoteLoginRepository(baseRetrofit, noHeaderRetrofit)
     }
 
     @Provides
