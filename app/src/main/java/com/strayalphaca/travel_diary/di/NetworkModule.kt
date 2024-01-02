@@ -76,6 +76,22 @@ object NetworkModule {
             .build()
     }
 
+    @NoHeaderClient
+    @Singleton
+    @Provides
+    fun provideNoHeaderRetrofit(): Retrofit {
+        val client = OkHttpClient.Builder()
+            .connectTimeout(connect_timeout_milli, TimeUnit.MILLISECONDS)
+            .writeTimeout(write_timeout_milli, TimeUnit.MILLISECONDS)
+            .readTimeout(read_timeout_milli, TimeUnit.MILLISECONDS)
+            .build()
+
+        return Retrofit.Builder()
+            .baseUrl(base_url)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 }
 
 @Qualifier
@@ -85,3 +101,7 @@ annotation class ReissueClient
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class BaseClient
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class NoHeaderClient
