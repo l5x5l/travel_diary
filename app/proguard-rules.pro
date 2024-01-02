@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep class com.strayalphaca.travel_diary.map.model.* {*;}
+-keep class com.strayalphaca.travel_diary.data.login.model.* {*;}
+-keep class com.strayalphaca.travel_diary.data.calendar.models.* {*;}
+-keep class com.strayalphaca.travel_diary.data.diary.model.* {*;}
+-keep class com.strayalphaca.travel_diary.data.file.model.* {*;}
+-keep class com.strayalphaca.travel_diary.data.map.model.* {*;}
+-keep class com.strayalphaca.travel_diary.core.data.model.* {*;}

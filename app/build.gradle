@@ -15,6 +15,15 @@ android {
     namespace 'com.strayalphaca.travel_diary'
     compileSdk 33
 
+    signingConfigs {
+        release {
+            keyAlias properties["key_alias"]
+            keyPassword properties["key_password"]
+            storeFile file(properties["store_file"])
+            storePassword properties["store_password"]
+        }
+    }
+
     defaultConfig {
         applicationId "com.strayalphaca.travel_diary"
         minSdk 24
@@ -29,7 +38,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
