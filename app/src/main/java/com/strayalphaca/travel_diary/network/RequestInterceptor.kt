@@ -22,7 +22,7 @@ class RequestInterceptor @Inject constructor(
             return Response.Builder()
                 .request(request)
                 .protocol(Protocol.HTTP_1_1)
-                .code(407)
+                .code(408)
                 .message("socket timeout error")
                 .body("{${e}}".toResponseBody(null)).build()
         }
@@ -45,6 +45,7 @@ class RequestInterceptor @Inject constructor(
         }
 
         val requestAfterRefreshToken = setRequestHeader(chain)
+        response.close()
         return chain.proceed(requestAfterRefreshToken)
     }
 
