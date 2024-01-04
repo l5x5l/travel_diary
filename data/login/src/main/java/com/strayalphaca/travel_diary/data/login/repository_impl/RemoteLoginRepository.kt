@@ -17,12 +17,14 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 
 class RemoteLoginRepository @Inject constructor(
-    retrofit: Retrofit
+    baseRetrofit: Retrofit,
+    noHeaderRetrofit : Retrofit
 ) : LoginRepository {
-    private val loginRetrofit = retrofit.create(LoginApi::class.java)
+    private val loginRetrofit = baseRetrofit.create(LoginApi::class.java)
+    private val loginNoHeaderRetrofit = noHeaderRetrofit.create(LoginApi::class.java)
 
     override suspend fun emailLogin(email: String, password: String): BaseResponse<Tokens> {
-        val response = loginRetrofit.login(LoginRequestBody(email = email, password = password))
+        val response = loginNoHeaderRetrofit.login(LoginRequestBody(email = email, password = password))
         return responseToBaseResponseWithMapping(
             response = response,
             mappingFunction = ::tokenDtoToToken
@@ -30,7 +32,7 @@ class RemoteLoginRepository @Inject constructor(
     }
 
     override suspend fun emailSignup(email: String, password: String): BaseResponse<String> {
-        val response = loginRetrofit.signUpByEmail(SignUpRequestBody(email = email, password = password))
+        val response = loginNoHeaderRetrofit.signUpByEmail(SignUpRequestBody(email = email, password = password))
         return responseToBaseResponseWithMapping(
             response = response,
             mappingFunction = ::extractIdFromSignupResponse
