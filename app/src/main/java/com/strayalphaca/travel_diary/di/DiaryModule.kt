@@ -18,6 +18,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -29,6 +30,8 @@ abstract class DiaryModule {
 @Module
 @InstallIn(SingletonComponent::class)
 object DiaryProvideModule {
+
+    @Singleton
     @Provides
     fun provideDiaryRepository(
         @BaseClient retrofit : Retrofit,
