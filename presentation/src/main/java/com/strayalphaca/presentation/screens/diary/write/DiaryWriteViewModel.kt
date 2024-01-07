@@ -235,6 +235,7 @@ class DiaryWriteViewModel @Inject constructor(
                         medias = mediaFileIdList,
                         voice = voiceFileId,
                         cityId = state.value.cityId,
+                        cityName = state.value.cityName,
                         date = state.value.diaryDate
                     )
                 )
