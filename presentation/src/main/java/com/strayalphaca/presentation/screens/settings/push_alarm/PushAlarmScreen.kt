@@ -3,6 +3,7 @@ package com.strayalphaca.presentation.screens.settings.push_alarm
 import android.Manifest
 import android.app.TimePickerDialog
 import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -30,6 +31,9 @@ import com.strayalphaca.presentation.ui.theme.Gray4
 import com.strayalphaca.presentation.utils.findActivity
 import com.strayalphaca.presentation.utils.minuteIn24HourToHour12
 import com.strayalphaca.presentation.utils.openAppSettings
+import com.strayalphaca.travel_diary.core.presentation.utils.EXACT_ALARM_PERMISSION
+import com.strayalphaca.travel_diary.core.presentation.utils.POST_NOTIFICATIONS_33
+import com.strayalphaca.travel_diary.core.presentation.utils.checkExactAlarmAvailable
 
 @Composable
 fun PushAlarmScreen(
@@ -40,7 +44,7 @@ fun PushAlarmScreen(
     val usePushAlarm by viewModel.usePushAlarm.collectAsState()
     val pushAlarmMinute by viewModel.pushAlarmMinute.collectAsState()
     val targetUrl by viewModel.clickTarget.collectAsState()
-    val isShowPermissionRequestDialog by viewModel.isShowPermissionRequestDialog.collectAsState()
+    val requestPermissionSettingAction by viewModel.requestPermissionSettingAction.collectAsState()
 
     val timePickerDialog = TimePickerDialog(
         context,
@@ -52,19 +56,31 @@ fun PushAlarmScreen(
         false
     )
 
-    val launcher =
+    val exactNotificationPermissionsLauncher =
         rememberLauncherForActivityResult(
-            ActivityResultContracts.RequestPermission(),
-            onResult = { isGranted ->
-                if (isGranted) {
-                    viewModel.setUsePushAlarm(true)
-                } else {
-                    viewModel.showPermissionRequestDialog()
-                }
+            contract = ActivityResultContracts.RequestMultiplePermissions(),
+            onResult = { permissionGrantMap ->
+                permissionGrantMap.values
+                    .all { it }
+                    .let { allGranted ->
+                        when {
+                            !allGranted -> {
+                                viewModel.showPermissionRequestDialog(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            }
+                            checkExactAlarmAvailable(context) -> {
+                                viewModel.setUsePushAlarm(true)
+                            }
+                            else -> {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    viewModel.showPermissionRequestDialog(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                }
+                            }
+                        }
+                    }
             }
         )
 
-    if (isShowPermissionRequestDialog && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    if (requestPermissionSettingAction != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         PermissionRequestDialog(
             title = stringResource(id = R.string.deny_permission),
             message = stringResource(id = R.string.permission_description_post_notification),
@@ -72,7 +88,7 @@ fun PushAlarmScreen(
                 !it.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
             } ?: true,
             onDismissRequest = viewModel::dismissPermissionRequestDialog,
-            goToSettingClick = { context.findActivity()?.openAppSettings() }
+            goToSettingClick = { context.findActivity()?.openAppSettings(requestPermissionSettingAction ?: Settings.ACTION_APPLICATION_DETAILS_SETTINGS) }
         )
     }
 
@@ -86,10 +102,14 @@ fun PushAlarmScreen(
             checked = usePushAlarm,
             onCheckedChange = { useAlarm ->
                 if (useAlarm) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                        launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    else
-                        viewModel.setUsePushAlarm(true)
+                    listOfNotNull(EXACT_ALARM_PERMISSION, POST_NOTIFICATIONS_33).let { permissionList ->
+                        if (permissionList.isEmpty()) {
+                            viewModel.setUsePushAlarm(true)
+                            return@let
+                        }
+
+                        exactNotificationPermissionsLauncher.launch(permissionList.toTypedArray())
+                    }
                 } else {
                     viewModel.setUsePushAlarm(false)
                 }
