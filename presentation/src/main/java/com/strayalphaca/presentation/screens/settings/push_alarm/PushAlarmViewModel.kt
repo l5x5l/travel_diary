@@ -33,8 +33,8 @@ class PushAlarmViewModel @Inject constructor(
     private val _clickTarget = MutableStateFlow(Route.pushAlarmTargetList.last())
     val clickTarget: StateFlow<Route?> = _clickTarget.asStateFlow()
 
-    private val _isShowPermissionRequestDialog = MutableStateFlow(false)
-    val isShowPermissionRequestDialog = _isShowPermissionRequestDialog.asStateFlow()
+    private val _requestPermissionSettingAction = MutableStateFlow<String?>(null)
+    val requestPermissionSettingAction  =_requestPermissionSettingAction.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -93,11 +93,11 @@ class PushAlarmViewModel @Inject constructor(
         }
     }
 
-    fun showPermissionRequestDialog() {
-        _isShowPermissionRequestDialog.value = true
+    fun showPermissionRequestDialog(action : String) {
+        _requestPermissionSettingAction.value = action
     }
 
     fun dismissPermissionRequestDialog() {
-        _isShowPermissionRequestDialog.value = false
+        _requestPermissionSettingAction.value = null
     }
 }

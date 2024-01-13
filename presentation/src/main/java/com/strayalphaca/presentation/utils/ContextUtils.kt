@@ -30,9 +30,9 @@ internal fun Context.findActivity() : Activity? {
 }
 
 
-fun Activity.openAppSettings() {
+fun Activity.openAppSettings(action : String = Settings.ACTION_APPLICATION_DETAILS_SETTINGS) {
     Intent(
-        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        action,
         Uri.fromParts("package", packageName, null)
     ).also (::startActivity)
 }
