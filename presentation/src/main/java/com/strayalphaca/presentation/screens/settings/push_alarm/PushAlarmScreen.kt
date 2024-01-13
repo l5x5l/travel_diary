@@ -88,7 +88,7 @@ fun PushAlarmScreen(
                 !it.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
             } ?: true,
             onDismissRequest = viewModel::dismissPermissionRequestDialog,
-            goToSettingClick = { context.findActivity()?.openAppSettings() }
+            goToSettingClick = { context.findActivity()?.openAppSettings(requestPermissionSettingAction ?: Settings.ACTION_APPLICATION_DETAILS_SETTINGS) }
         )
     }
 
