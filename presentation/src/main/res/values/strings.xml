@@ -15,7 +15,7 @@
     <string name="login_with_social_account">소셜 계정으로 로그인</string>
     <string name="signup_with_email">이메일로 회원가입</string>
     <string name="request_auth_code">인증번호 요청하기</string>
-    <string name="input_auth_code">인증번호 입력</string>호
+    <string name="input_auth_code">인증번호 입력</string>
     <string name="change_email">이메일 변경</string>
     <string name="request_again">재요청</string>
     <string name="move_to_next_step">다음 단계로 이동하기</string>
