@@ -31,7 +31,7 @@ class UseCaseCheckAuthCode @Inject constructor(
     private fun getClientSideErrorCode(email : String, authCode : String) : Int? {
         return if (!isEmailFormat(email)) {
             INVALID_EMAIL_FORMAT
-        } else if (authCode.length != 4) {
+        } else if (authCode.length != 6) {
             INVALID_AUTH_CODE_FORMAT
         } else {
             null

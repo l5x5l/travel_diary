@@ -10,7 +10,7 @@
     <string name="login_error_exist_email">이미 가입된 이메일입니다.</string>
 
     <string name="login_error_empty_password">비밀번호를 입력해 주세요.</string>
-    <string name="login_error_invalid_auth_code_format">인증번호 4자리를 입력해 주세요.</string>
+    <string name="login_error_invalid_auth_code_format">인증번호 6자리를 입력해 주세요.</string>
     <string name="login_error_invalid_auth_code">인증번호가 일치하지 않습니다.</string>
 
     <string name="diary_error_empty_diary_content">내용을 입력해주세요.</string>
