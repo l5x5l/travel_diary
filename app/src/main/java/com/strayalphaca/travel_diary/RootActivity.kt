@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,8 +37,10 @@ import com.strayalphaca.presentation.screens.video.VideoContainer
 import com.strayalphaca.presentation.screens.video.VideoViewModel
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import com.strayalphaca.presentation.utils.collectAsEffect
+import com.strayalphaca.presentation.utils.collectLatestInScope
 import com.strayalphaca.travel_diary.core.presentation.logger.ScreenLogEvent
 import com.strayalphaca.travel_diary.core.presentation.logger.ScreenLogger
+import com.strayalphaca.travel_diary.core.presentation.model.MessageTrigger
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -46,6 +49,7 @@ class RootActivity : ComponentActivity() {
 
     private val viewModel : RootViewModel by viewModels()
     @Inject lateinit var screenLogger : ScreenLogger
+    @Inject lateinit var messageTrigger: MessageTrigger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +76,14 @@ class RootActivity : ComponentActivity() {
 
                 RootNavHost(navController = navHostController)
             }
+        }
+
+        initObserver()
+    }
+
+    private fun initObserver() {
+        messageTrigger.message.collectLatestInScope(lifecycleScope) {message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
 
