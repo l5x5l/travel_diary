@@ -2,6 +2,7 @@ package com.strayalphaca.travel_diary.di
 
 import com.strayalphaca.travel_diary.BuildConfig
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
+import com.strayalphaca.travel_diary.network.BaseInterceptor
 import com.strayalphaca.travel_diary.network.RequestInterceptor
 import dagger.Module
 import dagger.Provides
@@ -67,6 +68,7 @@ object NetworkModule {
             .connectTimeout(connect_timeout_milli, TimeUnit.MILLISECONDS)
             .writeTimeout(write_timeout_milli, TimeUnit.MILLISECONDS)
             .readTimeout(read_timeout_milli, TimeUnit.MILLISECONDS)
+            .addInterceptor(BaseInterceptor())
             .build()
 
         return Retrofit.Builder()
@@ -84,6 +86,7 @@ object NetworkModule {
             .connectTimeout(connect_timeout_milli, TimeUnit.MILLISECONDS)
             .writeTimeout(write_timeout_milli, TimeUnit.MILLISECONDS)
             .readTimeout(read_timeout_milli, TimeUnit.MILLISECONDS)
+            .addInterceptor(BaseInterceptor())
             .build()
 
         return Retrofit.Builder()
