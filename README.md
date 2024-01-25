@@ -1,4 +1,5 @@
-# travel_diary (가명)
+# traily
+![그래픽 이미지](https://github.com/l5x5l/travel_diary/assets/39579912/71d1da58-5225-422e-ac51-63f5b82b949d)
 
 ### 앱 구조
 클린 아키텍쳐를 따라 app, presentation, domain, data 모듈로 구성되어 있습니다.
@@ -6,10 +7,14 @@
 - presentation : 앱을 구성하는 화면
 - domain : 앱에서 사용하는 데이터에 대한 비즈니스 로직을 처리하거나, 앱에서 사용하는 useCase를 정의
 - data : 서버 및 로컬 저장소로부터 데이터를 가져오거나, 저장, 수정, 삭제하는 기능들을 정의
+- core : 각 레이어 내 모듈에서 공통적으로 사용하는 기능들을 정의
+
+![프로젝트](https://github.com/l5x5l/travel_diary/assets/39579912/07f8f70c-94f3-42fe-a305-1e4d95fada0f)
+
 
 * * *
 
-## 세부 폴더 구성 (개발 과정에서 변경될 수 있습니다.)
+## 세부 폴더 구성 (레이어 내 모듈마다 약간의 차이가 있을 수 있습니다.)
 ### presentation
 - screens : 화면에 대한 Activity, ViewModel코드
 - components : 화면을 구성하는 Button과 같은 선정의된 UI요소들
@@ -26,7 +31,6 @@ domain 모듈은 다루는 기능(로그인, 일기 데이터 작성/조회/수�
 - utils : 해당 폴더 내에서 사용하는 유틸 함수
 
 ### data
-공통 폴더
 - network : 네트워크 통신에 사용할 클래스의 인터페이스를 정의한다. (app 모듈에서 DI)
 - local_storage : 로컬스토리지에 접근할 떄 사용할 클래스의 인터페이스를 정의한다. (app 모듈에서 DI)
 위 공통폴더를 제외한 나머지 폴터는 data 모듈은 다루는 데이터(사용자 데이터, 일기 데이터 등)에 따라 생성되며, 한 데이터에 대한 폴더내부구조는 아래와 같다.
@@ -35,3 +39,8 @@ domain 모듈은 다루는 기능(로그인, 일기 데이터 작성/조회/수�
   - response_data : 서버/로컬 스토리지에서 전달되는 데이터 형식
   - request_data : 서버/로컬 스토리지에 접근할 떄 사용하는 (예시-request body)의 데이터 형식
 * * *
+
+## 시연 영상
+
+https://github.com/l5x5l/travel_diary/assets/39579912/a1da3cda-0d72-4359-b176-8183330c7020
+
