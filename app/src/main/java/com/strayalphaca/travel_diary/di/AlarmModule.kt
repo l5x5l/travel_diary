@@ -3,7 +3,7 @@ package com.strayalphaca.travel_diary.di
 import android.app.Activity
 import android.content.Context
 import com.strayalphaca.travel_diary.RootActivity
-import com.strayalphaca.travel_diary.data.alarm.datastore.AlarmDataStore
+import com.strayalphaca.travel_diary.data.alarm.data_source.AlarmDataStore
 import com.strayalphaca.travel_diary.data.alarm.repository.AlarmRepositoryImpl
 import com.strayalphaca.travel_diary.dataStore
 import com.strayalphaca.travel_diary.domain.alarm.AlarmRepository
