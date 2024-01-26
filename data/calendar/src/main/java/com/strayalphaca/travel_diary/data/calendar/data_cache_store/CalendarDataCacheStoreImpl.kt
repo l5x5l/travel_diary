@@ -1,4 +1,4 @@
-package com.strayalphaca.travel_diary.data.calendar.data_store
+package com.strayalphaca.travel_diary.data.calendar.data_cache_store
 
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.travel_diary.domain.calendar.model.MonthCalendar
@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CalendarDataStoreImpl @Inject constructor() : CalendarDataStore {
+class CalendarDataCacheStoreImpl @Inject constructor() : CalendarDataCacheStore {
     private val monthCalendarData = MutableStateFlow(MonthCalendar.getInstanceFromCalendar())
 
     override suspend fun setCalendarData(year : Int, month : Int, dataList: List<DiaryInCalendar>) {
