@@ -4,7 +4,7 @@ import com.strayalphaca.travel_diary.core.data.utils.voidResponseToBaseResponse
 import com.strayalphaca.travel_diary.data.auth.api.AuthApi
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
-import com.strayalphaca.travel_diary.data.auth.datastore.AuthDataStore
+import com.strayalphaca.travel_diary.data.auth.data_source.AuthDataStore
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Retrofit
 import javax.inject.Inject

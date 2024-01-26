@@ -1,7 +1,7 @@
 package com.strayalphaca.travel_diary.di
 
 import android.content.Context
-import com.strayalphaca.travel_diary.data.auth.datastore.AuthDataStore
+import com.strayalphaca.travel_diary.data.auth.data_source.AuthDataStore
 import com.strayalphaca.travel_diary.data.auth.repository.AuthRepositoryImpl
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import com.strayalphaca.travel_diary.dataStore
