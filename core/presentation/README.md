@@ -7,4 +7,4 @@
 
 ### core:presentation 모듈 내 패키지 구조
 - logger : 화면 기록 및 이벤트 호출을 로깅하기 위한 클래스 및 인터페이스
-- utils : 특정 버젼 이상에서만 사용가능한 권한 관련한 유틸 함수 및 변수
+- model : toast, snack bar같은 앱 전체적으로 표시할 메세지를 호출하는 MessageTrigger 인터페이스 및 구현체 
