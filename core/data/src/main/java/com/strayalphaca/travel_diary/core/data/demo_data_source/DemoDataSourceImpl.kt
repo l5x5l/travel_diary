@@ -72,13 +72,35 @@ class DemoDataSourceImpl : DemoDataSource {
             .map { it[0].toDiaryItemDto() }
     }
 
+    override fun addDiaryAndGetID(diaryDto: DiaryDto) : String {
+        val id = "${dataList.size + 1}"
+        dataList.add(diaryDto.copy(id = id))
+        return id
+    }
+
+    override fun modifyDiary(diaryDto: DiaryDto) {
+        val newDataList = dataList.map {
+            if (diaryDto.id == it.id) {
+                diaryDto
+            } else {
+                it
+            }
+        }
+        dataList.clear()
+        dataList.addAll(newDataList)
+    }
+
+    override fun deleteDiary(id: String) {
+        dataList.removeIf { it.id == id }
+    }
+
     private fun getAddedDateCalendar(dayAdd : Int) : Calendar {
         val todayCalendar = Calendar.getInstance()
         todayCalendar.add(Calendar.DAY_OF_MONTH, dayAdd)
         return todayCalendar
     }
 
-    private val dataList = listOf(
+    private val dataList = mutableListOf(
         DiaryDto(
             id = "1",
             date = DiaryDate.getInstanceFromCalendar(getAddedDateCalendar(-1)).toString(),

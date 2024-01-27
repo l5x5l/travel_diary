@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class FileRepositoryImpl @Inject constructor() : FileRepository {
     override suspend fun uploadFile(fileInfo: FileInfo): BaseResponse<String> {
-        return BaseResponse.Success(data = "string")
+        return BaseResponse.Success(data = fileInfo.file.path)
     }
 
 }

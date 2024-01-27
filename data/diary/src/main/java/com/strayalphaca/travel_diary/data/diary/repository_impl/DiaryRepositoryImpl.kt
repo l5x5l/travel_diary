@@ -52,15 +52,18 @@ class DiaryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun uploadDiary(diaryWriteData: DiaryWriteData): BaseResponse<String> {
-        return BaseResponse.Success(data = diaryWriteData.recordDate.toString())
+        val id = dataSource.uploadDiaryAndGetId(diaryWriteData)
+        return BaseResponse.Success(data = id)
     }
 
     override suspend fun modifyDiary(diaryModifyData: DiaryModifyData): BaseResponse<Nothing> {
+        dataSource.modifyDiary(diaryModifyData)
         diaryItemUpdateChannel.emit(DiaryItemUpdate.Modify(diaryModifyData.toDiaryItem()))
         return BaseResponse.EmptySuccess
     }
 
     override suspend fun deleteDiary(diaryId: String): BaseResponse<Nothing> {
+        dataSource.removeDiary(diaryId)
         diaryItemUpdateChannel.emit(DiaryItemUpdate.Delete(DiaryItem(id = diaryId, cityName = "-", imageUrl = null)))
         return BaseResponse.EmptySuccess
     }
