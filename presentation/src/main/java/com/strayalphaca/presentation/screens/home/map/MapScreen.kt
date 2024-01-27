@@ -121,6 +121,22 @@ fun MapScreen(
                     )
                 }
             }
+
+            if (state.showError) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colors.surface.copy(alpha = 0.8f))
+                ) {
+                    TapePolaroidView(
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .align(Alignment.Center)
+                            .zIndex(4f),
+                        textResourceId = R.string.unknown_error
+                    )
+                }
+            }
         }
     }
 }
