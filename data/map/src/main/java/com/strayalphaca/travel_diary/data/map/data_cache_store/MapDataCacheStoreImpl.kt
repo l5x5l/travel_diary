@@ -1,11 +1,11 @@
-package com.strayalphaca.travel_diary.data.map.data_store
+package com.strayalphaca.travel_diary.data.map.data_cache_store
 
 import com.strayalphaca.travel_diary.map.model.LocationWithData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
-class MapDataStoreImpl @Inject constructor() : MapDataStore {
+class MapDataCacheStoreImpl @Inject constructor() : MapDataCacheStore {
     private val mapWithData = MutableStateFlow(LocationWithData())
 
     override suspend fun setMapData(locationWithData: LocationWithData) {

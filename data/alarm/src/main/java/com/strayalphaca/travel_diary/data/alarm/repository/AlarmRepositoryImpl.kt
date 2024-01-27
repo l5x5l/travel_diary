@@ -1,6 +1,6 @@
 package com.strayalphaca.travel_diary.data.alarm.repository
 
-import com.strayalphaca.travel_diary.data.alarm.datastore.AlarmDataStore
+import com.strayalphaca.travel_diary.data.alarm.data_source.AlarmDataStore
 import com.strayalphaca.travel_diary.domain.alarm.AlarmRepository
 import com.strayalphaca.travel_diary.domain.alarm.model.AlarmInfo
 import kotlinx.coroutines.flow.Flow

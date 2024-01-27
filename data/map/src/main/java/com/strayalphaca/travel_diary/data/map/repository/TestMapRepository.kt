@@ -2,7 +2,7 @@ package com.strayalphaca.travel_diary.data.map.repository
 
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.core.data.demo_data_source.DemoDataSource
-import com.strayalphaca.travel_diary.data.map.data_store.MapDataStore
+import com.strayalphaca.travel_diary.data.map.data_cache_store.MapDataCacheStore
 import com.strayalphaca.travel_diary.map.model.City
 import com.strayalphaca.travel_diary.map.model.Location
 import com.strayalphaca.travel_diary.map.model.LocationDiary
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TestMapRepository @Inject constructor(
-    private val mapDataStore: MapDataStore,
+    private val mapDataCacheStore: MapDataCacheStore,
     private val demoDataSource: DemoDataSource
 ) : MapRepository {
     override suspend fun getNationWideData(): BaseResponse<List<LocationDiary>> {
@@ -27,7 +27,7 @@ class TestMapRepository @Inject constructor(
                 id = diaryItemDto.id
             )
         }
-        mapDataStore.setMapData(LocationWithData(null, data = data))
+        mapDataCacheStore.setMapData(LocationWithData(null, data = data))
         return BaseResponse.Success(data)
     }
 
@@ -45,13 +45,13 @@ class TestMapRepository @Inject constructor(
                 id = diaryItemDto.id
             )
         }
-        mapDataStore.setMapData(LocationWithData(Location.getInstanceByProvinceId(provinceId), data))
+        mapDataCacheStore.setMapData(LocationWithData(Location.getInstanceByProvinceId(provinceId), data))
         return BaseResponse.Success(data)
     }
 
     override suspend fun refreshIfContainDiary(diaryId: String) {
-        if (!mapDataStore.checkContainDiary(diaryId)) return
-        val currentLocationId = mapDataStore.getCurrentProvinceId()
+        if (!mapDataCacheStore.checkContainDiary(diaryId)) return
+        val currentLocationId = mapDataCacheStore.getCurrentProvinceId()
         if (currentLocationId == null) {
             getNationWideData()
         } else {
@@ -60,7 +60,7 @@ class TestMapRepository @Inject constructor(
     }
 
     override fun getLocationWithDataFlow(): Flow<LocationWithData> {
-        return mapDataStore.getMapData()
+        return mapDataCacheStore.getMapData()
     }
 
 }

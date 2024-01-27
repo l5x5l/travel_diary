@@ -3,7 +3,7 @@ package com.strayalphaca.travel_diary.data.map.repository
 import com.strayalphaca.travel_diary.core.data.utils.responseToBaseResponseWithMapping
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.map.api.MapApi
-import com.strayalphaca.travel_diary.data.map.data_store.MapDataStore
+import com.strayalphaca.travel_diary.data.map.data_cache_store.MapDataCacheStore
 import com.strayalphaca.travel_diary.map.model.Location
 import com.strayalphaca.travel_diary.map.model.LocationDiary
 import com.strayalphaca.travel_diary.map.model.LocationWithData
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class RemoteMapRepository @Inject constructor(
     retrofit : Retrofit,
-    private val dataStore: MapDataStore
+    private val dataStore: MapDataCacheStore
 ) : MapRepository {
     private val mapRetrofit = retrofit.create(MapApi::class.java)
 

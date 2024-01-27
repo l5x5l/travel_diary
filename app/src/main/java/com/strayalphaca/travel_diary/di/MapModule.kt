@@ -1,8 +1,8 @@
 package com.strayalphaca.travel_diary.di
 
 import com.strayalphaca.travel_diary.core.data.demo_data_source.DemoDataSource
-import com.strayalphaca.travel_diary.data.map.data_store.MapDataStore
-import com.strayalphaca.travel_diary.data.map.data_store.MapDataStoreImpl
+import com.strayalphaca.travel_diary.data.map.data_cache_store.MapDataCacheStore
+import com.strayalphaca.travel_diary.data.map.data_cache_store.MapDataCacheStoreImpl
 import com.strayalphaca.travel_diary.data.map.repository.RemoteMapRepository
 import com.strayalphaca.travel_diary.data.map.repository.TestMapRepository
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
@@ -19,20 +19,20 @@ import javax.inject.Singleton
 object MapModule {
     @Provides
     fun provideMapRepository(
-        mapDataStore: MapDataStore,
+        mapDataCacheStore: MapDataCacheStore,
         @BaseClient retrofit: Retrofit,
         authRepository: AuthRepository,
         demoDataSource: DemoDataSource
     ) : MapRepository {
         val hasToken = authRepository.getAccessToken() != null
         return if (hasToken) {
-            RemoteMapRepository(retrofit, mapDataStore)
+            RemoteMapRepository(retrofit, mapDataCacheStore)
         } else {
-            TestMapRepository(mapDataStore, demoDataSource)
+            TestMapRepository(mapDataCacheStore, demoDataSource)
         }
     }
 
     @Provides
     @Singleton
-    fun provideMapDataStore() : MapDataStore = MapDataStoreImpl()
+    fun provideMapDataStore() : MapDataCacheStore = MapDataCacheStoreImpl()
 }

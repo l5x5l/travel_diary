@@ -1,4 +1,4 @@
-package com.strayalphaca.travel_diary.data.auth.datastore
+package com.strayalphaca.travel_diary.data.auth.data_source
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

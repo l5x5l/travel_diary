@@ -1,4 +1,4 @@
-package com.strayalphaca.travel_diary.data.alarm.datastore
+package com.strayalphaca.travel_diary.data.alarm.data_source
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

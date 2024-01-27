@@ -4,8 +4,8 @@ import com.strayalphaca.travel_diary.core.data.demo_data_source.DemoDataSource
 import com.strayalphaca.travel_diary.data.calendar.data_source.CalendarDataSource
 import com.strayalphaca.travel_diary.data.calendar.data_source.CalendarTestDataSource
 import com.strayalphaca.travel_diary.data.calendar.data_source.RemoteCalendarDataSource
-import com.strayalphaca.travel_diary.data.calendar.data_store.CalendarDataStore
-import com.strayalphaca.travel_diary.data.calendar.data_store.CalendarDataStoreImpl
+import com.strayalphaca.travel_diary.data.calendar.data_cache_store.CalendarDataCacheStore
+import com.strayalphaca.travel_diary.data.calendar.data_cache_store.CalendarDataCacheStoreImpl
 import com.strayalphaca.travel_diary.data.calendar.repository_impl.CalendarRepositoryImpl
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository
@@ -23,7 +23,7 @@ abstract class CalendarModule {
     abstract fun bindCalendarRepository(calendarRepository: CalendarRepositoryImpl) : CalendarRepository
 
     @Binds
-    abstract fun bindCalendarDataStore(calendarDataStore: CalendarDataStoreImpl) : CalendarDataStore
+    abstract fun bindCalendarDataStore(calendarDataStore: CalendarDataCacheStoreImpl) : CalendarDataCacheStore
 }
 
 @Module
