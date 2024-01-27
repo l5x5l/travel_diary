@@ -31,9 +31,9 @@ import com.strayalphaca.presentation.ui.theme.Gray4
 import com.strayalphaca.presentation.utils.findActivity
 import com.strayalphaca.presentation.utils.minuteIn24HourToHour12
 import com.strayalphaca.presentation.utils.openAppSettings
-import com.strayalphaca.travel_diary.core.presentation.utils.EXACT_ALARM_PERMISSION
-import com.strayalphaca.travel_diary.core.presentation.utils.POST_NOTIFICATIONS_33
-import com.strayalphaca.travel_diary.core.presentation.utils.checkExactAlarmAvailable
+import com.strayalphaca.presentation.utils.EXACT_ALARM_PERMISSION
+import com.strayalphaca.presentation.utils.POST_NOTIFICATIONS_33
+import com.strayalphaca.presentation.utils.checkExactAlarmAvailable
 
 @Composable
 fun PushAlarmScreen(

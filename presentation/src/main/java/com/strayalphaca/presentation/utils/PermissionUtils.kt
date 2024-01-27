@@ -1,4 +1,4 @@
-package com.strayalphaca.travel_diary.core.presentation.utils
+package com.strayalphaca.presentation.utils
 
 import android.Manifest
 import android.app.AlarmManager
