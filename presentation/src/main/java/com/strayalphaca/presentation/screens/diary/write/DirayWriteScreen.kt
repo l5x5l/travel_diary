@@ -78,6 +78,10 @@ fun DiaryWriteContainer(
             goBackWithModifySuccessResult()
     }
 
+    viewModel.toastMessage.collectAsEffect { message ->
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
     BackHandler(true) {
         if (state.buttonActive)
             goBack()
