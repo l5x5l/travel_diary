@@ -10,4 +10,7 @@ interface DemoDataSource {
     fun getDiaryListByMonth(year : Int, month : Int) : List<DiaryDto>
     fun getTitleDiaryListByProvinceId(provinceId : Int) : List<DiaryItemDto>
     fun getTitleDiaryListNationWide() : List<DiaryItemDto>
+    fun addDiaryAndGetID(diaryDto: DiaryDto) : String
+    fun modifyDiary(diaryDto: DiaryDto)
+    fun deleteDiary(id : String)
 }

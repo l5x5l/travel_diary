@@ -73,6 +73,9 @@ class DiaryWriteViewModel @Inject constructor(
 
     private var diaryId: String? = null
 
+    private val _toastMessage = MutableEventFlow<String>()
+    val toastMessage = _toastMessage.asEventFlow()
+
     init {
         musicPlayer.setCompleteCallback {
             viewModelScope.launch {
@@ -248,8 +251,9 @@ class DiaryWriteViewModel @Inject constructor(
                 is BaseResponse.EmptySuccess -> { // 기존 일지를 수정한 경우, 별도의 데이터가 같이 전달되지 않음
                     events.send(DiaryWriteEvent.DiaryWriteSuccess(diaryId!!))
                 }
-                else -> {
+                is BaseResponse.Failure -> {
                     events.send(DiaryWriteEvent.DiaryWriteFail)
+                    _toastMessage.emit(response.errorMessage)
                 }
             }
         }

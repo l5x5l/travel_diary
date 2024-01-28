@@ -5,6 +5,7 @@ import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
 import com.strayalphaca.travel_diary.data.diary.data_source.DiaryDataSource
 import com.strayalphaca.travel_diary.data.diary.utils.diaryDtoToDiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
+import com.strayalphaca.travel_diary.diary.model.DiaryErrorCodes.DEMO_VERSION_CANNOT_CURD
 import com.strayalphaca.travel_diary.diary.model.DiaryItem
 import com.strayalphaca.travel_diary.diary.model.DiaryItemUpdate
 import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
@@ -52,17 +53,15 @@ class DiaryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun uploadDiary(diaryWriteData: DiaryWriteData): BaseResponse<String> {
-        return BaseResponse.Success(data = diaryWriteData.recordDate.toString())
+        return BaseResponse.Failure(errorCode = DEMO_VERSION_CANNOT_CURD, errorMessage = "")
     }
 
     override suspend fun modifyDiary(diaryModifyData: DiaryModifyData): BaseResponse<Nothing> {
-        diaryItemUpdateChannel.emit(DiaryItemUpdate.Modify(diaryModifyData.toDiaryItem()))
-        return BaseResponse.EmptySuccess
+        return BaseResponse.Failure(errorCode = DEMO_VERSION_CANNOT_CURD, errorMessage = "")
     }
 
     override suspend fun deleteDiary(diaryId: String): BaseResponse<Nothing> {
-        diaryItemUpdateChannel.emit(DiaryItemUpdate.Delete(DiaryItem(id = diaryId, cityName = "-", imageUrl = null)))
-        return BaseResponse.EmptySuccess
+        return BaseResponse.Failure(errorCode = DEMO_VERSION_CANNOT_CURD, errorMessage = "")
     }
 
     override suspend fun getDiaryItemUpdate(): Flow<DiaryItemUpdate> {

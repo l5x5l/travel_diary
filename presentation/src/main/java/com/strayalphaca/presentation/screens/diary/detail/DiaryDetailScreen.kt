@@ -2,6 +2,7 @@ package com.strayalphaca.presentation.screens.diary.detail
 
 import android.content.res.Configuration
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -35,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.Feeling
@@ -61,6 +63,7 @@ fun DiaryDetailContainer(
 ) {
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(needRefresh) {
         if (needRefresh)
@@ -70,6 +73,10 @@ fun DiaryDetailContainer(
     viewModel.goBackNavigationEvent.collectAsEffect { deleteSuccess ->
         if (deleteSuccess)
             goBackWithDeleteSuccess()
+    }
+
+    viewModel.toastMessage.collectAsEffect { message ->
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     BackHandler(enabled = !state.showDeleteDialog) {

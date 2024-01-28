@@ -49,6 +49,9 @@ class DiaryDetailViewModel @Inject constructor(
     private val _goBackNavigationEvent = MutableEventFlow<Boolean>()
     val goBackNavigationEvent = _goBackNavigationEvent.asEventFlow()
 
+    private val _toastMessage = MutableEventFlow<String>()
+    val toastMessage = _toastMessage.asEventFlow()
+
     fun tryRefresh() {
         viewModelScope.launch {
             event.send(DiaryDetailEvent.DiaryLoading)
@@ -83,10 +86,14 @@ class DiaryDetailViewModel @Inject constructor(
         viewModelScope.launch {
             event.send(DiaryDetailEvent.DeleteDiaryLoading)
             val response = useCaseDeleteDiary(id.value)
-            if (response is BaseResponse.EmptySuccess) {
-                event.send(DiaryDetailEvent.DeleteDiarySuccess)
-            } else {
-                event.send(DiaryDetailEvent.DeleteDiaryFail)
+            when (response) {
+                is BaseResponse.Failure -> {
+                    event.send(DiaryDetailEvent.DeleteDiaryFail)
+                    _toastMessage.emit(response.errorMessage)
+                }
+                else -> {
+                    event.send(DiaryDetailEvent.DeleteDiarySuccess)
+                }
             }
         }
     }

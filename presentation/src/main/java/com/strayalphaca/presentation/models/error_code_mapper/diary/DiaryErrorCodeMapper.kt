@@ -3,6 +3,7 @@ package com.strayalphaca.presentation.models.error_code_mapper.diary
 import android.content.Context
 import com.strayalpaca.travel_diary.core.domain.model.ErrorCodeMapper
 import com.strayalphaca.presentation.R
+import com.strayalphaca.travel_diary.diary.model.DiaryErrorCodes.DEMO_VERSION_CANNOT_CURD
 import com.strayalphaca.travel_diary.diary.model.DiaryErrorCodes.EMPTY_ARGUMENT_DIARY_CONTENT
 
 class DiaryErrorCodeMapper constructor(
@@ -12,6 +13,9 @@ class DiaryErrorCodeMapper constructor(
         return when(errorCode) {
             EMPTY_ARGUMENT_DIARY_CONTENT -> {
                 context.getString(R.string.diary_error_empty_diary_content)
+            }
+            DEMO_VERSION_CANNOT_CURD -> {
+                context.getString(R.string.diary_error_demo_restrict)
             }
             else -> {
                 context.getString(R.string.unknown_error)
