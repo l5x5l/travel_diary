@@ -108,7 +108,7 @@ class DiaryWriteViewModel @Inject constructor(
 
     fun inputContent(content : String) {
         viewModelScope.launch {
-            _writingContent.value = content
+            _writingContent.update { content }
         }
     }
 
@@ -185,7 +185,7 @@ class DiaryWriteViewModel @Inject constructor(
         musicPlayerJob = viewModelScope.launch {
             while (true) {
                 if (state.value.musicPlaying) {
-                    _musicProgress.value = musicPlayer.getProgress()
+                    _musicProgress.update { musicPlayer.getProgress() }
                 }
                 delay(250L)
             }
@@ -195,7 +195,7 @@ class DiaryWriteViewModel @Inject constructor(
     fun dragMusicProgressByUser(progress : Float) {
         pauseMusic()
         musicPlayer.setPosition(progress)
-        _musicProgress.value = progress
+        _musicProgress.update { progress }
     }
 
     fun uploadDiary() {
