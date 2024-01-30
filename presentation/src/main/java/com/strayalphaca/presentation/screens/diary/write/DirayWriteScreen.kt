@@ -11,6 +11,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.rememberScrollState
@@ -38,7 +40,9 @@ import com.strayalphaca.presentation.ui.theme.Gray2
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -143,6 +147,8 @@ fun DiaryWriteScreen(
 ) {
     val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val interactionSource = remember { MutableInteractionSource() }
+    val focusManager = LocalFocusManager.current
 
     val photoPickerLauncher = if (3 - state.imageFiles.size > 1) {
         rememberLauncherForActivityResult(
@@ -197,7 +203,16 @@ fun DiaryWriteScreen(
     }
 
     Surface {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null
+                ) {
+                    focusManager.clearFocus()
+                }
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

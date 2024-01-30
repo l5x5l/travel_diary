@@ -7,7 +7,9 @@ import com.strayalphaca.travel_diary.core.data.model.DiaryItemDto
 import com.strayalphaca.travel_diary.core.data.model.ImageDto
 import com.strayalphaca.travel_diary.core.data.model.MediaFileInfoDto
 import java.util.Calendar
+import javax.inject.Singleton
 
+@Singleton
 class DemoDataSourceImpl : DemoDataSource {
     override fun getDiaryDetail(id: String): DiaryDto {
         return dataList.find { it.id == id } ?: throw IllegalStateException("Cannot found diary, id : $id")
