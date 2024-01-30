@@ -114,6 +114,11 @@ class DiaryWriteViewModel @Inject constructor(
 
     fun inputVoiceFile(file : Uri, isLocal : Boolean = false) {
         viewModelScope.launch {
+            if (uriHandler.fileSizeFromUri(file) >= 5 * 1024 * 1024) {
+                _toastMessage.emit("5mb 이상 파일은 업로드할 수 없습니다. 더 작은 파일을 선택해주세요.")
+                return@launch
+            }
+
             musicPlayer.setMusic(file, isLocal)
             events.send(DiaryWriteEvent.AddVoiceFile(file))
         }
