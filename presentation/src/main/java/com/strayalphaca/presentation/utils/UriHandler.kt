@@ -15,6 +15,13 @@ import javax.inject.Singleton
 class UriHandler @Inject constructor(
     @ApplicationContext private val context : Context
 ) {
+    fun fileSizeFromUri(uri : Uri) : Long {
+        val byteSize = context.contentResolver.openAssetFileDescriptor(uri, "r").use {
+            it?.length
+        }
+        return byteSize ?: throw IllegalArgumentException("file path from uri does not exist : $uri")
+    }
+
     fun uriToFile(uri : Uri) : FileInfo {
         val path = uriToFilePath(uri)
         val fileType = getFileType(uri)
