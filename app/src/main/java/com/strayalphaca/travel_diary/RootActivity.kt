@@ -91,11 +91,10 @@ class RootActivity : ComponentActivity() {
         }
     }
 
-    override fun onRestart() {
-        super.onRestart()
+    override fun onStart() {
+        super.onStart()
         viewModel.callLockScreen()
     }
-
 }
 
 @Composable
