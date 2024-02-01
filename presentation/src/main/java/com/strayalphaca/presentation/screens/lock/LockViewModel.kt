@@ -46,7 +46,6 @@ class LockViewModel @Inject constructor(
             _sideEffect.emit(LockScreenSideEffect.CheckComplete)
         } else {
             events.send(LockScreenEvent.ClearInputPassword)
-            _sideEffect.emit(LockScreenSideEffect.ShowFailMessage)
         }
     }
 
@@ -56,10 +55,10 @@ class LockViewModel @Inject constructor(
                 val inputPassword = event.inputPassword.run {
                     return@run if (length <= 4) this else substring(0, 4)
                 }
-                state.copy(inputPassword = inputPassword)
+                state.copy(inputPassword = inputPassword, showError = false)
             }
             LockScreenEvent.ClearInputPassword -> {
-                state.copy(inputPassword = "", checkingPassword = false)
+                state.copy(inputPassword = "", checkingPassword = false, showError = true)
             }
             LockScreenEvent.PasswordChecking -> {
                 state.copy(checkingPassword = true)
