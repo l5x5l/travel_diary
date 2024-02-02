@@ -13,7 +13,9 @@ import com.strayalphaca.presentation.screens.settings.home.SettingsHomeScreenCon
 import com.strayalphaca.presentation.screens.settings.language_setting.LanguageSettingScreen
 import com.strayalphaca.presentation.screens.settings.push_alarm.PushAlarmScreen
 import com.strayalphaca.presentation.screens.settings.push_alarm.PushAlarmViewModel
-import com.strayalphaca.presentation.screens.settings.screen_lock.ScreenLockScreen
+import com.strayalphaca.presentation.screens.settings.screen_lock.ScreenLockScreenContainer
+import com.strayalphaca.presentation.screens.settings.screen_lock.ScreenLockViewModel
+import com.strayalphaca.presentation.screens.settings.screen_lock.components.ScreenPasswordDialogViewModel
 import com.strayalphaca.presentation.screens.settings.withdrawal.WithdrawalScreen
 import com.strayalphaca.presentation.screens.settings.withdrawal.WithdrawalViewModel
 
@@ -48,7 +50,9 @@ fun SettingsNavHost(
         }
 
         composable(ScreenLockScreenDestination.route) {
-            ScreenLockScreen()
+            val screenViewModel = hiltViewModel<ScreenLockViewModel>()
+            val dialogViewModel = hiltViewModel<ScreenPasswordDialogViewModel>()
+            ScreenLockScreenContainer(screenViewModel, dialogViewModel)
         }
 
         composable(LanguageSettingScreenDestination.route) {

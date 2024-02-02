@@ -117,4 +117,10 @@
 
     <string name="fail_next_page_load">로딩중 문제가 발생했어요.</string>
     <string name="retry_next_page_load">재시도</string>
+
+    <string name="input_new_screen_password_title">새 비밀번호 4자리 입력</string>
+    <string name="check_screen_password_title">비밀번호 재확인</string>
+    <string name="input_exist_screen_password_title">기존 비밀번호 입력</string>
+    <string name="password_not_macthed">비밀번호가 일치하지 않습니다.</string>
+    <string name="move_back">돌아가기</string>
 </resources>
