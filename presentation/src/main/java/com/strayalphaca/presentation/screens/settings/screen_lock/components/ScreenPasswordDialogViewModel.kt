@@ -128,6 +128,7 @@ class ScreenPasswordDialogViewModel @Inject constructor(
                 _inputPassword.update { "" }
                 ScreenLockPasswordDialogState.CheckingNewPasswordFail(
                     onFillTextEvent = ::compareToTempNewPassword,
+                    leftButtonPressEvent = ::moveToNewPasswordInputStep,
                     rightButtonPressEvent = ::dismiss
                 )
             }

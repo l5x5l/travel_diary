@@ -16,9 +16,7 @@ sealed class ScreenLockPasswordDialogState(
         override val rightButtonPressEvent: () -> Unit,
         override val onFillTextEvent: (String) -> Unit
     ) : ScreenLockPasswordDialogState(
-        titleResourceId = R.string.input_new_screen_password_title,
-        rightButtonPressEvent = rightButtonPressEvent,
-        onFillTextEvent = onFillTextEvent
+        titleResourceId = R.string.input_new_screen_password_title
     )
 
     data class InputNewPasswordAgain(
@@ -27,9 +25,7 @@ sealed class ScreenLockPasswordDialogState(
         override val onFillTextEvent: (String) -> Unit
     ) : ScreenLockPasswordDialogState(
         titleResourceId = R.string.check_screen_password_title,
-        leftButtonTextResourceId = R.string.move_back,
-        rightButtonPressEvent = rightButtonPressEvent,
-        onFillTextEvent = onFillTextEvent
+        leftButtonTextResourceId = R.string.move_back
     )
 
     object CheckingNewPassword : ScreenLockPasswordDialogState(
@@ -41,21 +37,19 @@ sealed class ScreenLockPasswordDialogState(
 
     data class CheckingNewPasswordFail(
         override val rightButtonPressEvent: () -> Unit,
+        override val leftButtonPressEvent: () -> Unit,
         override val onFillTextEvent: (String) -> Unit
     ) : ScreenLockPasswordDialogState(
         titleResourceId = R.string.check_screen_password_title,
         errorMessageStringResourceId = R.string.password_not_macthed,
-        rightButtonPressEvent = rightButtonPressEvent,
-        onFillTextEvent = onFillTextEvent
+        leftButtonTextResourceId = R.string.move_back
     )
 
     data class InputExistPasswordForCancel(
         override val rightButtonPressEvent: () -> Unit,
         override val onFillTextEvent: (String) -> Unit
     ) : ScreenLockPasswordDialogState(
-        titleResourceId = R.string.input_exist_screen_password_title,
-        rightButtonPressEvent = rightButtonPressEvent,
-        onFillTextEvent = onFillTextEvent
+        titleResourceId = R.string.input_exist_screen_password_title
     )
 
     object CheckingExistPasswordForCancel : ScreenLockPasswordDialogState(
@@ -68,18 +62,14 @@ sealed class ScreenLockPasswordDialogState(
         override val onFillTextEvent: (String) -> Unit
     ) : ScreenLockPasswordDialogState(
         titleResourceId = R.string.input_exist_screen_password_title,
-        errorMessageStringResourceId = R.string.password_not_macthed,
-        rightButtonPressEvent = rightButtonPressEvent,
-        onFillTextEvent = onFillTextEvent
+        errorMessageStringResourceId = R.string.password_not_macthed
     )
 
     data class InputExistPasswordForChange(
         override val rightButtonPressEvent: () -> Unit,
         override val onFillTextEvent: (String) -> Unit
     ) : ScreenLockPasswordDialogState(
-        titleResourceId = R.string.input_exist_screen_password_title,
-        rightButtonPressEvent = rightButtonPressEvent,
-        onFillTextEvent = onFillTextEvent
+        titleResourceId = R.string.input_exist_screen_password_title
     )
 
     object CheckingExistPasswordForChange : ScreenLockPasswordDialogState(
@@ -93,9 +83,7 @@ sealed class ScreenLockPasswordDialogState(
     ) : ScreenLockPasswordDialogState(
         titleResourceId = R.string.input_exist_screen_password_title,
         errorMessageStringResourceId = R.string.password_not_macthed,
-        rightButtonTextResourceId = R.string.cancel,
-        rightButtonPressEvent = rightButtonPressEvent,
-        onFillTextEvent = onFillTextEvent
+        rightButtonTextResourceId = R.string.cancel
     )
 
 }
