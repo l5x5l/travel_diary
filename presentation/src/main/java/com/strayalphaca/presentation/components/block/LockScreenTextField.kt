@@ -23,11 +23,13 @@ import com.strayalphaca.presentation.ui.theme.Gray4
 fun LockScreenTextField(
     modifier : Modifier = Modifier,
     text : String,
-    onTextChanged : (String) -> Unit
+    onTextChanged : (String) -> Unit,
+    enabled : Boolean = true
 ) {
     BasicTextField(
         modifier = modifier,
         value = text,
+        enabled = enabled,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         onValueChange = onTextChanged,
         decorationBox = {
