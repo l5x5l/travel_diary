@@ -8,23 +8,29 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.strayalphaca.presentation.ui.theme.Gray2
+import com.strayalphaca.presentation.ui.theme.Gray4
 
 @Composable
 fun LockScreenTextField(
     modifier : Modifier = Modifier,
     text : String,
-    onTextChanged : (String) -> Unit
+    onTextChanged : (String) -> Unit,
+    enabled : Boolean = true
 ) {
     BasicTextField(
+        modifier = modifier,
         value = text,
+        enabled = enabled,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         onValueChange = onTextChanged,
         decorationBox = {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -61,18 +67,17 @@ private fun LockScreenTextFieldCell(
                 shape = shape
             )
             .run {
-                if (isFocused) {
-                    border(
-                        width = 1.dp,
-                        color = Gray2,
-                        shape = shape
-                    )
-                } else {
-                    this
-                }
+                border(
+                    width = 1.dp,
+                    color = if (isFocused) MaterialTheme.colors.onSurface else Gray4,
+                    shape = shape
+                )
             },
         contentAlignment = Alignment.Center
     ) {
-        Text(text = text.toString())
+        Text(
+            text = text.toString(),
+            color = MaterialTheme.colors.onSurface
+        )
     }
 }

@@ -3,6 +3,8 @@ package com.strayalphaca.travel_diary.data.lock.repository_impl
 import com.strayalphaca.travel_diary.data.lock.data_source.LockDataSource
 import com.strayalpaca.travel_diary.domain.lock.repository.LockRepository
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class LockRepositoryImpl @Inject constructor(
@@ -26,5 +28,14 @@ class LockRepositoryImpl @Inject constructor(
     override suspend fun checkUsingPassword(): Boolean {
         val password = dataSource.getPassword()
         return password != null
+    }
+
+    override suspend fun checkUsingPasswordFlow(): Flow<Boolean> {
+        return dataSource.passwordFlow().map { it != null }
+    }
+
+    override suspend fun clearPassword(): BaseResponse<Nothing> {
+        dataSource.setPassword(null)
+        return BaseResponse.EmptySuccess
     }
 }

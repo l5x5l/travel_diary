@@ -74,6 +74,10 @@ class RootActivity : ComponentActivity() {
                     if (tokenErrorOccur) navHostController.navigateToIntroTop()
                 }
 
+                viewModel.showLockScreen.collectAsEffect { show ->
+                    if (show) navHostController.navigate(Lock.route)
+                }
+
                 RootNavHost(navController = navHostController)
             }
         }
@@ -87,6 +91,10 @@ class RootActivity : ComponentActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.callLockScreen()
+    }
 }
 
 @Composable

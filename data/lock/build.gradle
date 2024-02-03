@@ -42,12 +42,9 @@ dependencies {
     androidTestImplementation libs.test.junit
     androidTestImplementation libs.test.espresso
 
-    // okHttp3 https://github.com/square/okhttp
-    implementation libs.bundles.okhttp3
-
-    // retrofit2 https://github.com/square/retrofit
-    implementation libs.bundles.retrofit2
-
     // https://mvnrepository.com/artifact/javax.inject/javax.inject/1
     implementation libs.javax.inject
+
+    // data store core
+    implementation libs.bundles.datastore
 }
