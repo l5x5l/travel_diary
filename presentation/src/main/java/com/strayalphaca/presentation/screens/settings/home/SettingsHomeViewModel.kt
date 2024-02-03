@@ -2,6 +2,7 @@ package com.strayalphaca.presentation.screens.settings.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.strayalpaca.travel_diary.domain.lock.use_case.UseCaseRemovePassword
 import com.strayalphaca.presentation.alarm.TrailyAlarmManager
 import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
 import com.strayalphaca.presentation.models.event_flow.asEventFlow
@@ -23,7 +24,8 @@ class SettingsHomeViewModel @Inject constructor(
     private val useCaseClearToken: UseCaseClearToken,
     private val alarmManager: TrailyAlarmManager,
     private val useCaseSetAlarmInfo: UseCaseSetAlarmInfo,
-    private val userEventLogger: UserEventLogger
+    private val userEventLogger: UserEventLogger,
+    private val useCaseRemoveLockPassword: UseCaseRemovePassword
 ) : ViewModel() {
     private val _isLogin = MutableStateFlow(false)
     val isLogin = _isLogin.asStateFlow()
@@ -54,6 +56,7 @@ class SettingsHomeViewModel @Inject constructor(
             useCaseClearToken()
 
             useCaseSetAlarmInfo(AlarmInfo(alarmOn = false, hour = 20, minute = 0))
+            useCaseRemoveLockPassword()
             alarmManager.cancelAlarm()
 
             userEventLogger.log(UserLogEvent.Logout)
