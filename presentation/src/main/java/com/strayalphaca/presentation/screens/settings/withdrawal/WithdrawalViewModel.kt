@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalphaca.travel_diary.domain.login.use_case.UseCaseWithdrawal
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.domain.lock.use_case.UseCaseRemovePassword
 import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
 import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.travel_diary.core.presentation.logger.UserEventLogger
@@ -21,7 +22,8 @@ class WithdrawalViewModel @Inject constructor(
     private val useCaseWithdrawal: UseCaseWithdrawal,
     private val useCaseGetDiaryCount: UseCaseGetDiaryCount,
     private val useCaseClearToken: UseCaseClearToken,
-    private val userEventLogger: UserEventLogger
+    private val userEventLogger: UserEventLogger,
+    private val useCaseRemoveLockPassword : UseCaseRemovePassword
 ) : ViewModel() {
     private val _totalDiaryCount = MutableStateFlow(0)
     val totalDiaryCount = _totalDiaryCount.asStateFlow()
@@ -58,6 +60,7 @@ class WithdrawalViewModel @Inject constructor(
             val res = useCaseWithdrawal()
             if (res is BaseResponse.EmptySuccess) {
                 useCaseClearToken()
+                useCaseRemoveLockPassword()
                 _deleteLoading.value = false
                 _withdrawalSuccess.emit(true)
                 userEventLogger.log(UserLogEvent.Withdrawal)
