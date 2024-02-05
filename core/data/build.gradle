@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -48,4 +49,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/javax.inject/javax.inject/1
     implementation libs.javax.inject
+
+    // room
+    implementation libs.bundles.room
+    annotationProcessor libs.roomCompiler
+    kapt libs.roomCompiler
 }
