@@ -6,11 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.strayalphaca.travel_diary.core.data.room.dao.RecordDao
 import com.strayalphaca.travel_diary.core.data.room.entity.FileEntity
+import com.strayalphaca.travel_diary.core.data.room.entity.LocationEntity
 import com.strayalphaca.travel_diary.core.data.room.entity.RecordEntity
 import com.strayalphaca.travel_diary.core.data.room.entity.RecordFileEntity
 
 @Database(
-    entities = [RecordEntity::class, FileEntity::class, RecordFileEntity::class],
+    entities = [RecordEntity::class, FileEntity::class, RecordFileEntity::class, LocationEntity::class],
     version = 1
 )
 abstract class TrailyRoomDatabase : RoomDatabase() {

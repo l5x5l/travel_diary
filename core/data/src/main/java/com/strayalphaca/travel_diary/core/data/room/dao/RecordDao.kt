@@ -30,7 +30,7 @@ interface RecordDao {
         "SELECT r.id, r.createdAt as date, f.filePath as imageUri, r.locationId as locationId FROM RecordEntity r " +
         "INNER JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "INNER JOIN FileEntity f on rf.fileId = f.id " +
-        "WHERE createdAt LIKE :dateQuery || '%'"
+        "WHERE r.createdAt LIKE :dateQuery || '%'"
     )
     suspend fun getRecordInCalendar(dateQuery : String) : List<RecordItem>
 
@@ -59,7 +59,8 @@ interface RecordDao {
         "INNER JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "INNER JOIN FileEntity f on rf.fileId = f.id " +
         "INNER JOIN LocationEntity l on r.locationId = l.id " +
-        "WHERE l.id = :cityId"
+        "WHERE l.id = :cityId " +
+        "LIMIT :perPage OFFSET (:pageIdx - 1) * :perPage"
     )
     suspend fun getRecordListInCity(cityId : Int, pageIdx : Int, perPage : Int): List<RecordItem>
 
@@ -69,7 +70,8 @@ interface RecordDao {
         "INNER JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "INNER JOIN FileEntity f on rf.fileId = f.id " +
         "INNER JOIN LocationEntity l on r.locationId = l.id " +
-        "WHERE l.cityGroupId = :cityGroupId"
+        "WHERE l.cityGroupId = :cityGroupId " +
+        "LIMIT :perPage OFFSET (:pageIdx - 1) * :perPage"
     )
     suspend fun getRecordListInCityGroup(cityGroupId : Int, pageIdx : Int, perPage : Int) : List<RecordItem>
 
@@ -80,7 +82,7 @@ interface RecordDao {
     suspend fun addRecordFile(recordFileEntity: RecordFileEntity) : Long
 
     @Query(
-        "SELECT f.filePath as filePath, f.id = id From FileEntity f " +
+        "SELECT f.filePath as filePath, f.id as id From FileEntity f " +
         "INNER JOIN RecordFileEntity rf ON f.id == rf.id " +
         "WHERE rf.recordId = :recordId"
     )
