@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class RemoteMapRepository @Inject constructor(
     retrofit : Retrofit,
-    private val dataStore: MapDataCacheStore
+    private val dataCacheStore: MapDataCacheStore
 ) : MapRepository {
     private val mapRetrofit = retrofit.create(MapApi::class.java)
 
@@ -27,7 +27,7 @@ class RemoteMapRepository @Inject constructor(
             mappingFunction = { it.data.map { responseData -> responseData.toLocationDiary() }}
         ).also {
             if (it is BaseResponse.Success)
-                dataStore.setMapData(LocationWithData(null, it.data))
+                dataCacheStore.setMapData(LocationWithData(null, it.data))
         }
     }
 
@@ -38,13 +38,13 @@ class RemoteMapRepository @Inject constructor(
             mappingFunction = { it.data.map { responseData -> responseData.toLocationDiary(provinceId) }}
         ).also {
             if (it is BaseResponse.Success)
-                dataStore.setMapData(LocationWithData(Location.getInstanceByProvinceId(provinceId), it.data))
+                dataCacheStore.setMapData(LocationWithData(Location.getInstanceByProvinceId(provinceId), it.data))
         }
     }
 
     override suspend fun refreshIfContainDiary(diaryId: String) {
-        if (!dataStore.checkContainDiary(diaryId)) return
-        val currentLocationId = dataStore.getCurrentProvinceId()
+        if (!dataCacheStore.checkContainDiary(diaryId)) return
+        val currentLocationId = dataCacheStore.getCurrentProvinceId()
         if (currentLocationId == null) {
             getNationWideData()
         } else {
@@ -53,7 +53,7 @@ class RemoteMapRepository @Inject constructor(
     }
 
     override fun getLocationWithDataFlow(): Flow<LocationWithData> {
-        return dataStore.getMapData()
+        return dataCacheStore.getMapData()
     }
 
 }
