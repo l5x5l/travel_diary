@@ -7,6 +7,7 @@ import com.strayalphaca.presentation.models.deeplink_handler.NotificationDeepLin
 import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
 import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
+import com.strayalphaca.travel_diary.domain.auth.usecase.UseCaseSaveToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +16,8 @@ import javax.inject.Inject
 class RootViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val deepLinkHandler: NotificationDeepLinkHandler,
-    private val useCaseUsePassword: UseCaseUsePassword
+    private val useCaseUsePassword: UseCaseUsePassword,
+    private val useCaseSaveToken: UseCaseSaveToken
 ) : ViewModel() {
     val invalidRefreshToken = authRepository.invalidRefreshToken()
 
@@ -34,6 +36,12 @@ class RootViewModel @Inject constructor(
                 return@launch
 
             _showLockScreen.emit(true)
+        }
+    }
+
+    fun setTokenToLocal() {
+        viewModelScope.launch {
+            useCaseSaveToken("local")
         }
     }
 }
