@@ -74,4 +74,8 @@ class DiaryTestDataSource @Inject constructor(
     override suspend fun removeDiary(id: String) {
         demoDataSource.deleteDiary(id)
     }
+
+    override suspend fun getDiaryCount(): Int {
+        return 100
+    }
 }

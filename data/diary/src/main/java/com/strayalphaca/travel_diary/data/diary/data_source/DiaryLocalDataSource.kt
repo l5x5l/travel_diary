@@ -6,6 +6,7 @@ import com.strayalphaca.travel_diary.core.data.model.DiaryDto
 import com.strayalphaca.travel_diary.core.data.model.DiaryItemDto
 import com.strayalphaca.travel_diary.core.data.model.ImageDto
 import com.strayalphaca.travel_diary.core.data.model.MediaFileInfoDto
+import com.strayalphaca.travel_diary.core.data.model.VoiceFileInDiaryDto
 import com.strayalphaca.travel_diary.core.data.room.dao.RecordDao
 import com.strayalphaca.travel_diary.core.data.room.entity.RecordEntity
 import com.strayalphaca.travel_diary.core.data.room.entity.RecordFileEntity
@@ -19,18 +20,17 @@ class DiaryLocalDataSource @Inject constructor(
 ) : DiaryDataSource {
     override suspend fun getDiaryData(id: String): BaseResponse<DiaryDto> {
         val recordEntity = recordDao.getRecord(id.toInt())
-        val fileList = recordDao.getFiles(id.toInt())
+        val fileList = recordDao.getFiles(id.toInt()).map {
+            MediaFileInfoDto(id = it.id.toString(), originName = it.filePath, uploadedLink = it.filePath, thumbnailLink = it.filePath, type = it.type)
+        }
         val diaryDto = DiaryDto(
             id = id,
             date = recordEntity.createdAt,
             feeling = recordEntity.feeling,
             weather = recordEntity.weather,
             content = recordEntity.content,
-            medias = fileList.map {
-                MediaFileInfoDto(
-                    id = it.id.toString(), originName = it.filePath, uploadedLink = it.filePath, thumbnailLink = it.filePath
-                )
-            },
+            medias = fileList.filter { it.type == "Image" || it.type == "Video" },
+            voice = fileList.find { it.type == "Voice" }?.let { VoiceFileInDiaryDto(originName = it.originName, uploadedLink = it.uploadedLink, shortLink = it.shortLink) },
             cityId = recordEntity.locationId,
             createdAt = recordEntity.createdAt
         )
@@ -53,7 +53,7 @@ class DiaryLocalDataSource @Inject constructor(
         perPage: Int,
         offset: Int
     ): List<DiaryItemDto> {
-        return recordDao.getRecordListInCityGroup(cityGroupId, perPage, offset).map { recordItem ->
+        return recordDao.getRecordListInCityGroup(cityGroupId, perPage = perPage, pageIdx = offset).map { recordItem ->
             DiaryItemDto(
                 id = recordItem.id.toString(),
                 image = recordItem.imageUri?.let { ImageDto(originalName = it, uploadedLink = it, shortLink = it) },
@@ -75,17 +75,19 @@ class DiaryLocalDataSource @Inject constructor(
              )
          ).also {
              diaryWriteData.medias?.let { fileIdList ->
-                 for (fileId in fileIdList) {
-                     recordDao.addRecordFile(RecordFileEntity(recordId = it.toInt(), fileId = fileId.toInt()))
+                 fileIdList.forEachIndexed { index, fileIdString ->
+                     recordDao.addRecordFile(RecordFileEntity(recordId = it.toInt(), fileId = fileIdString.toInt(), positionInRecord = index))
                  }
              }
              diaryWriteData.voice?.let { voiceFileId ->
-                 recordDao.addRecordFile(RecordFileEntity(recordId = it.toInt(), fileId = voiceFileId.toInt()))
+                 recordDao.addRecordFile(RecordFileEntity(recordId = it.toInt(), fileId = voiceFileId.toInt(), positionInRecord = 0))
              }
          }.toString()
     }
 
     override suspend fun modifyDiary(diaryModifyData: DiaryModifyData) {
+        recordDao.deleteRecordFileOfRecord(diaryModifyData.id.toInt())
+
         recordDao.updateRecord(
             id = diaryModifyData.id.toInt(),
             weather = diaryModifyData.weather.toString(),
@@ -93,9 +95,22 @@ class DiaryLocalDataSource @Inject constructor(
             content = diaryModifyData.content ?: "",
             locationId = diaryModifyData.cityId,
         )
+
+        diaryModifyData.medias?.let { fileIdList ->
+            fileIdList.forEachIndexed { index, fileIdString ->
+                recordDao.addRecordFile(RecordFileEntity(recordId = diaryModifyData.id.toInt(), fileId = fileIdString.toInt(), positionInRecord = index))
+            }
+        }
+        diaryModifyData.voice?.let { voiceFileId ->
+            recordDao.addRecordFile(RecordFileEntity(recordId = diaryModifyData.id.toInt(), fileId = voiceFileId.toInt(), positionInRecord = 0))
+        }
     }
 
     override suspend fun removeDiary(id: String) {
         recordDao.deleteRecord(id.toInt())
+    }
+
+    override suspend fun getDiaryCount(): Int {
+        return recordDao.getAllRecords().size
     }
 }

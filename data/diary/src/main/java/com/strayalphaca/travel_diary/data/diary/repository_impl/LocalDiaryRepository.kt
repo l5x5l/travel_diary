@@ -71,6 +71,6 @@ class LocalDiaryRepository @Inject constructor(
     }
 
     override suspend fun getDiaryCount(): BaseResponse<Int> {
-        return BaseResponse.Success(data = 100)
+        return BaseResponse.Success(data = dataSource.getDiaryCount())
     }
 }
