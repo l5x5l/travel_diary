@@ -11,8 +11,11 @@ import com.strayalphaca.travel_diary.core.data.room.entity.RecordFileEntity
 
 @Dao
 interface RecordDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addRecordAndGetId(recordEntity: RecordEntity) : Long
+
+    @Query("SELECT * FROM RecordEntity")
+    suspend fun getAllRecords() : List<RecordEntity>
 
     @Query("SELECT * FROM RecordEntity WHERE id = :id  LIMIT 1")
     suspend fun getRecord(id : Int) : RecordEntity
@@ -28,11 +31,12 @@ interface RecordDao {
     suspend fun updateRecord(id : Int, content : String, weather : String, feeling : String, locationId : Int?)
 
     // 달력 일지 조회
+    // 이게 문제다, join을 해서, 동일한 id를 가진 일지가 여러개 생긴 거다.
     @Query(
         "SELECT r.id, r.createdAt as date, f.filePath as imageUri, r.locationId as locationId FROM RecordEntity r " +
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
-        "WHERE r.createdAt LIKE :dateQuery || '%'"
+        "WHERE r.createdAt LIKE :dateQuery || '%' AND ( rf.positionInRecord = 0 OR rf.positionInRecord is null ) "
     )
     suspend fun getRecordInCalendar(dateQuery : String) : List<RecordItem>
 
@@ -41,7 +45,8 @@ interface RecordDao {
         "SELECT r.id, r.createdAt as date, f.filePath as imageUri, r.locationId as locationId, l.provinceId as provinceId, l.cityGroupId as cityGroupId FROM RecordEntity r " +
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
-        "INNER JOIN LocationEntity l on r.locationId = l.id "
+        "INNER JOIN LocationEntity l on r.locationId = l.id " +
+        "WHERE rf.positionInRecord = 0 OR rf.positionInRecord is null"
     )
     suspend fun getRecordInMapNationWide() : List<RecordItem>
 
@@ -51,7 +56,7 @@ interface RecordDao {
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
         "INNER JOIN LocationEntity l on r.locationId = l.id " +
-        "WHERE l.provinceId = :provinceId"
+        "WHERE l.provinceId = :provinceId AND ( rf.positionInRecord = 0 OR rf.positionInRecord is null )"
     )
     suspend fun getRecordInMapProvince(provinceId : Int) : List<RecordItem>
 
@@ -61,7 +66,7 @@ interface RecordDao {
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
         "INNER JOIN LocationEntity l on r.locationId = l.id " +
-        "WHERE l.id = :cityId " +
+        "WHERE l.id = :cityId AND ( rf.positionInRecord = 0 OR rf.positionInRecord is null )" +
         "LIMIT :perPage OFFSET (:pageIdx - 1) * :perPage"
     )
     suspend fun getRecordListInCity(cityId : Int, pageIdx : Int, perPage : Int): List<RecordItem>
@@ -72,7 +77,7 @@ interface RecordDao {
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
         "INNER JOIN LocationEntity l on r.locationId = l.id " +
-        "WHERE l.cityGroupId = :cityGroupId " +
+        "WHERE l.cityGroupId = :cityGroupId AND ( rf.positionInRecord = 0 OR rf.positionInRecord is null )" +
         "LIMIT :perPage OFFSET (:pageIdx - 1) * :perPage"
     )
     suspend fun getRecordListInCityGroup(cityGroupId : Int, pageIdx : Int, perPage : Int) : List<RecordItem>
@@ -90,8 +95,8 @@ interface RecordDao {
     suspend fun deleteRecordFileOfRecord(recordId: Int)
 
     @Query(
-        "SELECT f.filePath as filePath, f.id as id, f.type as type From FileEntity f " +
-        "INNER JOIN RecordFileEntity rf ON f.id == rf.id " +
+        "SELECT f.filePath as filePath, f.id as id, f.type as type, rf.positionInRecord as positionInRecord From FileEntity f " +
+        "INNER JOIN RecordFileEntity rf ON f.id == rf.fileId " +
         "WHERE rf.recordId = :recordId"
     )
     suspend fun getFiles(recordId : Int) : List<FileItem>
@@ -119,6 +124,7 @@ interface RecordDao {
     data class FileItem(
         val id : Int,
         val filePath : String,
-        val type : String
+        val type : String,
+        val positionInRecord : Int
     )
 }
