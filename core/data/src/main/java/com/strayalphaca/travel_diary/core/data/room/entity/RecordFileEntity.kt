@@ -22,7 +22,8 @@ import androidx.room.PrimaryKey
     ]
 )
 data class RecordFileEntity(
-    @PrimaryKey(autoGenerate = true) val id : Int = 0,
     val recordId : Int,
     val fileId : Int
-)
+) {
+    @PrimaryKey(autoGenerate = true) var id : Int = 0
+}

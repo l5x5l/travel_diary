@@ -18,11 +18,12 @@ import androidx.room.PrimaryKey
     ]
 )
 data class RecordEntity(
-    @PrimaryKey(autoGenerate = true) val id : Int = 0,
     val content : String,
     val weather : String,
     val feeling : String,
     val locationId : Int?,
     val createdAt : String,
     val updatedAt : String
-)
+) {
+    @PrimaryKey(autoGenerate = true) var id : Int = 0
+}
