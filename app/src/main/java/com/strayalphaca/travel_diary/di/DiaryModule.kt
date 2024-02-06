@@ -13,7 +13,7 @@ import com.strayalphaca.travel_diary.data.diary.repository_impl.RemoteDiaryRepos
 import com.strayalphaca.travel_diary.diary.di.DiaryErrorCodeMapperProvide
 import com.strayalphaca.travel_diary.diary.repository.DiaryRepository
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
-import com.strayalphaca.travel_diary.mode.IS_LOCAL
+import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

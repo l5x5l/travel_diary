@@ -9,7 +9,7 @@ import com.strayalphaca.travel_diary.data.map.repository.RemoteMapRepository
 import com.strayalphaca.travel_diary.data.map.repository.TestMapRepository
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import com.strayalphaca.travel_diary.map.repository.MapRepository
-import com.strayalphaca.travel_diary.mode.IS_LOCAL
+import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

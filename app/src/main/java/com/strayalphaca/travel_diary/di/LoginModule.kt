@@ -16,7 +16,7 @@ import com.strayalphaca.travel_diary.domain.login.di.LoginErrorCodeMapperProvide
 import com.strayalphaca.travel_diary.domain.login.di.SignupErrorCodeMapperProvide
 import com.strayalphaca.travel_diary.domain.login.di.WithdrawalErrorCodeMapperProvide
 import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
-import com.strayalphaca.travel_diary.mode.IS_LOCAL
+import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

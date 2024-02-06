@@ -11,7 +11,7 @@ import com.strayalphaca.travel_diary.data.calendar.data_source.CalendarLocalData
 import com.strayalphaca.travel_diary.data.calendar.repository_impl.CalendarRepositoryImpl
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import com.strayalphaca.travel_diary.domain.calendar.repository.CalendarRepository
-import com.strayalphaca.travel_diary.mode.IS_LOCAL
+import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

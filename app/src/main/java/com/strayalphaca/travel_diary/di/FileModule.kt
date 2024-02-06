@@ -9,7 +9,7 @@ import com.strayalphaca.travel_diary.data.file.repository.RemoteFileRepository
 import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import com.strayalphaca.travel_diary.domain.file.model.FileResizeHandler
 import com.strayalphaca.travel_diary.domain.file.repository.FileRepository
-import com.strayalphaca.travel_diary.mode.IS_LOCAL
+import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
