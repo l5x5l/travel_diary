@@ -123,6 +123,9 @@ dependencies {
     implementation libs.bundles.room
     annotationProcessor libs.roomCompiler
     kapt libs.roomCompiler
+
+    // kotlin reflection
+    implementation libs.kotlin.reflection
 }
 
 kapt {

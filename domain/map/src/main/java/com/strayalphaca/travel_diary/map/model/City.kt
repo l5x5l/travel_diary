@@ -260,7 +260,7 @@ sealed class City(val id : Int, val name : String, val provinceId : Int, val gro
     object NamJejiGun : City(238, "남제주군", 17, 64)
 
     companion object {
-        private fun listOfCity() = City::class.sealedSubclasses.toSet()
+        fun listOfCity() = City::class.sealedSubclasses.toSet()
 
         fun getSameGroupCityList(group : Int) : List<City> {
             return listOfCity().filter { it.objectInstance?.group == group }.mapNotNull { it.objectInstance }
