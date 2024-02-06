@@ -28,8 +28,8 @@ interface RecordDao {
     // 달력 일지 조회
     @Query(
         "SELECT r.id, r.createdAt as date, f.filePath as imageUri, r.locationId as locationId FROM RecordEntity r " +
-        "INNER JOIN RecordFileEntity rf ON r.id = rf.recordId " +
-        "INNER JOIN FileEntity f on rf.fileId = f.id " +
+        "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
+        "LEFT JOIN FileEntity f on rf.fileId = f.id " +
         "WHERE r.createdAt LIKE :dateQuery || '%'"
     )
     suspend fun getRecordInCalendar(dateQuery : String) : List<RecordItem>
