@@ -6,20 +6,24 @@ import com.strayalphaca.presentation.models.error_code_mapper.DefaultErrorCodeMa
 import com.strayalphaca.presentation.models.error_code_mapper.login.AuthCodeErrorCodeMapper
 import com.strayalphaca.presentation.models.error_code_mapper.login.LoginErrorCodeMapper
 import com.strayalphaca.presentation.models.error_code_mapper.login.SignupErrorCodeMapper
+import com.strayalphaca.travel_diary.core.data.room.database.TrailyRoomDatabase
 import com.strayalphaca.travel_diary.data.login.data_source.LoginDataSource
-import com.strayalphaca.travel_diary.data.login.data_source.LoginTestDataSource
+import com.strayalphaca.travel_diary.data.login.data_source.LoginLocalDataSource
+import com.strayalphaca.travel_diary.data.login.repository_impl.LoginRepositoryImpl
 import com.strayalphaca.travel_diary.data.login.repository_impl.RemoteLoginRepository
 import com.strayalphaca.travel_diary.domain.login.di.AuthCodeErrorCodeMapperProvide
 import com.strayalphaca.travel_diary.domain.login.di.LoginErrorCodeMapperProvide
 import com.strayalphaca.travel_diary.domain.login.di.SignupErrorCodeMapperProvide
 import com.strayalphaca.travel_diary.domain.login.di.WithdrawalErrorCodeMapperProvide
 import com.strayalphaca.travel_diary.domain.login.repository.LoginRepository
+import com.strayalphaca.travel_diary.mode.IS_LOCAL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -27,14 +31,22 @@ object LoginModule {
     @Provides
     fun provideLoginRepository(
         @BaseClient baseRetrofit: Retrofit,
-        @NoHeaderClient noHeaderRetrofit: Retrofit
+        @NoHeaderClient noHeaderRetrofit: Retrofit,
+        loginDataSource: LoginDataSource
     ): LoginRepository {
-        return RemoteLoginRepository(baseRetrofit, noHeaderRetrofit)
+        return if (IS_LOCAL) {
+            LoginRepositoryImpl(loginDataSource)
+        } else {
+            return RemoteLoginRepository(baseRetrofit, noHeaderRetrofit)
+        }
     }
 
+    @Singleton
     @Provides
-    fun provideLoginDataSource() : LoginDataSource {
-        return LoginTestDataSource()
+    fun provideLoginDataSource(
+        trailyRoomDatabase: TrailyRoomDatabase
+    ) : LoginDataSource {
+        return LoginLocalDataSource(trailyRoomDatabase)
     }
 
     @LoginErrorCodeMapperProvide
