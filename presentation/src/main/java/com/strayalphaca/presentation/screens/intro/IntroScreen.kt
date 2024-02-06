@@ -28,6 +28,7 @@ import com.strayalphaca.presentation.components.atom.text_button.TextButton
 import com.strayalphaca.presentation.components.template.dialog.OneButtonDialog
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import com.strayalphaca.presentation.utils.UseFinishByBackPressTwice
+import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
 
 @Composable
 fun IntroScreen(
@@ -40,7 +41,7 @@ fun IntroScreen(
     if (showOfflineOverviewDialog) {
         OneButtonDialog(
             title = stringResource(id = R.string.look_around_guide),
-            mainText = stringResource(id = R.string.look_around_guide_text),
+            mainText = stringResource(id = if (IS_LOCAL) R.string.look_around_guide_text_local else R.string.look_around_guide_text),
             buttonText = stringResource(id = R.string.check),
             buttonClick = {
                 showOfflineOverviewDialog = false
@@ -82,7 +83,7 @@ fun IntroScreen(
             Spacer(modifier = Modifier.weight(0.18f))
 
             BaseButton(
-                text = stringResource(id = R.string.login),
+                text = stringResource(id = if (IS_LOCAL) R.string.start else R.string.login),
                 onClick = { goToLogin() },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -94,7 +95,7 @@ fun IntroScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             TextButton(
-                text = stringResource(id = R.string.continue_offline),
+                text = stringResource(id = if (IS_LOCAL) R.string.demo_drowse else R.string.continue_offline),
                 modifier = Modifier.padding(horizontal = 32.dp),
                 onClick = { showOfflineOverviewDialog = true }
             )

@@ -70,9 +70,12 @@
 
     <string name="hello">안녕하세요!</string>
     <string name="intro">추억을 담는 여정,\nTraily에 오신 것을 환영합니다</string>
+    <string name="start">시작하기</string>
     <string name="continue_offline">비회원으로 둘러보기</string>
+    <string name="demo_drowse">둘러보기</string>
     <string name="look_around_guide">둘러보기 안내</string>
     <string name="look_around_guide_text">둘러보기 기능은 오직 체험용도로 사용되며, 일지 작성/수정/삭제와 같은 기능은 지원하지 않습니다.\n로그인을 원하시는 경우 하단 오른쪽에 있는 설정버튼 클릭->로그인 클릭을 통해 로그인 화면으로 이동할 수 있습니다.</string>
+    <string name="look_around_guide_text_local">둘러보기 기능은 오직 체험용도로 사용되며, 일지 작성/수정/삭제와 같은 기능은 지원하지 않습니다.\n모든 기능을 사용하려면 앱을 종료하거나, 설정->돌아가기 버튼을 통해 첫 화면으로 이동할 수 있습니다.</string>
 
     <string name="select_date">날짜 선택</string>
     <string name="cancel">취소</string>
@@ -100,11 +103,14 @@
     
     <string name="caution">주의사항</string>
     <string name="withdrawal_caution_message">회원탈퇴를 할 경우, 동일한 아이디로는 24시간 이내 재 회원가입이 불가능하며, 지금까지 작성한 기록들은 동일한 계정으로 다시 회원가입하도라도 복구되지 않습니다.</string>
+    <string name="clear_data_caution_message">데이터는 즉시 초기화되며, 초기화된 데이터는 다시 복구할 수 없습니다.</string>
     <string name="current_login">현재 로그인 계정</string>
     <string name="my_diaries">나의 기록들</string>
     <string name="total_count_format">총 %d개</string>
     <string name="withdrawal_check_dialog_title">회원탈퇴를 원하시면, %s 를 입력한 후 \'확인\' 버튼을 눌러주세요</string>
+    <string name="clear_data_check_dialog_title">데이터 초기화를 원하시면, %s 를 입력한 후 \'확인\' 버튼을 눌러주세요</string>
     <string name="withdrawal_check_dialog_target_text">회원탈퇴</string>
+    <string name="clear_data_check_dialog_target_text">데이터초기화</string>
 
     <string name="logout_check_dialog_text">로그아웃 하실건가요?</string>
 
@@ -123,4 +129,5 @@
     <string name="input_exist_screen_password_title">기존 비밀번호 입력</string>
     <string name="password_not_macthed">비밀번호가 일치하지 않습니다.</string>
     <string name="move_back">돌아가기</string>
+    <string name="clear_data">데이터 초기화하기</string>
 </resources>
