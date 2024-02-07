@@ -26,9 +26,9 @@ class MapLocalDataSource @Inject constructor(
     }
 
     override suspend fun getDiaryListInProvince(provinceId: Int): BaseResponse<List<LocationDiary>> {
-        val recordItemList = recordDao.getRecordInMapProvince(provinceId).groupBy { it.cityGroupId }.values.first()
+        val recordItemList = recordDao.getRecordInMapProvince(provinceId).groupBy { it.cityGroupId }.values.firstOrNull()
 
-        val response = recordItemList.map { recordItem ->
+        val response = recordItemList?.map { recordItem ->
             LocationDiary(
                 thumbnailUri = recordItem.imageUri,
                 location = Location(
@@ -39,7 +39,7 @@ class MapLocalDataSource @Inject constructor(
                 ),
                 id = recordItem.id.toString()
             )
-        }
+        } ?: emptyList()
         return BaseResponse.Success(data = response)
     }
 }
