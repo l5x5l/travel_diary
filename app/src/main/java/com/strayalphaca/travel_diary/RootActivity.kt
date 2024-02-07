@@ -41,6 +41,7 @@ import com.strayalphaca.presentation.utils.collectLatestInScope
 import com.strayalphaca.travel_diary.core.presentation.logger.ScreenLogEvent
 import com.strayalphaca.travel_diary.core.presentation.logger.ScreenLogger
 import com.strayalphaca.travel_diary.core.presentation.model.MessageTrigger
+import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -78,7 +79,10 @@ class RootActivity : ComponentActivity() {
                     if (show) navHostController.navigate(Lock.route)
                 }
 
-                RootNavHost(navController = navHostController)
+                RootNavHost(
+                    navController = navHostController,
+                    setLocalToken = viewModel::setTokenToLocal
+                )
             }
         }
 
@@ -100,7 +104,8 @@ class RootActivity : ComponentActivity() {
 @Composable
 fun RootNavHost(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    setLocalToken : () -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -139,7 +144,13 @@ fun RootNavHost(
         composable(SettingsGraph.route) {
             SettingsBaseScreen(
                 exitSettingNav = { navController.popBackStack() },
-                goToLogin = { navController.navigate(LoginGraph.route) },
+                goToLogin = {
+                    if (IS_LOCAL) {
+                        navController.navigateToIntroTop()
+                    } else {
+                        navController.navigate(LoginGraph.route)
+                    }
+                },
                 goToIntro = {
                     navController.navigateToIntroTop()
                 }
@@ -227,7 +238,16 @@ fun RootNavHost(
                         popUpTo(0) { inclusive = true }
                     }
                 },
-                goToLogin = { navController.navigate(LoginGraph.route) }
+                goToLogin = {
+                    if (IS_LOCAL) {
+                        navController.navigate(HomeGraph.route){
+                            popUpTo(0) { inclusive = true }
+                        }
+                        setLocalToken()
+                    } else {
+                        navController.navigate(LoginGraph.route)
+                    }
+                }
             )
         }
 

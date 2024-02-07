@@ -118,6 +118,14 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation libs.firebase.analytics
     implementation libs.firebase.crashlytics
+
+    // room
+    implementation libs.bundles.room
+    annotationProcessor libs.roomCompiler
+    kapt libs.roomCompiler
+
+    // kotlin reflection
+    implementation libs.kotlin.reflection
 }
 
 kapt {

@@ -21,6 +21,7 @@ import com.strayalphaca.presentation.components.atom.base_button.BaseButton
 import com.strayalphaca.presentation.components.template.dialog.CheckByInputTextDialog
 import com.strayalphaca.presentation.utils.collectAsEffect
 import com.strayalphaca.presentation.utils.restartApplication
+import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
 
 
 @Composable
@@ -52,10 +53,10 @@ fun WithdrawalScreen(
     if (showCheckDialog) {
         CheckByInputTextDialog(
             title = stringResource(
-                id = R.string.withdrawal_check_dialog_title,
-                stringResource(id = R.string.withdrawal_check_dialog_target_text)
+                id = if (IS_LOCAL) R.string.clear_data_check_dialog_title else R.string.withdrawal_check_dialog_title,
+                stringResource(id = if (IS_LOCAL) R.string.clear_data_check_dialog_target_text else R.string.withdrawal_check_dialog_target_text)
             ),
-            targetText = stringResource(id = R.string.withdrawal_check_dialog_target_text),
+            targetText = stringResource(id = if (IS_LOCAL) R.string.clear_data_check_dialog_target_text else R.string.withdrawal_check_dialog_target_text),
             onDismissRequest = viewModel::closeDialog,
             onSelectConfirm = viewModel::withdrawal
         )
@@ -89,15 +90,6 @@ fun WithdrawalScreen(
                     .padding(vertical = 12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(style = MaterialTheme.typography.body1, text = stringResource(id = R.string.current_login))
-                    Text(style = MaterialTheme.typography.body1, text = "")
-                }
-
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
                     Text(style = MaterialTheme.typography.body1, text = stringResource(id = R.string.my_diaries))
                     Text(style = MaterialTheme.typography.body1, text = stringResource(id = R.string.total_count_format, diaryCount))
                 }
@@ -113,7 +105,7 @@ fun WithdrawalScreen(
 
                 Text(
                     style = MaterialTheme.typography.body2,
-                    text = stringResource(id = R.string.withdrawal_caution_message)
+                    text = stringResource(id = if (IS_LOCAL) R.string.clear_data_caution_message else R.string.withdrawal_caution_message)
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -124,7 +116,7 @@ fun WithdrawalScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
-                text = stringResource(id = R.string.withdrawal),
+                text = stringResource(id = if (IS_LOCAL) R.string.clear_data else R.string.withdrawal),
                 onClick = {
                     viewModel.showDialog()
                 },

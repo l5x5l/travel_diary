@@ -13,4 +13,5 @@ interface DiaryDataSource {
     suspend fun uploadDiaryAndGetId(diaryWriteData : DiaryWriteData) : String
     suspend fun modifyDiary(diaryModifyData: DiaryModifyData)
     suspend fun removeDiary(id : String)
+    suspend fun getDiaryCount() : Int
 }
