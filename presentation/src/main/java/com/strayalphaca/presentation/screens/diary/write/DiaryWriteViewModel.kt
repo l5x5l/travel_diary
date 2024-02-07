@@ -12,6 +12,7 @@ import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
 import com.strayalphaca.presentation.screens.diary.model.MediaFileInDiary
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
+import com.strayalphaca.presentation.screens.diary.util.fileTypeTransfer
 import com.strayalphaca.presentation.screens.diary.util.getInstanceFromDateString
 import com.strayalphaca.presentation.utils.UriHandler
 import com.strayalphaca.presentation.utils.mapIf
@@ -21,6 +22,7 @@ import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
 import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
 import com.strayalphaca.travel_diary.diary.model.Feeling
+import com.strayalphaca.travel_diary.diary.model.File
 import com.strayalphaca.travel_diary.diary.model.Weather
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseGetDiaryDetail
 import com.strayalphaca.travel_diary.diary.use_case.UseCaseModifyDiary
@@ -240,7 +242,9 @@ class DiaryWriteViewModel @Inject constructor(
                         feeling = state.value.feeling,
                         weather = state.value.weather,
                         content = writingContent.value,
-                        medias = mediaFileIdList,
+                        mediasFiles = mediaFileIdList.zip(state.value.imageFiles){ id, fileInDiary ->
+                            File(id = id, fileLink = fileInDiary.uri.toString(), type = fileTypeTransfer(fileInDiary.fileType))
+                        },
                         voice = voiceFileId,
                         cityId = state.value.cityId,
                         cityName = state.value.cityName,

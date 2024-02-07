@@ -31,12 +31,14 @@ data class DiaryModifyData(
     val feeling: Feeling?,
     val weather : Weather?,
     val content : String?,
-    val medias : List<String>?,
+    val mediasFiles : List<File>?,
     val voice : String?,
     val cityId : Int?,
     val cityName : String ?= null
 ) {
     fun toDiaryItem() : DiaryItem {
-        return DiaryItem(id = id, imageUrl = medias?.getOrNull(0), cityName = cityName ?: "-")
+        return DiaryItem(id = id, imageUrl = mediasFiles?.getOrNull(0)?.fileLink, cityName = cityName ?: "-")
     }
+
+    val medias = mediasFiles?.map { it.id }
 }

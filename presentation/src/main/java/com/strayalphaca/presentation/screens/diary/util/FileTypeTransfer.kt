@@ -18,3 +18,20 @@ fun fileTypeTransfer(fileType : FileTypeInDiary) : FileTypeInFile {
         }
     }
 }
+
+fun fileTypeTransfer(fileType : FileTypeInFile) : FileTypeInDiary {
+    return when (fileType) {
+        FileTypeInFile.Image -> {
+            FileTypeInDiary.IMAGE
+        }
+        FileTypeInFile.Video -> {
+            FileTypeInDiary.VIDEO
+        }
+        FileTypeInFile.Voice -> {
+            FileTypeInDiary.VOICE
+        }
+        FileTypeInFile.Unknown -> {
+            throw IllegalArgumentException("Unknown file detected")
+        }
+    }
+}
