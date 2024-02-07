@@ -21,6 +21,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -35,21 +36,45 @@ object DiaryProvideModule {
 
     @Provides
     fun provideDiaryRepository(
-        @BaseClient retrofit : Retrofit,
         authRepository: AuthRepository,
-        diaryDataSource: DiaryTestDataSource,
-        diaryLocalDataSource: DiaryLocalDataSource
+        localDairyRepository: LocalDiaryRepository,
+        remoteDiaryRepository: RemoteDiaryRepository,
+        demoDiaryRepository : DiaryRepositoryImpl
     ) : DiaryRepository {
         val hasToken = authRepository.getAccessToken() != null
         return if (hasToken) {
             if (IS_LOCAL) {
-                LocalDiaryRepository(diaryLocalDataSource)
+                localDairyRepository
             } else {
-                RemoteDiaryRepository(retrofit)
+                remoteDiaryRepository
             }
         } else {
-            DiaryRepositoryImpl(diaryDataSource)
+            demoDiaryRepository
         }
+    }
+
+    @Singleton
+    @Provides
+    fun provideRemoteDiaryRepository(
+        @BaseClient retrofit : Retrofit,
+    ) : RemoteDiaryRepository {
+        return RemoteDiaryRepository(retrofit)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLocalDiaryRepository(
+        diaryLocalDataSource: DiaryLocalDataSource,
+    ) : LocalDiaryRepository {
+        return LocalDiaryRepository(diaryLocalDataSource)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDemoDiaryRepository(
+        diaryDataSource: DiaryTestDataSource,
+    ) : DiaryRepositoryImpl {
+        return DiaryRepositoryImpl(diaryDataSource)
     }
 
     @DiaryErrorCodeMapperProvide
