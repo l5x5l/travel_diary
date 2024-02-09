@@ -13,12 +13,13 @@
 | 분야          | 기술 스택                                           |
 |---------------|-----------------------------------------------------|
 | **언어**  | `Kotlin`                                           |
-| **UI** | `Xml, ViewBinding`                                          |
+| **UI** | `Compose`                                          |
 | **의존성 주입** | `Dagger Hilt`                                          |
 | **구조** | `Clean Architecture, MVVM, MVI`              |
-| **jetpack** | `CameraX, Navigation`              |
+| **jetpack** | `Navigation`              |
 | **데이터베이스** | `Room`              |
 | **비동기 처리** | `Flow, Coroutine`              |
+| **통신** | `Retrofit2, Okhttp3`              |
 
 
 ## 시연 영상
