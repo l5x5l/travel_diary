@@ -87,7 +87,7 @@ fun CheckByInputTextDialog(
                     },
                     enabled = (content == targetText)
                 ) {
-                    Text(text = stringResource(id = R.string.confirm), color = MaterialTheme.colors.onSurface)
+                    Text(text = stringResource(id = R.string.check), color = MaterialTheme.colors.onSurface)
                 }
             }
         }
