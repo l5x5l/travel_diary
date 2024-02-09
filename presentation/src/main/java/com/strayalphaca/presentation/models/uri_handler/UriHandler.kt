@@ -1,4 +1,4 @@
-package com.strayalphaca.presentation.utils
+package com.strayalphaca.presentation.models.uri_handler
 
 import android.content.Context
 import android.net.Uri
@@ -37,7 +37,11 @@ class UriHandler @Inject constructor(
         context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
             cursor.moveToNext()
             val columnIndex = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)
-            path = cursor.getString(columnIndex)
+
+            path = if (columnIndex > -1)
+                cursor.getString(columnIndex)
+            else
+                uri.toString()
         }
 
         return path ?: throw IllegalArgumentException("file path from uri does not exist : $uri")

@@ -14,10 +14,11 @@ import com.strayalphaca.presentation.screens.diary.model.MediaFileInDiary
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import com.strayalphaca.presentation.screens.diary.util.fileTypeTransfer
 import com.strayalphaca.presentation.screens.diary.util.getInstanceFromDateString
-import com.strayalphaca.presentation.utils.UriHandler
+import com.strayalphaca.presentation.models.uri_handler.UriHandler
 import com.strayalphaca.presentation.utils.mapIf
 import com.strayalphaca.travel_diary.core.presentation.logger.UserEventLogger
 import com.strayalphaca.travel_diary.core.presentation.logger.UserLogEvent
+import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
 import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
@@ -114,7 +115,7 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
-    fun inputVoiceFile(file : Uri, isLocal : Boolean = false) {
+    fun inputVoiceFile(file : Uri, isLocal : Boolean = true) {
         viewModelScope.launch {
             if (uriHandler.fileSizeFromUri(file) >= 5 * 1024 * 1024) {
                 _toastMessage.emit("5mb 이상 파일은 업로드할 수 없습니다. 더 작은 파일을 선택해주세요.")
@@ -369,7 +370,7 @@ class DiaryWriteViewModel @Inject constructor(
                 state.copy(buttonActive = true, showLoadingError = true, showInitLoading = false)
             }
             is DiaryWriteEvent.DiaryLoadingSuccess -> {
-                events.diaryDetail.voiceFile?.fileLink?.let { musicPlayer.setMusic(it.toUri(), false) }
+                events.diaryDetail.voiceFile?.fileLink?.let { musicPlayer.setMusic(it.toUri(), IS_LOCAL) }
                 state.copy(
                     buttonActive = true,
                     showLoadingError = false,

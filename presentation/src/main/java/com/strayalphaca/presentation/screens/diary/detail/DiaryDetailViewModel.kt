@@ -13,6 +13,7 @@ import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.presentation.screens.diary.model.MusicPlayer
 import com.strayalphaca.travel_diary.core.presentation.logger.UserEventLogger
 import com.strayalphaca.travel_diary.core.presentation.logger.UserLogEvent
+import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
 import com.strayalphaca.travel_diary.domain.calendar.usecase.UseCaseHandleCachedCalendarDiary
 import com.strayalphaca.travel_diary.map.usecase.UseCaseRefreshCachedMap
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -116,7 +117,6 @@ class DiaryDetailViewModel @Inject constructor(
     private fun startMusicPlayerJob() {
         musicPlayerJob = viewModelScope.launch {
             while (true) {
-
                 if (state.value.musicPlaying) {
                     _musicProgress.value = musicPlayer.getProgress()
                 }
@@ -162,7 +162,7 @@ class DiaryDetailViewModel @Inject constructor(
                 state.copy(showError = true)
             }
             is DiaryDetailEvent.DiaryLoadingSuccess -> {
-                event.diaryDetail.voiceFile?.fileLink?.let { musicPlayer.setMusic(it.toUri(), false) }
+                event.diaryDetail.voiceFile?.fileLink?.let { musicPlayer.setMusic(it.toUri(), IS_LOCAL) }
                 state.copy(diaryDetail = event.diaryDetail, showError = false)
             }
             DiaryDetailEvent.PauseMusic -> {

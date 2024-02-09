@@ -170,8 +170,7 @@ fun DiaryWriteScreen(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
         uri?.let {
-            val isNewDiary = (id == null || id == "null")
-            changeVoiceFile(it, isNewDiary)
+            changeVoiceFile(it, true)
         }
     }
 
