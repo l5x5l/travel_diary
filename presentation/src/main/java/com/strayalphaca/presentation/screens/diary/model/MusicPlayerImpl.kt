@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import com.strayalphaca.presentation.utils.fixContentUrl
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
@@ -27,7 +28,8 @@ class MusicPlayerImpl @Inject constructor(private val context : Context) : Music
                 .build()
         )
         if (isLocal) {
-            mediaPlayer.setDataSource(context, uri)
+            val changedUri = fixContentUrl(uri)
+            mediaPlayer.setDataSource(context, changedUri)
             mediaPlayer.prepare()
         } else {
             mediaPlayer.setDataSource(uri.toString())

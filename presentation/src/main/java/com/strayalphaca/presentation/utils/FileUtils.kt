@@ -2,6 +2,7 @@ package com.strayalphaca.presentation.utils
 
 import android.content.Context
 import android.net.Uri
+import androidx.core.net.toUri
 import java.io.IOException
 import java.io.InputStream
 
@@ -22,4 +23,13 @@ fun checkUriIsVideo(uri : Uri, context : Context) : Boolean {
     val contentResolver = context.contentResolver
     val result = contentResolver.getType(uri)
     return result?.startsWith("video") ?: false
+}
+
+fun fixContentUrl(uri : Uri) : Uri {
+    val uriString = uri.toString()
+    return if (uriString.contains("content:/") && !uriString.contains("content://")){
+        uriString.replace("content:/", "content://").toUri()
+    } else {
+        uri
+    }
 }

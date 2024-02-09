@@ -97,7 +97,8 @@ interface RecordDao {
     @Query(
         "SELECT f.filePath as filePath, f.id as id, f.type as type, rf.positionInRecord as positionInRecord From FileEntity f " +
         "INNER JOIN RecordFileEntity rf ON f.id == rf.fileId " +
-        "WHERE rf.recordId = :recordId"
+        "WHERE rf.recordId = :recordId " +
+        "ORDER BY rf.positionInRecord"
     )
     suspend fun getFiles(recordId : Int) : List<FileItem>
 

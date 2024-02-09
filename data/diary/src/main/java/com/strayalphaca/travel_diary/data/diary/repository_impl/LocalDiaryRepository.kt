@@ -58,12 +58,16 @@ class LocalDiaryRepository @Inject constructor(
 
     override suspend fun modifyDiary(diaryModifyData: DiaryModifyData): BaseResponse<Nothing> {
         dataSource.modifyDiary(diaryModifyData)
-        return BaseResponse.EmptySuccess
+        return BaseResponse.EmptySuccess.also {
+            diaryItemUpdateChannel.emit(DiaryItemUpdate.Modify(diaryModifyData.toDiaryItem()))
+        }
     }
 
     override suspend fun deleteDiary(diaryId: String): BaseResponse<Nothing> {
         dataSource.removeDiary(id = diaryId)
-        return BaseResponse.EmptySuccess
+        return BaseResponse.EmptySuccess.also {
+            diaryItemUpdateChannel.emit(DiaryItemUpdate.Delete(DiaryItem(id = diaryId, imageUrl = null, cityName = "-")))
+        }
     }
 
     override suspend fun getDiaryItemUpdate(): Flow<DiaryItemUpdate> {
