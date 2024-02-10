@@ -267,7 +267,8 @@ fun DiaryDetailScreen(
                                 play = playMusic,
                                 pause = pauseMusic,
                                 soundProgressChange = changeMusicProgress,
-                                soundProgress = musicProgress
+                                soundProgress = musicProgress,
+                                isError = state.musicError
                             )
                         }
                     }

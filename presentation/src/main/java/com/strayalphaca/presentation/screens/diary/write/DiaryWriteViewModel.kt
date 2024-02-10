@@ -42,6 +42,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -103,6 +104,11 @@ class DiaryWriteViewModel @Inject constructor(
             if (response is BaseResponse.Success) {
                 inputContent(response.data.content)
                 events.send(DiaryWriteEvent.DiaryLoadingSuccess(response.data))
+                try {
+                    response.data.voiceFile?.fileLink?.let { musicPlayer.setMusic(it.toUri(), IS_LOCAL) }
+                } catch (e : IOException) {
+                    events.send(DiaryWriteEvent.MusicLoadingFail)
+                }
             } else {
                 events.send(DiaryWriteEvent.DiaryLoadingFail)
             }
@@ -122,8 +128,12 @@ class DiaryWriteViewModel @Inject constructor(
                 return@launch
             }
 
-            musicPlayer.setMusic(file, isLocal)
-            events.send(DiaryWriteEvent.AddVoiceFile(file))
+            try {
+                musicPlayer.setMusic(file, isLocal)
+                events.send(DiaryWriteEvent.AddVoiceFile(file))
+            } catch (e : IOException) {
+                events.send(DiaryWriteEvent.MusicLoadingFail)
+            }
         }
     }
 
@@ -370,7 +380,6 @@ class DiaryWriteViewModel @Inject constructor(
                 state.copy(buttonActive = true, showLoadingError = true, showInitLoading = false)
             }
             is DiaryWriteEvent.DiaryLoadingSuccess -> {
-                events.diaryDetail.voiceFile?.fileLink?.let { musicPlayer.setMusic(it.toUri(), IS_LOCAL) }
                 state.copy(
                     buttonActive = true,
                     showLoadingError = false,
@@ -397,10 +406,10 @@ class DiaryWriteViewModel @Inject constructor(
                 state.copy(buttonActive = true)
             }
             is DiaryWriteEvent.AddVoiceFile -> {
-                state.copy(voiceFile = MediaFileInDiary.LocalFile(localUri = events.file, fileType = FileType.Voice))
+                state.copy(voiceFile = MediaFileInDiary.LocalFile(localUri = events.file, fileType = FileType.Voice), musicError = false)
             }
             DiaryWriteEvent.RemoveVoiceFile -> {
-                state.copy(voiceFile = null)
+                state.copy(voiceFile = null, musicError = false)
             }
             is DiaryWriteEvent.AddImageList -> {
                 val newImages = events.file.map { MediaFileInDiary.LocalFile(localUri = it, fileType = uriHandler.getFileType(it)) }
@@ -450,6 +459,9 @@ class DiaryWriteViewModel @Inject constructor(
                     diaryDate = events.diaryDate
                 )
             }
+            DiaryWriteEvent.MusicLoadingFail -> {
+                state.copy(musicError = true)
+            }
         }
     }
 
@@ -477,6 +489,7 @@ sealed class DiaryWriteEvent {
     class SelectLocationById(val cityId : Int) : DiaryWriteEvent()
     object ClearLocation : DiaryWriteEvent()
     class SetDiaryDate(val diaryDate: DiaryDate) : DiaryWriteEvent()
+    object MusicLoadingFail : DiaryWriteEvent()
 }
 
 data class DiaryWriteState(
@@ -492,5 +505,6 @@ data class DiaryWriteState(
     val showLocationPickerDialog : Boolean = false,
     val cityName : String ?= null,
     val cityId : Int ?= null,
-    val diaryDate: DiaryDate = DiaryDate.getInstanceFromCalendar()
+    val diaryDate: DiaryDate = DiaryDate.getInstanceFromCalendar(),
+    val musicError : Boolean = false
 )
