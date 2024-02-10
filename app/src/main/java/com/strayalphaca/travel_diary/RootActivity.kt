@@ -76,7 +76,7 @@ class RootActivity : ComponentActivity() {
                 }
 
                 viewModel.showLockScreen.collectAsEffect { show ->
-                    if (show) navHostController.navigate(Lock.route)
+                    if (show && currentDestination?.route != Lock.route) navHostController.navigate(Lock.route)
                 }
 
                 RootNavHost(
