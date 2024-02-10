@@ -1,4 +1,4 @@
-package com.strayalphaca.presentation.screens.diary.component
+package com.strayalphaca.presentation.screens.diary.component.block
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding

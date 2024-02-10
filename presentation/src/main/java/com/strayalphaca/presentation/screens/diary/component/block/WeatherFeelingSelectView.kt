@@ -1,4 +1,4 @@
-package com.strayalphaca.presentation.screens.diary.write.component.block
+package com.strayalphaca.presentation.screens.diary.component.block
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
@@ -13,8 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.strayalphaca.presentation.R
-import com.strayalphaca.presentation.screens.diary.component.ContentIconImage
-import com.strayalphaca.presentation.screens.diary.component.ContentSelectView
+import com.strayalphaca.presentation.screens.diary.component.atom.ContentIconImage
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
 import com.strayalphaca.presentation.screens.diary.util.getFeelingIconId
 import com.strayalphaca.presentation.screens.diary.util.getWeatherIconId
@@ -26,9 +25,9 @@ fun WeatherFeelingSelectView(
     feeling: Feeling,
     weather: Weather,
     currentShowSelectView: CurrentShowSelectView?,
-    setFeeling : (Feeling) -> Unit,
-    setWeather : (Weather) -> Unit,
-    setCurrentShowSelectView: (CurrentShowSelectView) -> Unit
+    setFeeling : (Feeling) -> Unit = {},
+    setWeather : (Weather) -> Unit = {},
+    setCurrentShowSelectView: (CurrentShowSelectView) -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth()) {

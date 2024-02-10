@@ -1,4 +1,4 @@
-package com.strayalphaca.presentation.screens.diary.write.component.block
+package com.strayalphaca.presentation.screens.diary.component.block
 
 import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi

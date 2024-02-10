@@ -1,4 +1,4 @@
-package com.strayalphaca.presentation.screens.diary.component
+package com.strayalphaca.presentation.screens.diary.component.atom
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

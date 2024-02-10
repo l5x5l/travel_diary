@@ -8,8 +8,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
@@ -36,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
@@ -45,11 +45,13 @@ import com.strayalphaca.travel_diary.diary.model.FileType
 import com.strayalphaca.presentation.components.template.dialog.TwoButtonDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
 import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
-import com.strayalphaca.presentation.screens.diary.component.ContentIconImage
-import com.strayalphaca.presentation.screens.diary.util.getFeelingIconId
-import com.strayalphaca.presentation.screens.diary.util.getWeatherIconId
+import com.strayalphaca.presentation.screens.diary.component.block.LocationView
+import com.strayalphaca.presentation.screens.diary.component.block.WeatherFeelingSelectView
+import com.strayalphaca.presentation.screens.diary.component.template.DiaryViewTemplate
 import com.strayalphaca.presentation.utils.collectAsEffect
+import com.strayalphaca.presentation.utils.thenIf
 import com.strayalphaca.travel_diary.diary.model.Weather
+import kotlin.math.absoluteValue
 
 @Composable
 fun DiaryDetailContainer(
@@ -117,7 +119,6 @@ fun DiaryDetailScreen(
     showDeleteDialog : () -> Unit = {},
     hideDeleteDialog : () -> Unit = {}
 ) {
-    val scrollState = rememberScrollState()
     var dropdownExpanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(id) {
@@ -189,108 +190,88 @@ fun DiaryDetailScreen(
                 .height(1.dp)
                 .background(Gray2))
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             if (state.diaryDetail != null) {
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .verticalScroll(scrollState)
-                ) {
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(text = state.diaryDetail.date.toString())
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    if (state.diaryDetail.cityName != null) {
-                        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = stringResource(id = R.string.location),
-                                style = MaterialTheme.typography.body2,
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .padding(end = 10.dp)
-                            )
-
-                            Text(
-                                text = state.diaryDetail.cityName ?: stringResource(id = R.string.placeholder_location),
-                                style = MaterialTheme.typography.body2,
-                                color = MaterialTheme.colors.onSurface,
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .weight(1f)
-                                    .padding(end = 10.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                            Text(text = stringResource(id = R.string.today_feeling), style = MaterialTheme.typography.body2)
-                            Spacer(modifier = Modifier.width(10.dp))
-                            ContentIconImage(
-                                iconId = getFeelingIconId(state.diaryDetail.feeling),
-                                descriptionText = state.diaryDetail.feeling.name
-                            )
-                        }
-                        Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                            Text(text = stringResource(id = R.string.weather), style = MaterialTheme.typography.body2)
-                            Spacer(modifier = Modifier.width(10.dp))
-                            ContentIconImage(
-                                iconId = state.diaryDetail.weather.let { getWeatherIconId(it) },
-                                descriptionText = state.diaryDetail.weather.toString()
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    if (state.diaryDetail.files.isNotEmpty()) {
-                        HorizontalPager(pageCount = state.diaryDetail.files.size) {
+                DiaryViewTemplate(
+                    modifier = Modifier.weight(1f),
+                    hideMediaArea = state.diaryDetail.files.isEmpty() && state.diaryDetail.voiceFile == null,
+                    dateTextView = {
+                        Text(text = state.diaryDetail.date.toString())
+                    },
+                    locationView = {
+                        LocationView(
+                            cityName = state.diaryDetail.cityName,
+                            onClickGpsIcon = null
+                        )
+                    },
+                    weatherFeelingView = {
+                        WeatherFeelingSelectView(
+                            feeling = state.diaryDetail.feeling,
+                            weather = state.diaryDetail.weather,
+                            currentShowSelectView = null
+                        )
+                    },
+                    polaroidHorizontalPager = { isTabletMode ->
+                        val pagerState = rememberPagerState()
+                        HorizontalPager(
+                            pageCount = state.diaryDetail.files.size,
+                            state = pagerState
+                        ) { index ->
                             PolaroidView(
-                                fileUri = Uri.parse(state.diaryDetail.files[it].fileLink),
-                                thumbnailUri = Uri.parse(state.diaryDetail.files[it].getThumbnail()),
-                                isVideo = state.diaryDetail.files[it].type == FileType.VIDEO,
+                                modifier = Modifier.thenIf(isTabletMode) {
+                                    graphicsLayer {
+                                        val pageOffset = pagerState.run { currentPage - index + currentPageOffsetFraction }
+                                        if (pageOffset < 0) {
+                                            translationY = -pageOffset * size.height * 0.3f
+                                            translationX = pageOffset * size.width
+                                        }
+                                        alpha = 1 - pageOffset.absoluteValue
+                                    }
+                                },
+                                fileUri = Uri.parse(state.diaryDetail.files[index].fileLink),
+                                thumbnailUri = Uri.parse(state.diaryDetail.files[index].getThumbnail()),
+                                isVideo = state.diaryDetail.files[index].type == FileType.VIDEO,
                                 onClick = { uri ->
                                     if (state.deleteLoading) return@PolaroidView
                                     goToVideo(uri)
                                 },
                                 dateString = state.diaryDetail.date.toString(),
-                                positionString = "${it + 1}/${state.diaryDetail.files.size}"
+                                positionString = "${index + 1}/${state.diaryDetail.files.size}"
                             )
                         }
-                    } else {
-                        Divider(
-                            modifier = Modifier
-                                .fillMaxWidth(1f),
-                            thickness = 1.dp,
-                            color = MaterialTheme.colors.onSurface
+                    },
+                    textField = {
+                        if (state.diaryDetail.files.isEmpty()) {
+                            Divider(
+                                modifier = Modifier
+                                    .fillMaxWidth(1f),
+                                thickness = 1.dp,
+                                color = MaterialTheme.colors.onSurface
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Text(
+                            text = state.diaryDetail.content,
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            style = MaterialTheme.typography.body2
                         )
+                    },
+                    soundView = {
+                        state.diaryDetail.voiceFile?.let { file ->
+                            SoundView(
+                                file = file.fileLink.toUri(),
+                                playing = state.musicPlaying,
+                                play = playMusic,
+                                pause = pauseMusic,
+                                soundProgressChange = changeMusicProgress,
+                                soundProgress = musicProgress
+                            )
+                        }
                     }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Text(
-                        text = state.diaryDetail.content,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        style = MaterialTheme.typography.body2
-                    )
-
-                    Spacer(modifier = Modifier.height(40.dp))
-
-                    // voice 파일 유무에 따라 변경 필요
-                    state.diaryDetail.voiceFile?.let { file ->
-                        SoundView(
-                            file = file.fileLink.toUri(),
-                            playing = state.musicPlaying,
-                            play = playMusic,
-                            pause = pauseMusic,
-                            soundProgressChange = changeMusicProgress,
-                            soundProgress = musicProgress
-                        )
-                    }
-                }
+                )
             } else if (!state.showError) { // 데이터 로딩중
                 Box(
                     modifier = Modifier.fillMaxSize(),

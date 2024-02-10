@@ -44,13 +44,13 @@ import com.strayalphaca.presentation.components.atom.text_button.TextButtonState
 import com.strayalphaca.presentation.components.block.EmptySoundView
 import com.strayalphaca.presentation.components.template.dialog.DiaryLocationPickerDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
+import com.strayalphaca.presentation.screens.diary.component.template.DiaryViewTemplate
 import com.strayalphaca.travel_diary.diary.model.Feeling
 import com.strayalphaca.travel_diary.diary.model.Weather
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
-import com.strayalphaca.presentation.screens.diary.write.component.template.DiaryWriteContentView
-import com.strayalphaca.presentation.screens.diary.write.component.block.LocationView
-import com.strayalphaca.presentation.screens.diary.write.component.block.PolaroidHorizontalPager
-import com.strayalphaca.presentation.screens.diary.write.component.block.WeatherFeelingSelectView
+import com.strayalphaca.presentation.screens.diary.component.block.LocationView
+import com.strayalphaca.presentation.screens.diary.component.block.PolaroidHorizontalPager
+import com.strayalphaca.presentation.screens.diary.component.block.WeatherFeelingSelectView
 import com.strayalphaca.presentation.utils.GetMediaActivityResultContract
 import com.strayalphaca.presentation.utils.collectAsEffect
 import com.strayalphaca.presentation.utils.isPhotoPickerAvailable
@@ -229,16 +229,14 @@ fun DiaryWriteScreen(
                     .background(Gray2)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                text = state.diaryDate.toString()
-            )
+            Spacer(modifier = Modifier.height(8.dp))
 
             if (!state.showInitLoading && !state.showLoadingError) {
-                DiaryWriteContentView(
+                DiaryViewTemplate(
                     modifier = Modifier.weight(1f),
+                    dateTextView = {
+                        Text(text = state.diaryDate.toString())
+                    },
                     locationView = {
                         LocationView(
                             cityName = state.cityName,
@@ -255,7 +253,7 @@ fun DiaryWriteScreen(
                             setCurrentShowSelectView = showSelectView
                         )
                     },
-                    polaroidHorizontalPager = {
+                    polaroidHorizontalPager = { isTabletMode ->
                         PolaroidHorizontalPager(
                             imageFiles = state.imageFiles,
                             diaryDate = state.diaryDate,
@@ -273,7 +271,7 @@ fun DiaryWriteScreen(
                                 }
                             },
                             enabled = state.buttonActive,
-                            isTabletMode = false
+                            isTabletMode = isTabletMode
                         )
                     },
                     textField = {
