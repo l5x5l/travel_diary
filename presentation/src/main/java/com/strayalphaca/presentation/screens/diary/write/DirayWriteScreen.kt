@@ -7,17 +7,12 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -34,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
 import com.strayalphaca.presentation.components.atom.text_button.TextButton
-import com.strayalphaca.presentation.components.block.PolaroidView
 import com.strayalphaca.presentation.components.block.SoundView
 import com.strayalphaca.presentation.ui.theme.Gray2
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
@@ -47,22 +41,19 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.strayalphaca.presentation.components.atom.text_button.TextButtonState
-import com.strayalphaca.presentation.components.block.EmptyPolaroidView
 import com.strayalphaca.presentation.components.block.EmptySoundView
 import com.strayalphaca.presentation.components.template.dialog.DiaryLocationPickerDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
+import com.strayalphaca.presentation.screens.diary.component.template.DiaryViewTemplate
 import com.strayalphaca.travel_diary.diary.model.Feeling
 import com.strayalphaca.travel_diary.diary.model.Weather
-import com.strayalphaca.presentation.screens.diary.component.ContentIconImage
-import com.strayalphaca.presentation.screens.diary.component.ContentSelectView
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
-import com.strayalphaca.presentation.screens.diary.util.getFeelingIconId
-import com.strayalphaca.presentation.screens.diary.util.getWeatherIconId
+import com.strayalphaca.presentation.screens.diary.component.block.LocationView
+import com.strayalphaca.presentation.screens.diary.component.block.PolaroidHorizontalPager
+import com.strayalphaca.presentation.screens.diary.component.block.WeatherFeelingSelectView
 import com.strayalphaca.presentation.utils.GetMediaActivityResultContract
 import com.strayalphaca.presentation.utils.collectAsEffect
 import com.strayalphaca.presentation.utils.isPhotoPickerAvailable
-import com.strayalphaca.travel_diary.domain.file.model.FileType
-import kotlin.math.min
 
 @Composable
 fun DiaryWriteContainer(
@@ -119,7 +110,6 @@ fun DiaryWriteContainer(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryWriteScreen(
     id: String?,
@@ -145,7 +135,6 @@ fun DiaryWriteScreen(
     hideLocationPickerDialog : () -> Unit = {},
     selectCityById : (Int?) -> Unit = {}
 ) {
-    val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current
     val interactionSource = remember { MutableInteractionSource() }
     val focusManager = LocalFocusManager.current
@@ -240,199 +229,98 @@ fun DiaryWriteScreen(
                     .background(Gray2)
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             if (!state.showInitLoading && !state.showLoadingError) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding(horizontal = 16.dp)
-                        .verticalScroll(scrollState)
-                ) {
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Text(text = state.diaryDate.toString())
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = stringResource(id = R.string.location),
-                            style = MaterialTheme.typography.body2,
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .padding(end = 10.dp)
+                DiaryViewTemplate(
+                    modifier = Modifier.weight(1f),
+                    dateTextView = {
+                        Text(text = state.diaryDate.toString())
+                    },
+                    locationView = {
+                        LocationView(
+                            cityName = state.cityName,
+                            onClickGpsIcon = showLocationPickerDialog
                         )
-
-                        Text(
-                            text = state.cityName ?: stringResource(id = R.string.placeholder_location),
-                            style = MaterialTheme.typography.body2,
-                            color = if (state.cityName != null) MaterialTheme.colors.onSurface else Gray2,
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .weight(1f)
-                                .padding(end = 10.dp)
+                    },
+                    weatherFeelingView = {
+                        WeatherFeelingSelectView(
+                            feeling = state.feeling,
+                            weather = state.weather,
+                            currentShowSelectView = state.currentShowSelectView,
+                            setFeeling = setFeeling,
+                            setWeather = setWeather,
+                            setCurrentShowSelectView = showSelectView
                         )
-
-                        ContentIconImage(
-                            iconId = R.drawable.ic_gps,
-                            descriptionText = stringResource(id = R.string.select_location),
-                            onClick = showLocationPickerDialog
+                    },
+                    polaroidHorizontalPager = { isTabletMode ->
+                        PolaroidHorizontalPager(
+                            imageFiles = state.imageFiles,
+                            diaryDate = state.diaryDate,
+                            onClickVideo = goToVideo,
+                            onClickDeleteButton = deleteImageFile,
+                            onClickAddMedia = {
+                                if (isPhotoPickerAvailable()) {
+                                    photoPickerLauncher.launch(
+                                        PickVisualMediaRequest(
+                                            ActivityResultContracts.PickVisualMedia.ImageOnly
+                                        )
+                                    )
+                                } else {
+                                    prevPhotoPickerLauncher.launch("*/*")
+                                }
+                            },
+                            enabled = state.buttonActive,
+                            isTabletMode = isTabletMode
                         )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Row(
+                    },
+                    textField = {
+                        BasicTextField(
+                            value = content,
+                            onValueChange = changeContent,
                             modifier = Modifier
-                                .weight(1f)
-                                .align(Alignment.CenterVertically)
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.today_feeling),
-                                style = MaterialTheme.typography.body2,
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .padding(end = 10.dp)
-                            )
-                            ContentIconImage(
-                                iconId = getFeelingIconId(state.feeling),
-                                descriptionText = state.feeling.name,
-                                onClick = {
-                                    showSelectView(CurrentShowSelectView.FEELING)
-                                }
-                            )
-                        }
-                        Row(
-                            modifier = Modifier
-                                .weight(1f)
-                                .align(Alignment.CenterVertically)
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.weather),
-                                style = MaterialTheme.typography.body2,
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .padding(end = 10.dp)
-                            )
-                            ContentIconImage(
-                                iconId = getWeatherIconId(state.weather),
-                                descriptionText = state.weather.toString(),
-                                onClick = {
-                                    showSelectView(CurrentShowSelectView.WEATHER)
-                                }
-                            )
-                        }
-                    }
+                                .border(1.dp, MaterialTheme.colors.onBackground)
+                                .defaultMinSize(minHeight = 250.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
+                            decorationBox = { innerTextField ->
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    innerTextField()
 
-                    AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.WEATHER) {
-                        ContentSelectView(contentList = Weather.values().toList()) {
-                            ContentIconImage(
-                                iconId = getWeatherIconId(it),
-                                descriptionText = it.name,
-                                onClick = {
-                                    setWeather(it)
+                                    Text(
+                                        text = "${content.length}/300",
+                                        modifier = Modifier.align(Alignment.End),
+                                        style = MaterialTheme.typography.caption
+                                    )
                                 }
-                            )
-                        }
-                    }
-
-                    AnimatedVisibility(state.currentShowSelectView == CurrentShowSelectView.FEELING) {
-                        ContentSelectView(contentList = Feeling.values().toList()) {
-                            ContentIconImage(
-                                iconId = getFeelingIconId(it),
-                                descriptionText = it.name,
-                                onClick = {
-                                    setFeeling(it)
-                                }
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    HorizontalPager(pageCount = min(state.imageFiles.size + 1, 3)) { index ->
-                        val target = state.imageFiles.getOrNull(index)
-                        if (target != null) {
-                            val isVideo = state.imageFiles[index].fileType == FileType.Video
-                            PolaroidView(
-                                fileUri = state.imageFiles[index].uri,
-                                thumbnailUri = state.imageFiles[index].getThumbnailUriOrFileUri(),
-                                isVideo = isVideo,
-                                onClick = goToVideo,
-                                onDeleteClick = deleteImageFile,
-                                dateString = state.diaryDate.toString(),
-                                positionString = "${index + 1}/${state.imageFiles.size}"
+                            }
+                        )
+                    },
+                    soundView = {
+                        if (state.voiceFile != null) {
+                            SoundView(
+                                file = state.voiceFile.uri,
+                                playing = state.musicPlaying,
+                                play = playMusic,
+                                pause = pauseMusic,
+                                remove = removeVoiceFile,
+                                soundProgressChange = changeMusicProgress,
+                                soundProgress = musicProgress
                             )
                         } else {
-                            EmptyPolaroidView(
+                            EmptySoundView(
                                 onClick = {
-                                    if (!state.buttonActive) return@EmptyPolaroidView
-
-                                    if (isPhotoPickerAvailable()) {
-                                        photoPickerLauncher.launch(
-                                            PickVisualMediaRequest(
-                                                ActivityResultContracts.PickVisualMedia.ImageOnly
-                                            )
-                                        )
-                                    } else {
-                                        prevPhotoPickerLauncher.launch("*/*")
-                                    }
+                                    if (!state.buttonActive) return@EmptySoundView
+                                    mp3PickerLauncher.launch("audio/*")
                                 }
                             )
                         }
                     }
+                )
 
-                    Spacer(modifier = Modifier.height(24.dp))
-
-
-                    BasicTextField(
-                        value = content,
-                        onValueChange = changeContent,
-                        modifier = Modifier
-                            .border(1.dp, MaterialTheme.colors.onBackground)
-                            .defaultMinSize(minHeight = 250.dp),
-                        textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
-                        decorationBox = { innerTextField ->
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                innerTextField()
-
-                                Text(
-                                    text = "${content.length}/300",
-                                    modifier = Modifier.align(Alignment.End),
-                                    style = MaterialTheme.typography.caption
-                                )
-                            }
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    if (state.voiceFile != null) {
-                        SoundView(
-                            file = state.voiceFile.uri,
-                            playing = state.musicPlaying,
-                            play = playMusic,
-                            pause = pauseMusic,
-                            remove = removeVoiceFile,
-                            soundProgressChange = changeMusicProgress,
-                            soundProgress = musicProgress
-                        )
-                    } else {
-                        EmptySoundView(
-                            onClick = {
-                                if (!state.buttonActive) return@EmptySoundView
-                                mp3PickerLauncher.launch("audio/*")
-                            }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
             } else if (state.showInitLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),

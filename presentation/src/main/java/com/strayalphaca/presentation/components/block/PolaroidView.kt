@@ -30,6 +30,7 @@ import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 
 @Composable
 fun PolaroidView(
+    modifier : Modifier = Modifier,
     fileUri: Uri = Uri.EMPTY,
     thumbnailUri : Uri = Uri.EMPTY,
     isVideo: Boolean = false,
@@ -40,7 +41,7 @@ fun PolaroidView(
 ) {
     val imageViewSize = remember { mutableStateOf(IntSize(0, 0)) }
 
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = modifier.fillMaxWidth()) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
