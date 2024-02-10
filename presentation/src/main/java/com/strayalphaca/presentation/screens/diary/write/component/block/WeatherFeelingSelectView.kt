@@ -1,4 +1,4 @@
-package com.strayalphaca.presentation.screens.diary.write.component
+package com.strayalphaca.presentation.screens.diary.write.component.block
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column

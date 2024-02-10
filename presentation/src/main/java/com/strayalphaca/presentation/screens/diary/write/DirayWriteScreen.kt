@@ -12,9 +12,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -49,9 +47,10 @@ import com.strayalphaca.presentation.components.template.error_view.ErrorView
 import com.strayalphaca.travel_diary.diary.model.Feeling
 import com.strayalphaca.travel_diary.diary.model.Weather
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
-import com.strayalphaca.presentation.screens.diary.write.component.LocationView
-import com.strayalphaca.presentation.screens.diary.write.component.PolaroidHorizontalPager
-import com.strayalphaca.presentation.screens.diary.write.component.WeatherFeelingSelectView
+import com.strayalphaca.presentation.screens.diary.write.component.template.DiaryWriteContentView
+import com.strayalphaca.presentation.screens.diary.write.component.block.LocationView
+import com.strayalphaca.presentation.screens.diary.write.component.block.PolaroidHorizontalPager
+import com.strayalphaca.presentation.screens.diary.write.component.block.WeatherFeelingSelectView
 import com.strayalphaca.presentation.utils.GetMediaActivityResultContract
 import com.strayalphaca.presentation.utils.collectAsEffect
 import com.strayalphaca.presentation.utils.isPhotoPickerAvailable
@@ -136,7 +135,6 @@ fun DiaryWriteScreen(
     hideLocationPickerDialog : () -> Unit = {},
     selectCityById : (Int?) -> Unit = {}
 ) {
-    val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current
     val interactionSource = remember { MutableInteractionSource() }
     val focusManager = LocalFocusManager.current
@@ -239,210 +237,92 @@ fun DiaryWriteScreen(
             )
 
             if (!state.showInitLoading && !state.showLoadingError) {
-                BoxWithConstraints(modifier = Modifier.weight(1f)) {
-                    if (maxWidth < 600.dp) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp)
-                                .verticalScroll(scrollState)
-                        ) {
-
-                            LocationView(
-                                cityName = state.cityName,
-                                onClickGpsIcon = showLocationPickerDialog
-                            )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            WeatherFeelingSelectView(
-                                feeling = state.feeling,
-                                weather = state.weather,
-                                currentShowSelectView = state.currentShowSelectView,
-                                setFeeling = setFeeling,
-                                setWeather = setWeather,
-                                setCurrentShowSelectView = showSelectView
-                            )
-
-                            Spacer(modifier = Modifier.height(24.dp))
-
-                            PolaroidHorizontalPager(
-                                imageFiles = state.imageFiles,
-                                diaryDate = state.diaryDate,
-                                onClickVideo = goToVideo,
-                                onClickDeleteButton = deleteImageFile,
-                                onClickAddMedia = {
-                                    if (isPhotoPickerAvailable()) {
-                                        photoPickerLauncher.launch(
-                                            PickVisualMediaRequest(
-                                                ActivityResultContracts.PickVisualMedia.ImageOnly
-                                            )
+                DiaryWriteContentView(
+                    modifier = Modifier.weight(1f),
+                    locationView = {
+                        LocationView(
+                            cityName = state.cityName,
+                            onClickGpsIcon = showLocationPickerDialog
+                        )
+                    },
+                    weatherFeelingView = {
+                        WeatherFeelingSelectView(
+                            feeling = state.feeling,
+                            weather = state.weather,
+                            currentShowSelectView = state.currentShowSelectView,
+                            setFeeling = setFeeling,
+                            setWeather = setWeather,
+                            setCurrentShowSelectView = showSelectView
+                        )
+                    },
+                    polaroidHorizontalPager = {
+                        PolaroidHorizontalPager(
+                            imageFiles = state.imageFiles,
+                            diaryDate = state.diaryDate,
+                            onClickVideo = goToVideo,
+                            onClickDeleteButton = deleteImageFile,
+                            onClickAddMedia = {
+                                if (isPhotoPickerAvailable()) {
+                                    photoPickerLauncher.launch(
+                                        PickVisualMediaRequest(
+                                            ActivityResultContracts.PickVisualMedia.ImageOnly
                                         )
-                                    } else {
-                                        prevPhotoPickerLauncher.launch("*/*")
-                                    }
-                                },
-                                enabled = state.buttonActive,
-                                isTabletMode = false
-                            )
-
-                            Spacer(modifier = Modifier.height(24.dp))
-
-                            BasicTextField(
-                                value = content,
-                                onValueChange = changeContent,
-                                modifier = Modifier
-                                    .border(1.dp, MaterialTheme.colors.onBackground)
-                                    .defaultMinSize(minHeight = 250.dp),
-                                textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
-                                decorationBox = { innerTextField ->
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        innerTextField()
-
-                                        Text(
-                                            text = "${content.length}/300",
-                                            modifier = Modifier.align(Alignment.End),
-                                            style = MaterialTheme.typography.caption
-                                        )
-                                    }
+                                    )
+                                } else {
+                                    prevPhotoPickerLauncher.launch("*/*")
                                 }
-                            )
-
-                            Spacer(modifier = Modifier.height(24.dp))
-
-                            if (state.voiceFile != null) {
-                                SoundView(
-                                    file = state.voiceFile.uri,
-                                    playing = state.musicPlaying,
-                                    play = playMusic,
-                                    pause = pauseMusic,
-                                    remove = removeVoiceFile,
-                                    soundProgressChange = changeMusicProgress,
-                                    soundProgress = musicProgress
-                                )
-                            } else {
-                                EmptySoundView(
-                                    onClick = {
-                                        if (!state.buttonActive) return@EmptySoundView
-                                        mp3PickerLauncher.launch("audio/*")
-                                    }
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-
-                    } else {
-                        Column(
+                            },
+                            enabled = state.buttonActive,
+                            isTabletMode = false
+                        )
+                    },
+                    textField = {
+                        BasicTextField(
+                            value = content,
+                            onValueChange = changeContent,
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(vertical = 16.dp)
-                                .verticalScroll(scrollState)
-                        ) {
-                            Row(modifier = Modifier.fillMaxSize()) {
+                                .border(1.dp, MaterialTheme.colors.onBackground)
+                                .defaultMinSize(minHeight = 250.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
+                            decorationBox = { innerTextField ->
                                 Column(
                                     modifier = Modifier
-                                        .weight(1f)
-                                        .padding(horizontal = 16.dp)
+                                        .fillMaxWidth()
+                                        .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    LocationView(
-                                        cityName = state.cityName,
-                                        onClickGpsIcon = showLocationPickerDialog
-                                    )
+                                    innerTextField()
 
-                                    Spacer(modifier = Modifier.height(24.dp))
-
-                                    PolaroidHorizontalPager(
-                                        imageFiles = state.imageFiles,
-                                        diaryDate = state.diaryDate,
-                                        onClickVideo = goToVideo,
-                                        onClickDeleteButton = deleteImageFile,
-                                        onClickAddMedia = {
-                                            if (isPhotoPickerAvailable()) {
-                                                photoPickerLauncher.launch(
-                                                    PickVisualMediaRequest(
-                                                        ActivityResultContracts.PickVisualMedia.ImageOnly
-                                                    )
-                                                )
-                                            } else {
-                                                prevPhotoPickerLauncher.launch("*/*")
-                                            }
-                                        },
-                                        enabled = state.buttonActive,
-                                        isTabletMode = true
-                                    )
-
-                                    Spacer(modifier = Modifier.height(24.dp))
-
-                                    if (state.voiceFile != null) {
-                                        SoundView(
-                                            file = state.voiceFile.uri,
-                                            playing = state.musicPlaying,
-                                            play = playMusic,
-                                            pause = pauseMusic,
-                                            remove = removeVoiceFile,
-                                            soundProgressChange = changeMusicProgress,
-                                            soundProgress = musicProgress
-                                        )
-                                    } else {
-                                        EmptySoundView(
-                                            onClick = {
-                                                if (!state.buttonActive) return@EmptySoundView
-                                                mp3PickerLauncher.launch("audio/*")
-                                            }
-                                        )
-                                    }
-                                }
-
-                                Column(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .padding(horizontal = 16.dp)
-                                ) {
-                                    WeatherFeelingSelectView(
-                                        feeling = state.feeling,
-                                        weather = state.weather,
-                                        currentShowSelectView = state.currentShowSelectView,
-                                        setFeeling = setFeeling,
-                                        setWeather = setWeather,
-                                        setCurrentShowSelectView = showSelectView
-                                    )
-
-                                    Spacer(modifier = Modifier.height(24.dp))
-
-                                    BasicTextField(
-                                        value = content,
-                                        onValueChange = changeContent,
-                                        modifier = Modifier
-                                            .border(1.dp, MaterialTheme.colors.onBackground)
-                                            .defaultMinSize(minHeight = 250.dp),
-                                        textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onBackground),
-                                        decorationBox = { innerTextField ->
-                                            Column(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
-                                            ) {
-                                                innerTextField()
-
-                                                Text(
-                                                    text = "${content.length}/300",
-                                                    modifier = Modifier.align(Alignment.End),
-                                                    style = MaterialTheme.typography.caption
-                                                )
-                                            }
-                                        }
+                                    Text(
+                                        text = "${content.length}/300",
+                                        modifier = Modifier.align(Alignment.End),
+                                        style = MaterialTheme.typography.caption
                                     )
                                 }
                             }
+                        )
+                    },
+                    soundView = {
+                        if (state.voiceFile != null) {
+                            SoundView(
+                                file = state.voiceFile.uri,
+                                playing = state.musicPlaying,
+                                play = playMusic,
+                                pause = pauseMusic,
+                                remove = removeVoiceFile,
+                                soundProgressChange = changeMusicProgress,
+                                soundProgress = musicProgress
+                            )
+                        } else {
+                            EmptySoundView(
+                                onClick = {
+                                    if (!state.buttonActive) return@EmptySoundView
+                                    mp3PickerLauncher.launch("audio/*")
+                                }
+                            )
                         }
-
                     }
-                }
+                )
+
             } else if (state.showInitLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
