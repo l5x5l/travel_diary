@@ -26,12 +26,18 @@ fun LockScreenTextField(
     onTextChanged : (String) -> Unit,
     enabled : Boolean = true
 ) {
+    val pattern = remember { Regex("^\\d+\$") }
+
     BasicTextField(
         modifier = modifier,
         value = text,
         enabled = enabled,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        onValueChange = onTextChanged,
+        onValueChange = {
+            if (it.matches(pattern) || it.isEmpty()) {
+                onTextChanged(it)
+            }
+        },
         decorationBox = {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 text.forEachIndexed { index, c ->
