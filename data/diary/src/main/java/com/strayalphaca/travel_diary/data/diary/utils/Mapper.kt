@@ -78,7 +78,7 @@ fun mediaFileInfoDtoToFile(fileDto: MediaFileInfoDto) : File {
 
 fun voiceFileInFileDtoToFile(voiceFileInDiaryDto: VoiceFileInDiaryDto) : File {
     return File(
-        id = voiceFileInDiaryDto.originName,
+        id = voiceFileInDiaryDto.id,
         fileLink = voiceFileInDiaryDto.uploadedLink,
         type = FileType.VOICE,
         thumbnailLink = null

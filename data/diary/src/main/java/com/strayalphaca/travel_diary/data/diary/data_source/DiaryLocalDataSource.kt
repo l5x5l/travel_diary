@@ -30,7 +30,7 @@ class DiaryLocalDataSource @Inject constructor(
             weather = recordEntity.weather,
             content = recordEntity.content,
             medias = fileList.filter { it.type == "Image" || it.type == "Video" },
-            voice = fileList.find { it.type == "Voice" }?.let { VoiceFileInDiaryDto(originName = it.originName, uploadedLink = it.uploadedLink, shortLink = it.shortLink) },
+            voice = fileList.find { it.type == "Voice" }?.let { VoiceFileInDiaryDto(id = it.id, originName = it.originName, uploadedLink = it.uploadedLink, shortLink = it.shortLink) },
             cityId = recordEntity.locationId,
             createdAt = recordEntity.createdAt
         )
