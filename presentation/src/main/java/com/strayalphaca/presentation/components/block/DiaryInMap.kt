@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.strayalphaca.presentation.components.atom.diary_default_image.DiaryDefaultImage
 import com.strayalphaca.presentation.ui.theme.Tape
 import com.strayalphaca.presentation.utils.pxToDp
 
@@ -31,21 +32,18 @@ fun DiaryInMap(modifier: Modifier, onClick : (Int) -> Unit, thumbnailUrl : Strin
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding((widthPx * 0.05f).toInt().pxToDp())
-        ) {
-            if (thumbnailUrl == null) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(0.8f)
-                        .background(Tape)
+                .padding(
+                    (widthPx * 0.05f)
+                        .toInt()
+                        .pxToDp()
                 )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Tape)
-                ) {
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Tape)
+            ) {
+                if (thumbnailUrl != null) {
                     AsyncImage(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -54,8 +52,13 @@ fun DiaryInMap(modifier: Modifier, onClick : (Int) -> Unit, thumbnailUrl : Strin
                         contentDescription = "thumbnail_image",
                         contentScale = ContentScale.Crop
                     )
+                } else {
+                    DiaryDefaultImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(0.8f)
+                    )
                 }
-
             }
 
             Spacer(modifier = Modifier

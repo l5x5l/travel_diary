@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.strayalphaca.presentation.components.atom.diary_default_image.DiaryDefaultImage
 import com.strayalphaca.travel_diary.domain.calendar.model.DiaryInCalendar
 import com.strayalphaca.presentation.ui.theme.Gray4
 import com.strayalphaca.presentation.ui.theme.Tape
@@ -35,14 +36,25 @@ fun CalendarItemView(modifier: Modifier = Modifier, item: DiaryInCalendar, isTod
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(0.8f)
                     .background(Tape)
             ) {
-                AsyncImage(
-                    model = item.thumbnailUrl,
-                    contentDescription = "thumbnail_image",
-                    contentScale = ContentScale.Crop
-                )
+                if (item.thumbnailUrl != null) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(0.8f),
+                        model = item.thumbnailUrl,
+                        contentDescription = "thumbnail_image",
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    DiaryDefaultImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(0.8f)
+                    )
+                }
+
             }
 
             Spacer(modifier = Modifier.height(10.dp))
