@@ -96,6 +96,8 @@ class DiaryWriteViewModel @Inject constructor(
     }
 
     fun tryLoadDetail(id : String) {
+        if (diaryId == id) return
+
         diaryId = id
         viewModelScope.launch {
             events.send(DiaryWriteEvent.DiaryLoading)
