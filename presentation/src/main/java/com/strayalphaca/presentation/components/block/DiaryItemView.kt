@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,6 +20,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.strayalphaca.presentation.components.atom.diary_default_image.DiaryDefaultImage
 import com.strayalphaca.presentation.ui.theme.Tape
 
 @Composable
@@ -47,15 +47,22 @@ fun DiaryItemView(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(0.8f)
                     .background(Tape)
             ) {
-                imageUrl?.let{ imageUrl ->
+                if (imageUrl != null) {
                     AsyncImage(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(0.8f),
                         model = imageUrl,
                         contentDescription = "image",
                         contentScale = ContentScale.Crop
+                    )
+                } else {
+                    DiaryDefaultImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(0.8f)
                     )
                 }
             }

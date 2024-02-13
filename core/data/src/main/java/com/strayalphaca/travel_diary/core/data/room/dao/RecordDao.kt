@@ -8,6 +8,8 @@ import com.strayalphaca.travel_diary.core.data.room.entity.FileEntity
 import com.strayalphaca.travel_diary.core.data.room.entity.LocationEntity
 import com.strayalphaca.travel_diary.core.data.room.entity.RecordEntity
 import com.strayalphaca.travel_diary.core.data.room.entity.RecordFileEntity
+import com.strayalphaca.travel_diary.core.data.room.model.FileItem
+import com.strayalphaca.travel_diary.core.data.room.model.RecordItem
 
 @Dao
 interface RecordDao {
@@ -33,7 +35,7 @@ interface RecordDao {
     // 달력 일지 조회
     // 이게 문제다, join을 해서, 동일한 id를 가진 일지가 여러개 생긴 거다.
     @Query(
-        "SELECT r.id, r.createdAt as date, f.filePath as imageUri, r.locationId as locationId FROM RecordEntity r " +
+        "SELECT r.id, r.createdAt as date, f.filePath as fileUri, r.locationId as locationId, f.type as fileType FROM RecordEntity r " +
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
         "WHERE r.createdAt LIKE :dateQuery || '%' AND ( rf.positionInRecord = 0 OR rf.positionInRecord is null ) "
@@ -42,7 +44,7 @@ interface RecordDao {
 
     // 지도 일지 조회 - 전국 지도
     @Query(
-        "SELECT r.id, r.createdAt as date, f.filePath as imageUri, r.locationId as locationId, l.provinceId as provinceId, l.cityGroupId as cityGroupId FROM RecordEntity r " +
+        "SELECT r.id, r.createdAt as date, f.filePath as fileUri, r.locationId as locationId, l.provinceId as provinceId, l.cityGroupId as cityGroupId, f.type as fileType FROM RecordEntity r " +
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
         "INNER JOIN LocationEntity l on r.locationId = l.id " +
@@ -52,7 +54,7 @@ interface RecordDao {
 
     // 지도 일지 조회 - 광역시/도 기준
     @Query(
-        "SELECT r.id, r.createdAt as date, f.filePath as imageUri, r.locationId as locationId, l.provinceId as provinceId, l.cityGroupId as cityGroupId FROM RecordEntity r " +
+        "SELECT r.id, r.createdAt as date, f.filePath as fileUri, r.locationId as locationId, l.provinceId as provinceId, l.cityGroupId as cityGroupId, f.type as fileType FROM RecordEntity r " +
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
         "INNER JOIN LocationEntity l on r.locationId = l.id " +
@@ -62,7 +64,7 @@ interface RecordDao {
 
     // 일지 리스트 조회 - 단일 도시 기준
     @Query(
-        "SELECT r.id, r.createdAt as date, f.filePath as imageUri, r.locationId as locationId, l.provinceId as provinceId, l.cityGroupId as cityGroupId FROM RecordEntity r " +
+        "SELECT r.id, r.createdAt as date, f.filePath as fileUri, r.locationId as locationId, l.provinceId as provinceId, l.cityGroupId as cityGroupId, f.type as fileType FROM RecordEntity r " +
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
         "INNER JOIN LocationEntity l on r.locationId = l.id " +
@@ -73,7 +75,7 @@ interface RecordDao {
 
     // 일지 리스트 조회 - 도시 그룹 기준
     @Query(
-        "SELECT r.id, r.createdAt as date, f.filePath as imageUri, r.locationId as locationId, l.provinceId as provinceId, l.cityGroupId as cityGroupId FROM RecordEntity r " +
+        "SELECT r.id, r.createdAt as date, f.filePath as fileUri, r.locationId as locationId, l.provinceId as provinceId, l.cityGroupId as cityGroupId, f.type as fileType FROM RecordEntity r " +
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
         "INNER JOIN LocationEntity l on r.locationId = l.id " +
@@ -112,20 +114,4 @@ interface RecordDao {
 
     @Query("SELECT * FROM LocationEntity")
     suspend fun getLocations() : List<LocationEntity>
-
-    data class RecordItem(
-        val id : Int,
-        val date : String,
-        val imageUri : String?,
-        val locationId : Int?,
-        val provinceId : Int?,
-        val cityGroupId : Int?
-    )
-
-    data class FileItem(
-        val id : Int,
-        val filePath : String,
-        val type : String,
-        val positionInRecord : Int
-    )
 }

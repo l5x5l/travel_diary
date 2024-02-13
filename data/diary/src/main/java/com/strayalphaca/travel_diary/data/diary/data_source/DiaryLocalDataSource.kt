@@ -10,6 +10,7 @@ import com.strayalphaca.travel_diary.core.data.model.VoiceFileInDiaryDto
 import com.strayalphaca.travel_diary.core.data.room.dao.RecordDao
 import com.strayalphaca.travel_diary.core.data.room.entity.RecordEntity
 import com.strayalphaca.travel_diary.core.data.room.entity.RecordFileEntity
+import com.strayalphaca.travel_diary.core.data.room.model.getSingleItemPerId
 import com.strayalphaca.travel_diary.diary.model.DiaryModifyData
 import com.strayalphaca.travel_diary.diary.model.DiaryWriteData
 import com.strayalphaca.travel_diary.map.model.City
@@ -38,14 +39,16 @@ class DiaryLocalDataSource @Inject constructor(
     }
 
     override suspend fun getDiaryList(cityId: Int, perPage: Int, offset: Int): List<DiaryItemDto> {
-        return recordDao.getRecordListInCity(cityId, perPage = perPage, pageIdx = offset).map { recordItem ->
-            DiaryItemDto(
-                id = recordItem.id.toString(),
-                image = recordItem.imageUri?.let { ImageDto(originalName = it, uploadedLink = it, shortLink = it) },
-                city = City.findCity(recordItem.locationId!!).run { CityDto(id = id, name = name) },
-                provinceId = recordItem.provinceId!!
-            )
-        }
+        return recordDao.getRecordListInCity(cityId, perPage = perPage, pageIdx = offset)
+            .getSingleItemPerId()
+            .map { recordItem ->
+                DiaryItemDto(
+                    id = recordItem.id.toString(),
+                    image = recordItem.fileUri?.let { ImageDto(originalName = it, uploadedLink = it, shortLink = it) },
+                    city = City.findCity(recordItem.locationId!!).run { CityDto(id = id, name = name) },
+                    provinceId = recordItem.provinceId!!
+                )
+            }
     }
 
     override suspend fun getDiaryListByCityGroup(
@@ -53,14 +56,16 @@ class DiaryLocalDataSource @Inject constructor(
         perPage: Int,
         offset: Int
     ): List<DiaryItemDto> {
-        return recordDao.getRecordListInCityGroup(cityGroupId, perPage = perPage, pageIdx = offset).map { recordItem ->
-            DiaryItemDto(
-                id = recordItem.id.toString(),
-                image = recordItem.imageUri?.let { ImageDto(originalName = it, uploadedLink = it, shortLink = it) },
-                city = City.findCity(recordItem.locationId!!).run { CityDto(id = id, name = name) },
-                provinceId = recordItem.provinceId!!
-            )
-        }
+        return recordDao.getRecordListInCityGroup(cityGroupId, perPage = perPage, pageIdx = offset)
+            .getSingleItemPerId()
+            .map { recordItem ->
+                DiaryItemDto(
+                    id = recordItem.id.toString(),
+                    image = recordItem.fileUri?.let { ImageDto(originalName = it, uploadedLink = it, shortLink = it) },
+                    city = City.findCity(recordItem.locationId!!).run { CityDto(id = id, name = name) },
+                    provinceId = recordItem.provinceId!!
+                )
+            }
     }
 
     override suspend fun uploadDiaryAndGetId(diaryWriteData: DiaryWriteData): String {

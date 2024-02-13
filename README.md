@@ -10,22 +10,32 @@
 
 ## 기술 스택
 
-| 분야          | 기술 스택                                           |
+| 분야            | 기술 스택                                           |
 |---------------|-----------------------------------------------------|
-| **언어**  | `Kotlin`                                           |
-| **UI** | `Compose`                                          |
-| **의존성 주입** | `Dagger Hilt`                                          |
-| **구조** | `Clean Architecture, MVVM, MVI`              |
-| **jetpack** | `Navigation`              |
-| **데이터베이스** | `Room`              |
-| **비동기 처리** | `Flow, Coroutine`              |
-| **통신** | `Retrofit2, Okhttp3`              |
+| **언어**        | `Kotlin`                                           |
+| **UI**        | `Compose`                                          |
+| **의존성 주입**    | `Dagger Hilt`                                          |
+| **구조**        | `Clean Architecture, MVVM, MVI`              |
+| **jetpack**   | `Navigation`              |
+| **로컬 데이터베이스** | `Room`              |
+| **비동기 처리**    | `Flow, Coroutine`              |
+| **통신**        | `Retrofit2, Okhttp3`              |
 
 
 ## 시연 영상
 
-https://github.com/l5x5l/travel_diary/assets/39579912/a1da3cda-0d72-4359-b176-8183330c7020
+일지 작성, 수정 / 비회원 둘러보기 기능 / 푸시 알림
+<p>
+<img width="24%" src="https://github.com/l5x5l/travel_diary/assets/39579912/bd51c286-91d0-42ff-a2c5-eb9c05dad003"/>
+<img width="24%" src="https://github.com/l5x5l/travel_diary/assets/39579912/2a58489d-b8ac-4edd-8ebd-aa280545032a"/>
+<img width="24%" src="https://github.com/l5x5l/travel_diary/assets/39579912/5c614c05-1a68-45d5-a10d-31997a3d64cb"/>
+</p>
 
+화면 잠금 기능 / 폴더블 기기 화면 지원
+<p>
+<img width="24%" src="https://github.com/l5x5l/travel_diary/assets/39579912/22579f91-aa93-4fbc-afd0-aeca02856466"/>
+<img width="48%" src="https://github.com/l5x5l/travel_diary/assets/39579912/101ca059-8696-473c-91f3-3783b7d82042"/>
+</p>
 
 ### 앱 구조
 클린 아키텍쳐를 따라 app, presentation, domain, data 모듈로 구성되어 있습니다.
@@ -40,7 +50,7 @@ https://github.com/l5x5l/travel_diary/assets/39579912/a1da3cda-0d72-4359-b176-81
 
 * * *
 
-## 세부 폴더 구성 (레이어 내 모듈마다 약간의 차이가 있을 수 있습니다.)
+## 세부 폴더 구성
 ### presentation
 - screens : 화면에 대한 Activity, ViewModel코드
 - components : 화면을 구성하는 Button과 같은 선정의된 UI요소들
@@ -52,14 +62,13 @@ https://github.com/l5x5l/travel_diary/assets/39579912/a1da3cda-0d72-4359-b176-81
 ### domain
 domain 모듈은 다루는 기능(로그인, 일기 데이터 작성/조회/수정 등)별로 분리되며, 한 기능에 대한 폴더내부구조는 아래와 같다.
 - models : 해당 폴더 내에서 사용하는 클래스/데이터
-- repository : data모듈에서 구현할 repository의 인터페이스 (app 모듈에서 DI)
+- repository : data모듈에서 구현할 repository의 인터페이스
 - use_case : viewModel에서 호출하는 useCase
 - utils : 해당 폴더 내에서 사용하는 유틸 함수
 
 ### data
-- network : 네트워크 통신에 사용할 클래스의 인터페이스를 정의한다. (app 모듈에서 DI)
-- local_storage : 로컬스토리지에 접근할 떄 사용할 클래스의 인터페이스를 정의한다. (app 모듈에서 DI)
-위 공통폴더를 제외한 나머지 폴터는 data 모듈은 다루는 데이터(사용자 데이터, 일기 데이터 등)에 따라 생성되며, 한 데이터에 대한 폴더내부구조는 아래와 같다.
+- network : 네트워크 통신에 사용할 retrofit 인터페이스를 정의한다.
+- local_storage : 로컬스토리지에 접근할 떄 사용할 클래스의 인터페이스를 정의한다.
 - repository_impl : domain모듈에서 정의한 인터페이스를 구현한 repository 클래스
 - models
   - response_data : 서버/로컬 스토리지에서 전달되는 데이터 형식
