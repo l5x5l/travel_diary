@@ -10,6 +10,8 @@ import com.strayalphaca.travel_diary.domain.auth.repository.AuthRepository
 import com.strayalphaca.travel_diary.domain.file.model.FileResizeHandler
 import com.strayalphaca.travel_diary.domain.file.repository.FileRepository
 import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
+import com.strayalphaca.travel_diary.data.file.file_manager.ExternalFileManager
+import com.strayalphaca.travel_diary.data.file.file_manager.FileManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,12 +26,13 @@ object FileModule {
     fun provideFileRepository(
         @BaseClient retrofit: Retrofit,
         authRepository: AuthRepository,
-        recordDao: RecordDao
+        recordDao: RecordDao,
+        fileManager: FileManager
     ) : FileRepository {
         val hasToken = authRepository.getAccessToken() != null
         return if (hasToken) {
             if (IS_LOCAL) {
-                LocalFileRepository(recordDao)
+                LocalFileRepository(recordDao, fileManager)
             } else {
                 RemoteFileRepository(retrofit)
             }
@@ -43,5 +46,12 @@ object FileModule {
         @ApplicationContext context: Context
     ) : FileResizeHandler {
         return FileResizeHandlerImpl(context)
+    }
+
+    @Provides
+    fun provideFileManager(
+        @ApplicationContext context : Context
+    ) : FileManager {
+        return ExternalFileManager(context)
     }
 }
