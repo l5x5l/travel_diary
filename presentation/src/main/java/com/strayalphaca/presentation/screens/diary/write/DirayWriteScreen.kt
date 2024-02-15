@@ -308,7 +308,8 @@ fun DiaryWriteScreen(
                                 pause = pauseMusic,
                                 remove = removeVoiceFile,
                                 soundProgressChange = changeMusicProgress,
-                                soundProgress = musicProgress
+                                soundProgress = musicProgress,
+                                isError = state.musicError
                             )
                         } else {
                             EmptySoundView(

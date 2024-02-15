@@ -27,6 +27,7 @@ data class DiaryDto(
 }
 
 data class VoiceFileInDiaryDto(
+    val id : String = "",
     val originName : String,
     val uploadedLink : String = "",
     val shortLink : String? = null

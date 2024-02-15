@@ -27,6 +27,7 @@ class MusicPlayerImpl @Inject constructor(private val context : Context) : Music
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .build()
         )
+        mediaPlayer.reset()
         if (isLocal) {
             val changedUri = fixContentUrl(uri)
             mediaPlayer.setDataSource(context, changedUri)
@@ -61,7 +62,8 @@ class MusicPlayerImpl @Inject constructor(private val context : Context) : Music
     }
 
     override fun release() {
-        mediaPlayer.stop()
+        if (mediaPlayer.isPlaying)
+            mediaPlayer.stop()
         mediaPlayer.release()
     }
 

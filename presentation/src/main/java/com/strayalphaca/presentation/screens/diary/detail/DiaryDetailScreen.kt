@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
+import androidx.lifecycle.Lifecycle
 import com.strayalphaca.travel_diary.diary.model.DiaryDetail
 import com.strayalphaca.travel_diary.diary.model.Feeling
 import com.strayalphaca.travel_diary.diary.model.File
@@ -49,6 +50,7 @@ import com.strayalphaca.presentation.screens.diary.component.block.LocationView
 import com.strayalphaca.presentation.screens.diary.component.block.WeatherFeelingSelectView
 import com.strayalphaca.presentation.screens.diary.component.template.DiaryViewTemplate
 import com.strayalphaca.presentation.utils.collectAsEffect
+import com.strayalphaca.presentation.utils.rememberLifecycleEvent
 import com.strayalphaca.presentation.utils.thenIf
 import com.strayalphaca.travel_diary.diary.model.Weather
 import kotlin.math.absoluteValue
@@ -66,10 +68,17 @@ fun DiaryDetailContainer(
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
     val context = LocalContext.current
+    val lifecycleEvent = rememberLifecycleEvent()
 
     LaunchedEffect(needRefresh) {
         if (needRefresh)
             viewModel.tryRefresh()
+    }
+
+    LaunchedEffect(lifecycleEvent) {
+        if (lifecycleEvent == Lifecycle.Event.ON_STOP || lifecycleEvent == Lifecycle.Event.ON_PAUSE) {
+            viewModel.pauseMusic()
+        }
     }
 
     viewModel.goBackNavigationEvent.collectAsEffect { deleteSuccess ->
@@ -267,7 +276,8 @@ fun DiaryDetailScreen(
                                 play = playMusic,
                                 pause = pauseMusic,
                                 soundProgressChange = changeMusicProgress,
-                                soundProgress = musicProgress
+                                soundProgress = musicProgress,
+                                isError = state.musicError
                             )
                         }
                     }

@@ -9,11 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
 import com.strayalphaca.presentation.R
 import com.strayalphaca.presentation.components.atom.base_icon_button.BaseIconButton
+import com.strayalphaca.presentation.ui.theme.Gray4
 
 @Composable
 fun SoundView(
@@ -23,7 +25,8 @@ fun SoundView(
     pause : () -> Unit = {},
     remove : (() -> Unit)? = null,
     soundProgressChange : (Float) -> Unit = {},
-    soundProgress : Float = 0f
+    soundProgress : Float = 0f,
+    isError : Boolean = false
 ) {
 
     Box(modifier = Modifier.fillMaxWidth()) {
@@ -43,16 +46,18 @@ fun SoundView(
                     Text(modifier = Modifier.padding(start = 12.dp), text = stringResource(id = R.string.recording_file), style = MaterialTheme.typography.body2)
 
                     Row {
-                        if (playing) {
-                            BaseIconButton(
-                                iconResourceId = R.drawable.ic_pause,
-                                onClick = pause
-                            )
-                        } else {
-                            BaseIconButton(
-                                iconResourceId = R.drawable.ic_play_arrow,
-                                onClick = play
-                            )
+                        if (!isError) {
+                            if (playing) {
+                                BaseIconButton(
+                                    iconResourceId = R.drawable.ic_pause,
+                                    onClick = pause
+                                )
+                            } else {
+                                BaseIconButton(
+                                    iconResourceId = R.drawable.ic_play_arrow,
+                                    onClick = play
+                                )
+                            }
                         }
 
                         Spacer(modifier = Modifier.width(12.dp))
@@ -68,16 +73,26 @@ fun SoundView(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Slider(
-                    value = soundProgress,
-                    onValueChange = {
-                        soundProgressChange(it)
-                    },
-                    colors = SliderDefaults.colors(
-                        thumbColor = MaterialTheme.colors.onBackground,
-                        activeTrackColor = MaterialTheme.colors.onBackground
+                if (isError) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                        textAlign = TextAlign.Center,
+                        color = Gray4,
+                        style = MaterialTheme.typography.caption,
+                        text = "음성파일 로드 중 문제가 발생했습니다."
                     )
-                )
+                } else {
+                    Slider(
+                        value = soundProgress,
+                        onValueChange = {
+                            soundProgressChange(it)
+                        },
+                        colors = SliderDefaults.colors(
+                            thumbColor = MaterialTheme.colors.onBackground,
+                            activeTrackColor = MaterialTheme.colors.onBackground
+                        )
+                    )
+                }
             }
         }
     }
@@ -95,7 +110,7 @@ fun SoundView(
 fun SoundViewPreview() {
     TravelDiaryTheme {
         Surface(modifier = Modifier.padding(16.dp)) {
-            SoundView(Uri.EMPTY)
+            SoundView(Uri.EMPTY, isError = true)
         }
     }
 }

@@ -22,6 +22,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -75,6 +76,11 @@ class DiaryDetailViewModel @Inject constructor(
             val response = useCaseGetDiaryDetail(id)
             if (response is BaseResponse.Success) {
                 event.send(DiaryDetailEvent.DiaryLoadingSuccess(response.data))
+                try {
+                    response.data.voiceFile?.fileLink?.let { musicPlayer.setMusic(it.toUri(), IS_LOCAL) }
+                } catch (e : IOException) {
+                    event.send(DiaryDetailEvent.MusicLoadingFail)
+                }
             } else {
                 event.send(DiaryDetailEvent.DiaryLoadingFail)
             }
@@ -162,8 +168,7 @@ class DiaryDetailViewModel @Inject constructor(
                 state.copy(showError = true)
             }
             is DiaryDetailEvent.DiaryLoadingSuccess -> {
-                event.diaryDetail.voiceFile?.fileLink?.let { musicPlayer.setMusic(it.toUri(), IS_LOCAL) }
-                state.copy(diaryDetail = event.diaryDetail, showError = false)
+                state.copy(diaryDetail = event.diaryDetail, showError = false, musicError = false)
             }
             DiaryDetailEvent.PauseMusic -> {
                 musicPlayerJob?.cancel()
@@ -188,6 +193,9 @@ class DiaryDetailViewModel @Inject constructor(
             }
             is DiaryDetailEvent.SetShowDeleteDialog -> {
                 state.copy(showDeleteDialog = event.visible)
+            }
+            DiaryDetailEvent.MusicLoadingFail -> {
+                state.copy(musicError = true)
             }
         }
     }
@@ -216,6 +224,7 @@ sealed class DiaryDetailEvent {
     object DeleteDiaryFail : DiaryDetailEvent()
     object DeleteDiarySuccess : DiaryDetailEvent()
     class SetShowDeleteDialog(val visible : Boolean) : DiaryDetailEvent()
+    object MusicLoadingFail : DiaryDetailEvent()
 }
 
 data class DiaryDetailState (
@@ -223,5 +232,6 @@ data class DiaryDetailState (
     val showError : Boolean = false,
     val musicPlaying : Boolean = false,
     val deleteLoading : Boolean = false,
-    val showDeleteDialog : Boolean = false
+    val showDeleteDialog : Boolean = false,
+    val musicError : Boolean = false
 )

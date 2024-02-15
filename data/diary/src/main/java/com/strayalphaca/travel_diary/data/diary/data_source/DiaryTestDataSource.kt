@@ -44,7 +44,7 @@ class DiaryTestDataSource @Inject constructor(
                 weather = weather.toString(),
                 content = content,
                 medias = medias?.map { MediaFileInfoDto(id = it, originName = it, uploadedLink = it, thumbnailLink = it) } ?: emptyList(),
-                voice = voice?.let { VoiceFileInDiaryDto(it, it, null) },
+                voice = voice?.let { VoiceFileInDiaryDto(id = "", it, it, null) },
                 createdAt = "",
                 cityId = cityId,
                 place = null
@@ -62,7 +62,7 @@ class DiaryTestDataSource @Inject constructor(
                 weather = weather.toString(),
                 content = content ?: "-",
                 medias = medias?.map { MediaFileInfoDto(id = it, originName = it, uploadedLink = it, thumbnailLink = it) } ?: emptyList(),
-                voice = voice?.let { VoiceFileInDiaryDto(it, it, null) },
+                voice = voice?.let { VoiceFileInDiaryDto(id = "", it, it, null) },
                 createdAt = "",
                 cityId = cityId,
                 place = cityName
