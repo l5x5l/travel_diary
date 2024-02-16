@@ -129,5 +129,5 @@
     <string name="input_exist_screen_password_title">기존 비밀번호 입력</string>
     <string name="password_not_macthed">비밀번호가 일치하지 않습니다.</string>
     <string name="move_back">돌아가기</string>
-    <string name="clear_data">데이터 초기화하기</string>
+    <string name="clear_data">데이터 초기화</string>
 </resources>
