@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import com.strayalphaca.travel_diary.core.data.room.entity.FileEntity
 import com.strayalphaca.travel_diary.core.data.room.entity.LocationEntity
 import com.strayalphaca.travel_diary.core.data.room.entity.RecordEntity
@@ -118,13 +117,4 @@ interface RecordDao {
 
     @Query("DELETE FROM RecordEntity")
     suspend fun clearRecord()
-
-    @Query("DELETE FROM RecordFileEntity")
-    suspend fun clearRecordFile()
-
-    @Transaction
-    suspend fun clearData() {
-        clearRecord()
-        clearRecordFile()
-    }
 }

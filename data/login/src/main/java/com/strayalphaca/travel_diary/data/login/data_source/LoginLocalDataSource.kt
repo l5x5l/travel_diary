@@ -34,7 +34,7 @@ class LoginLocalDataSource @Inject constructor(
 
     override suspend fun deleteUser(): BaseResponse<Nothing> {
         withContext(Dispatchers.IO) {
-            recordDao.clearData()
+            recordDao.clearRecord()
         }
         return BaseResponse.EmptySuccess
     }
