@@ -1,6 +1,7 @@
 package com.strayalphaca.presentation.screens.settings
 
 import com.strayalphaca.presentation.R
+import com.strayalphaca.travel_diary.core.presentation.model.IS_LOCAL
 
 interface SettingsDestinations {
     val route : String
@@ -29,7 +30,7 @@ object ScreenLockScreenDestination : SettingsDestinations {
 
 object WithdrawalScreenDestination : SettingsDestinations {
     override val route: String = "withdrawal"
-    override val titleStringId : Int = R.string.withdrawal
+    override val titleStringId : Int = if (IS_LOCAL) R.string.clear_data else R.string.withdrawal
 }
 
 object ChangePasswordScreenDestination : SettingsDestinations {

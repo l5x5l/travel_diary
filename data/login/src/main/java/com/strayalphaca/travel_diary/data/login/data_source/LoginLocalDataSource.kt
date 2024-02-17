@@ -1,14 +1,16 @@
 package com.strayalphaca.travel_diary.data.login.data_source
 
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
-import com.strayalphaca.travel_diary.core.data.room.database.TrailyRoomDatabase
+import com.strayalphaca.travel_diary.core.data.room.dao.RecordDao
 import com.strayalphaca.travel_diary.data.login.model.TokensDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LoginLocalDataSource @Inject constructor(
-    private val trailyRoomDatabase: TrailyRoomDatabase
+    private val recordDao: RecordDao
 ) : LoginDataSource {
     override suspend fun postSignup(): BaseResponse<String> {
         return BaseResponse.Failure(errorCode = -1, errorMessage = "-")
@@ -32,7 +34,7 @@ class LoginLocalDataSource @Inject constructor(
 
     override suspend fun deleteUser(): BaseResponse<Nothing> {
         withContext(Dispatchers.IO) {
-            trailyRoomDatabase.clearAllTables()
+            recordDao.clearRecord()
         }
         return BaseResponse.EmptySuccess
     }

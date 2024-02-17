@@ -6,7 +6,7 @@ import com.strayalphaca.presentation.models.error_code_mapper.DefaultErrorCodeMa
 import com.strayalphaca.presentation.models.error_code_mapper.login.AuthCodeErrorCodeMapper
 import com.strayalphaca.presentation.models.error_code_mapper.login.LoginErrorCodeMapper
 import com.strayalphaca.presentation.models.error_code_mapper.login.SignupErrorCodeMapper
-import com.strayalphaca.travel_diary.core.data.room.database.TrailyRoomDatabase
+import com.strayalphaca.travel_diary.core.data.room.dao.RecordDao
 import com.strayalphaca.travel_diary.data.login.data_source.LoginDataSource
 import com.strayalphaca.travel_diary.data.login.data_source.LoginLocalDataSource
 import com.strayalphaca.travel_diary.data.login.repository_impl.LoginRepositoryImpl
@@ -44,9 +44,9 @@ object LoginModule {
     @Singleton
     @Provides
     fun provideLoginDataSource(
-        trailyRoomDatabase: TrailyRoomDatabase
+        recordDao: RecordDao
     ) : LoginDataSource {
-        return LoginLocalDataSource(trailyRoomDatabase)
+        return LoginLocalDataSource(recordDao)
     }
 
     @LoginErrorCodeMapperProvide

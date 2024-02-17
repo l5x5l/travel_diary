@@ -114,4 +114,7 @@ interface RecordDao {
 
     @Query("SELECT * FROM LocationEntity")
     suspend fun getLocations() : List<LocationEntity>
+
+    @Query("DELETE FROM RecordEntity")
+    suspend fun clearRecord()
 }
