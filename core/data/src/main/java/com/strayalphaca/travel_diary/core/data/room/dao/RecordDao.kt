@@ -117,4 +117,15 @@ interface RecordDao {
 
     @Query("DELETE FROM RecordEntity")
     suspend fun clearRecord()
+
+    @Query(
+        "SELECT f.filePath FROM FileEntity as f " +
+        "INNER JOIN RecordFileEntity as rf " +
+        "WHERE rf.recordId is null"
+    )
+    suspend fun getDeleteTargetFilePaths() : List<String>
+
+    @Query("DELETE FROM FileEntity WHERE filePath IN (:filePaths)")
+    suspend fun deleteFile(filePaths : List<String>)
+
 }
