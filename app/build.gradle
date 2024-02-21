@@ -91,6 +91,8 @@ dependencies {
     implementation libs.hilt
     kapt libs.hilt.compiler
     implementation libs.hilt.navigation.compose
+    implementation libs.hilt.worker
+    kapt libs.hilt.worker.compiler
 
     // android compose
     implementation libs.androidx.compose.ui
@@ -126,6 +128,9 @@ dependencies {
 
     // kotlin reflection
     implementation libs.kotlin.reflection
+
+    // workManager
+    implementation libs.workruntime.ktx
 }
 
 kapt {

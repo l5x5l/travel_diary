@@ -9,6 +9,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
+import java.util.Calendar
 
 class ExternalFileManager constructor(
     private val context : Context
@@ -16,7 +17,7 @@ class ExternalFileManager constructor(
     override suspend fun saveFileAndGetPath(file: File): String? = withContext(Dispatchers.IO) {
         if (!isExternalStorageWritable()) return@withContext null
 
-        val fileName = file.name
+        val fileName = getCurrentTimeString() + "_" + file.name
         val externalStorageDir = context.getExternalFilesDir(null)
         val fileDirPath = externalStorageDir?.absolutePath + File.separator + "medias"
         val filePath = fileDirPath + File.separator + fileName
@@ -64,6 +65,19 @@ class ExternalFileManager constructor(
             path.replace("content:/", "content://")
         } else {
             path
+        }
+    }
+
+    private fun getCurrentTimeString() : String {
+        return Calendar.getInstance().run {
+            val year = get(Calendar.YEAR)
+            val month = get(Calendar.MONTH)
+            val day = get(Calendar.DAY_OF_MONTH)
+            val hour = get(Calendar.HOUR_OF_DAY)
+            val minute = get(Calendar.MINUTE)
+            val second = get(Calendar.SECOND)
+            val milli = get(Calendar.MILLISECOND)
+            "${year}_${month}_${day}_${hour}_${minute}_${second}_$milli"
         }
     }
 }
