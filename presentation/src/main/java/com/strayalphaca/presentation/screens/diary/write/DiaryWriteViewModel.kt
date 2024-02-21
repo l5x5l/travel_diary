@@ -80,6 +80,9 @@ class DiaryWriteViewModel @Inject constructor(
     private val _toastMessage = MutableEventFlow<String>()
     val toastMessage = _toastMessage.asEventFlow()
 
+    private val _requestPermissionSettingAction = MutableStateFlow<String?>(null)
+    val requestPermissionSettingAction = _requestPermissionSettingAction.asStateFlow()
+
     init {
         musicPlayer.setCompleteCallback {
             viewModelScope.launch {
@@ -326,6 +329,14 @@ class DiaryWriteViewModel @Inject constructor(
                 events.send(DiaryWriteEvent.ClearLocation)
             }
         }
+    }
+
+    fun showPermissionRequestDialog(permission : String) {
+        _requestPermissionSettingAction.update { permission }
+    }
+
+    fun dismissPermissionRequestDialog() {
+        _requestPermissionSettingAction.update { null }
     }
 
     private fun callGoBackNavigationEvent() {

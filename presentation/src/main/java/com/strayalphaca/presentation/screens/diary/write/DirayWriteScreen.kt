@@ -2,6 +2,7 @@ package com.strayalphaca.presentation.screens.diary.write
 
 import android.content.res.Configuration
 import android.net.Uri
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -43,6 +44,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.strayalphaca.presentation.components.atom.text_button.TextButtonState
 import com.strayalphaca.presentation.components.block.EmptySoundView
 import com.strayalphaca.presentation.components.template.dialog.DiaryLocationPickerDialog
+import com.strayalphaca.presentation.components.template.dialog.PermissionRequestDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
 import com.strayalphaca.presentation.screens.diary.component.template.DiaryViewTemplate
 import com.strayalphaca.travel_diary.diary.model.Feeling
@@ -52,8 +54,12 @@ import com.strayalphaca.presentation.screens.diary.component.block.LocationView
 import com.strayalphaca.presentation.screens.diary.component.block.PolaroidHorizontalPager
 import com.strayalphaca.presentation.screens.diary.component.block.WeatherFeelingSelectView
 import com.strayalphaca.presentation.utils.GetMediaActivityResultContract
+import com.strayalphaca.presentation.utils.WRITE_EXTERNAL_STORAGE_28
 import com.strayalphaca.presentation.utils.collectAsEffect
+import com.strayalphaca.presentation.utils.findActivity
 import com.strayalphaca.presentation.utils.isPhotoPickerAvailable
+import com.strayalphaca.presentation.utils.openAppSettings
+import com.strayalphaca.presentation.utils.rememberSinglePermissionRequestLauncher
 
 @Composable
 fun DiaryWriteContainer(
@@ -67,6 +73,7 @@ fun DiaryWriteContainer(
     val state by viewModel.state.collectAsState()
     val musicProgress by viewModel.musicProgress.collectAsState()
     val context = LocalContext.current
+    val requestPermissionSettingAction by viewModel.requestPermissionSettingAction.collectAsState()
 
     viewModel.goBackNavigationEvent.collectAsEffect { goBackNavigationEvent ->
         if (goBackNavigationEvent)
@@ -75,6 +82,18 @@ fun DiaryWriteContainer(
 
     viewModel.toastMessage.collectAsEffect { message ->
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    requestPermissionSettingAction?.let { permission ->
+        PermissionRequestDialog(
+            title = stringResource(R.string.deny_permission),
+            message = stringResource(id = R.string.permission_description_write_external_storage_under_28),
+            isPermanentlyDeclined = context.findActivity()?.let {
+                !it.shouldShowRequestPermissionRationale(permission)
+            } ?: true,
+            onDismissRequest = viewModel::dismissPermissionRequestDialog,
+            goToSettingClick = { context.findActivity()?.openAppSettings(permission) }
+        )
     }
 
     BackHandler(true) {
@@ -106,7 +125,8 @@ fun DiaryWriteContainer(
         uploadDiary = viewModel::uploadDiary,
         showLocationPickerDialog = viewModel::showLocationPickerDialog,
         hideLocationPickerDialog = viewModel::hideLocationPickerDialog,
-        selectCityById = viewModel::selectCityById
+        selectCityById = viewModel::selectCityById,
+        showPermissionDialog = viewModel::showPermissionRequestDialog
     )
 }
 
@@ -133,7 +153,8 @@ fun DiaryWriteScreen(
     uploadDiary : () -> Unit = {},
     showLocationPickerDialog : () -> Unit = {},
     hideLocationPickerDialog : () -> Unit = {},
-    selectCityById : (Int?) -> Unit = {}
+    selectCityById : (Int?) -> Unit = {},
+    showPermissionDialog : (String) -> Unit = {}
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val interactionSource = remember { MutableInteractionSource() }
@@ -162,6 +183,18 @@ fun DiaryWriteScreen(
             changeVoiceFile(it, true)
         }
     }
+
+    val requestWriteExternalStoragePermissionLauncherForImage = rememberSinglePermissionRequestLauncher(
+        onPermissionGranted = { prevPhotoPickerLauncher.launch("*/*") },
+        onPermissionDenied = { showPermissionDialog(Settings.ACTION_APPLICATION_DETAILS_SETTINGS) }
+    )
+
+    val requestWriteExternalStoragePermissionLauncherForVoice = rememberSinglePermissionRequestLauncher(
+        onPermissionGranted = { mp3PickerLauncher.launch("audio/*") },
+        onPermissionDenied = { showPermissionDialog(Settings.ACTION_APPLICATION_DETAILS_SETTINGS) }
+    )
+
+
 
     LaunchedEffect(id) {
         if (id != null && id != "null") loadDiary(id)
@@ -267,7 +300,11 @@ fun DiaryWriteScreen(
                                         )
                                     )
                                 } else {
-                                    prevPhotoPickerLauncher.launch("*/*")
+                                    if (WRITE_EXTERNAL_STORAGE_28 == null) {
+                                        prevPhotoPickerLauncher.launch("*/*")
+                                    } else {
+                                        requestWriteExternalStoragePermissionLauncherForImage.launch(WRITE_EXTERNAL_STORAGE_28)
+                                    }
                                 }
                             },
                             enabled = state.buttonActive,
@@ -315,7 +352,12 @@ fun DiaryWriteScreen(
                             EmptySoundView(
                                 onClick = {
                                     if (!state.buttonActive) return@EmptySoundView
-                                    mp3PickerLauncher.launch("audio/*")
+
+                                    if (WRITE_EXTERNAL_STORAGE_28 == null) {
+                                        mp3PickerLauncher.launch("audio/*")
+                                    } else {
+                                        requestWriteExternalStoragePermissionLauncherForVoice.launch(WRITE_EXTERNAL_STORAGE_28)
+                                    }
                                 }
                             )
                         }
