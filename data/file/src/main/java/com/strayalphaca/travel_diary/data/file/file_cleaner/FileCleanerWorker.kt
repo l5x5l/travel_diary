@@ -1,4 +1,4 @@
-package com.strayalphaca.travel_diary
+package com.strayalphaca.travel_diary.data.file.file_cleaner
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker

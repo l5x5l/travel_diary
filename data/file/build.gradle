@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -50,4 +52,13 @@ dependencies {
 
     // retrofit2 https://github.com/square/retrofit
     implementation libs.bundles.retrofit2
+
+    // hilt
+    implementation libs.hilt
+    kapt libs.hilt.compiler
+    implementation libs.hilt.worker
+    kapt libs.hilt.worker.compiler
+
+    // workManager
+    implementation libs.workruntime.ktx
 }

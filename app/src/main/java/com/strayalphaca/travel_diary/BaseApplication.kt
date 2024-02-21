@@ -12,6 +12,7 @@ import com.google.firebase.analytics.analytics
 import com.strayalphaca.presentation.alarm.NotificationManager
 import com.strayalphaca.presentation.models.NotificationChannelInfo
 import com.strayalphaca.travel_diary.core.presentation.logger.LoggerLibManager
+import com.strayalphaca.travel_diary.data.file.file_cleaner.FileCleanerWorker
 import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
