@@ -3,8 +3,11 @@ package com.strayalphaca.presentation.utils
 import android.Manifest
 import android.app.AlarmManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.Composable
 
 val EXACT_ALARM_PERMISSION = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
     Manifest.permission.SCHEDULE_EXACT_ALARM
@@ -30,11 +33,26 @@ val POST_NOTIFICATIONS_33 =
         null
     }
 
+val WRITE_EXTERNAL_STORAGE_28 = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+    Manifest.permission.WRITE_EXTERNAL_STORAGE
+} else {
+    null
+}
 
-fun checkPostNotificationAvailable(context: Context): Boolean {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
-    } else {
-        true
-    }
+@Composable
+fun rememberSinglePermissionRequestLauncher(
+    onPermissionGranted : () -> Unit,
+    onPermissionDenied : () -> Unit
+) : ManagedActivityResultLauncher<String, Boolean> {
+    val requestWriteExternalStoragePermissionLauncherForVoice = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { granted ->
+            if (granted) {
+                onPermissionGranted()
+            } else {
+                onPermissionDenied()
+            }
+        }
+    )
+    return requestWriteExternalStoragePermissionLauncherForVoice
 }

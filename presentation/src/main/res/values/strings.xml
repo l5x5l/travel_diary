@@ -87,6 +87,7 @@
     <string name="no">아니요</string>
 
     <string name="deny_permission">권한 거부됨</string>
+    <string name="permission_description_write_external_storage_under_28">이미지 및 음성파일을 저장하기 위해서는 저장소 권한이 필요합니다.</string>
     <string name="permission_description_post_notification">알람 권한을 허용하지 않으면, 알람 표시기능을 사용할 수 없습니다.</string>
     <string name="go_to_app_setting">앱 설정 화면으로 이동하기 >></string>
     <string name="check">확인</string>

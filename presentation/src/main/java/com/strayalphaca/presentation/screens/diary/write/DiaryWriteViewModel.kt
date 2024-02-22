@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strayalpaca.travel_diary.core.domain.model.DiaryDate
 import com.strayalpaca.travel_diary.core.domain.model.BaseResponse
+import com.strayalpaca.travel_diary.domain.lock.model.LockScreenAvailabilityManager
 import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
 import com.strayalphaca.presentation.models.event_flow.asEventFlow
 import com.strayalphaca.presentation.screens.diary.model.CurrentShowSelectView
@@ -57,7 +58,8 @@ class DiaryWriteViewModel @Inject constructor(
     private val musicPlayer: MusicPlayer,
     private val uriHandler: UriHandler,
     private val fileResizeHandler: FileResizeHandler,
-    private val userEventLogger: UserEventLogger
+    private val userEventLogger: UserEventLogger,
+    private val lockScreenAvailabilityManager: LockScreenAvailabilityManager
 ) : ViewModel() {
     private val events = Channel<DiaryWriteEvent>()
     val state: StateFlow<DiaryWriteState> = events.receiveAsFlow()
@@ -79,6 +81,9 @@ class DiaryWriteViewModel @Inject constructor(
 
     private val _toastMessage = MutableEventFlow<String>()
     val toastMessage = _toastMessage.asEventFlow()
+
+    private val _requestPermissionSettingAction = MutableStateFlow<String?>(null)
+    val requestPermissionSettingAction = _requestPermissionSettingAction.asStateFlow()
 
     init {
         musicPlayer.setCompleteCallback {
@@ -328,6 +333,14 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
+    fun showPermissionRequestDialog(permission : String) {
+        _requestPermissionSettingAction.update { permission }
+    }
+
+    fun dismissPermissionRequestDialog() {
+        _requestPermissionSettingAction.update { null }
+    }
+
     private fun callGoBackNavigationEvent() {
         viewModelScope.launch {
             _goBackNavigationEvent.emit(true)
@@ -371,6 +384,10 @@ class DiaryWriteViewModel @Inject constructor(
     private fun releaseMusicPlayer() {
         musicPlayerJob?.cancel()
         musicPlayer.release()
+    }
+
+    fun disableLockScreen() {
+        lockScreenAvailabilityManager.disableLockScreen()
     }
 
     private fun reduce(state: DiaryWriteState, events: DiaryWriteEvent): DiaryWriteState {
