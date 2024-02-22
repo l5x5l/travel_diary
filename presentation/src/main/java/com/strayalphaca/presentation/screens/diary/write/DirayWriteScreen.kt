@@ -126,7 +126,8 @@ fun DiaryWriteContainer(
         showLocationPickerDialog = viewModel::showLocationPickerDialog,
         hideLocationPickerDialog = viewModel::hideLocationPickerDialog,
         selectCityById = viewModel::selectCityById,
-        showPermissionDialog = viewModel::showPermissionRequestDialog
+        showPermissionDialog = viewModel::showPermissionRequestDialog,
+        disableLockScreen = viewModel::disableLockScreen
     )
 }
 
@@ -154,7 +155,8 @@ fun DiaryWriteScreen(
     showLocationPickerDialog : () -> Unit = {},
     hideLocationPickerDialog : () -> Unit = {},
     selectCityById : (Int?) -> Unit = {},
-    showPermissionDialog : (String) -> Unit = {}
+    showPermissionDialog : (String) -> Unit = {},
+    disableLockScreen : () -> Unit = {}
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val interactionSource = remember { MutableInteractionSource() }
@@ -185,12 +187,18 @@ fun DiaryWriteScreen(
     }
 
     val requestWriteExternalStoragePermissionLauncherForImage = rememberSinglePermissionRequestLauncher(
-        onPermissionGranted = { prevPhotoPickerLauncher.launch("*/*") },
+        onPermissionGranted = {
+            disableLockScreen()
+            prevPhotoPickerLauncher.launch("*/*")
+        },
         onPermissionDenied = { showPermissionDialog(Settings.ACTION_APPLICATION_DETAILS_SETTINGS) }
     )
 
     val requestWriteExternalStoragePermissionLauncherForVoice = rememberSinglePermissionRequestLauncher(
-        onPermissionGranted = { mp3PickerLauncher.launch("audio/*") },
+        onPermissionGranted = {
+            disableLockScreen()
+            mp3PickerLauncher.launch("audio/*")
+        },
         onPermissionDenied = { showPermissionDialog(Settings.ACTION_APPLICATION_DETAILS_SETTINGS) }
     )
 
@@ -294,6 +302,7 @@ fun DiaryWriteScreen(
                             onClickDeleteButton = deleteImageFile,
                             onClickAddMedia = {
                                 if (isPhotoPickerAvailable()) {
+                                    disableLockScreen()
                                     photoPickerLauncher.launch(
                                         PickVisualMediaRequest(
                                             ActivityResultContracts.PickVisualMedia.ImageOnly
@@ -301,6 +310,7 @@ fun DiaryWriteScreen(
                                     )
                                 } else {
                                     if (WRITE_EXTERNAL_STORAGE_28 == null) {
+                                        disableLockScreen()
                                         prevPhotoPickerLauncher.launch("*/*")
                                     } else {
                                         requestWriteExternalStoragePermissionLauncherForImage.launch(WRITE_EXTERNAL_STORAGE_28)
@@ -354,6 +364,7 @@ fun DiaryWriteScreen(
                                     if (!state.buttonActive) return@EmptySoundView
 
                                     if (WRITE_EXTERNAL_STORAGE_28 == null) {
+                                        disableLockScreen()
                                         mp3PickerLauncher.launch("audio/*")
                                     } else {
                                         requestWriteExternalStoragePermissionLauncherForVoice.launch(WRITE_EXTERNAL_STORAGE_28)

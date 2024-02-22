@@ -2,6 +2,7 @@ package com.strayalphaca.travel_diary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.strayalpaca.travel_diary.domain.lock.model.LockScreenAvailabilityManager
 import com.strayalpaca.travel_diary.domain.lock.use_case.UseCaseUsePassword
 import com.strayalphaca.presentation.models.deeplink_handler.NotificationDeepLinkHandler
 import com.strayalphaca.presentation.models.event_flow.MutableEventFlow
@@ -17,7 +18,8 @@ class RootViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val deepLinkHandler: NotificationDeepLinkHandler,
     private val useCaseUsePassword: UseCaseUsePassword,
-    private val useCaseSaveToken: UseCaseSaveToken
+    private val useCaseSaveToken: UseCaseSaveToken,
+    private val lockScreenAvailabilityManager: LockScreenAvailabilityManager
 ) : ViewModel() {
     val invalidRefreshToken = authRepository.invalidRefreshToken()
 
@@ -34,6 +36,11 @@ class RootViewModel @Inject constructor(
         viewModelScope.launch {
             if (authRepository.getAccessToken() == null || !useCaseUsePassword())
                 return@launch
+
+            if (!lockScreenAvailabilityManager.lockScreenEnabled) {
+                lockScreenAvailabilityManager.enableLockScreen()
+                return@launch
+            }
 
             _showLockScreen.emit(true)
         }
