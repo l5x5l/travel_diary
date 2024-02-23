@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,6 +36,9 @@ class PushAlarmViewModel @Inject constructor(
 
     private val _requestPermissionSettingAction = MutableStateFlow<String?>(null)
     val requestPermissionSettingAction  =_requestPermissionSettingAction.asStateFlow()
+
+    private val _timePickerDialogVisibility = MutableStateFlow(false)
+    val timePickerDialogVisibility = _timePickerDialogVisibility.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -99,5 +103,13 @@ class PushAlarmViewModel @Inject constructor(
 
     fun dismissPermissionRequestDialog() {
         _requestPermissionSettingAction.value = null
+    }
+
+    fun showTimePickerDialog() {
+        _timePickerDialogVisibility.update { true }
+    }
+
+    fun hideTimePickerDialog() {
+        _timePickerDialogVisibility.update { false }
     }
 }
