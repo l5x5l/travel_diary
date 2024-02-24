@@ -1,7 +1,6 @@
 package com.strayalphaca.presentation.screens.settings.push_alarm
 
 import android.Manifest
-import android.app.TimePickerDialog
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -26,6 +25,7 @@ import com.strayalphaca.presentation.components.atom.base_button.BaseButton
 import com.strayalphaca.presentation.components.atom.base_button.BaseButtonState
 import com.strayalphaca.presentation.components.block.TextWithSwitch
 import com.strayalphaca.presentation.components.template.dialog.PermissionRequestDialog
+import com.strayalphaca.presentation.components.template.dialog.TimePickerDialog
 import com.strayalphaca.presentation.models.Route
 import com.strayalphaca.presentation.ui.theme.Gray4
 import com.strayalphaca.presentation.utils.findActivity
@@ -45,16 +45,18 @@ fun PushAlarmScreen(
     val pushAlarmMinute by viewModel.pushAlarmMinute.collectAsState()
     val targetUrl by viewModel.clickTarget.collectAsState()
     val requestPermissionSettingAction by viewModel.requestPermissionSettingAction.collectAsState()
+    val timePickerDialogVisibility by viewModel.timePickerDialogVisibility.collectAsState()
 
-    val timePickerDialog = TimePickerDialog(
-        context,
-        { _, hour, minute ->
-            viewModel.setPushAlarmTime(hour, minute)
-        },
-        pushAlarmMinute / 60,
-        pushAlarmMinute % 60,
-        false
-    )
+    if (timePickerDialogVisibility) {
+        TimePickerDialog(
+            onDismissRequest = viewModel::hideTimePickerDialog,
+            setTime = viewModel::setPushAlarmTime,
+            initHour = pushAlarmMinute / 60,
+            initMinute = pushAlarmMinute % 60,
+            is24Hour = false
+        )
+    }
+
 
     val exactNotificationPermissionsLauncher =
         rememberLauncherForActivityResult(
@@ -130,7 +132,8 @@ fun PushAlarmScreen(
                     pushAlarmMinute % 60
                 ),
                 modifier = Modifier.clickable {
-                    if (usePushAlarm) timePickerDialog.show()
+                    if (usePushAlarm)
+                        viewModel.showTimePickerDialog()
                 },
             )
         }
