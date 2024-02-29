@@ -299,7 +299,6 @@ fun DiaryWriteScreen(
                             onClickDeleteButton = deleteImageFile,
                             onClickAddMedia = {
                                 if (isPhotoPickerAvailable()) {
-                                    disableLockScreen()
                                     photoPickerLauncher.launch(
                                         PickVisualMediaRequest(
                                             ActivityResultContracts.PickVisualMedia.ImageOnly
