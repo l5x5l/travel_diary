@@ -17,15 +17,17 @@ class MapLocalDataSource @Inject constructor(
         val recordItemList = recordDao.getRecordInMapNationWide()
             .getSingleItemPerId()
             .groupBy { it.provinceId }.values
-            .firstOrNull()
+            .map {
+                it.first()
+            }
 
-        val response = recordItemList?.map { recordItem ->
+        val response = recordItemList.map { recordItem ->
             LocationDiary(
                 thumbnailUri = recordItem.fileUri,
                 location = Location.getInstanceByProvinceId(recordItem.provinceId!!),
                 id = recordItem.id.toString()
             )
-        } ?: emptyList()
+        }
         return BaseResponse.Success(data = response)
     }
 
@@ -33,9 +35,11 @@ class MapLocalDataSource @Inject constructor(
         val recordItemList = recordDao.getRecordInMapProvince(provinceId)
             .getSingleItemPerId()
             .groupBy { it.cityGroupId }.values
-            .firstOrNull()
+            .map {
+                it.first()
+            }
 
-        val response = recordItemList?.map { recordItem ->
+        val response = recordItemList.map { recordItem ->
             LocationDiary(
                 thumbnailUri = recordItem.fileUri,
                 location = Location(
@@ -46,7 +50,7 @@ class MapLocalDataSource @Inject constructor(
                 ),
                 id = recordItem.id.toString()
             )
-        } ?: emptyList()
+        }
         return BaseResponse.Success(data = response)
     }
 }
