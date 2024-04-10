@@ -5,4 +5,6 @@
 
     <string name="get_from_gallery">갤러리에서\n가져오기</string>
     <string name="take_picture_from_camera">카메라로\n촬영하기</string>
+
+    <string name="permission_description_camera">사진 촬영을 위해서는 카메라 권한이 필요합니다.</string>
 </resources>
