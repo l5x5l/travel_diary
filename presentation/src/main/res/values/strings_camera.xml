@@ -7,4 +7,7 @@
     <string name="take_picture_from_camera">카메라로\n촬영하기</string>
 
     <string name="permission_description_camera">사진 촬영을 위해서는 카메라 권한이 필요합니다.</string>
+    
+    <string name="confirmation_this_photo">이 사진으로 결정하기</string>
+    <string name="retake_photo">다시 촬영하기</string>
 </resources>

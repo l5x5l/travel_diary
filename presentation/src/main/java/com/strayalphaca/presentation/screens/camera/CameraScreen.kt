@@ -2,15 +2,21 @@ package com.strayalphaca.presentation.screens.camera
 
 import android.Manifest
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageProxy
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,10 +26,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,19 +43,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
+import androidx.core.content.ContextCompat
 import com.strayalphaca.presentation.R
+import com.strayalphaca.presentation.screens.camera.util.imageProxyToBitmap
+import com.strayalphaca.presentation.screens.camera.util.reverseHorizontal
 import com.strayalphaca.presentation.ui.theme.Tape
 import com.strayalphaca.presentation.ui.theme.TravelDiaryTheme
+import com.strayalphaca.presentation.utils.collectAsEffect
 
 @Composable
 fun CameraScreenContainer(
+    viewModel : CameraViewModel,
     onBackPress : () -> Unit
 ) {
     var permissionGranted by remember { mutableStateOf(false) }
@@ -59,25 +76,45 @@ fun CameraScreenContainer(
         }
     )
 
+    val cameraScreenState by viewModel.screenState.collectAsState()
+
+    viewModel.moveToBackStack.collectAsEffect { photoUri ->
+        if (photoUri == null) {
+            onBackPress()
+        } else {
+            // 인자 추가된 onBackPress 구현
+        }
+    }
+
     LaunchedEffect(Unit) {
-        // 권한 확인 후 요청 혹은 화면 호출
         cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
     }
 
+    BackHandler {
+        viewModel.onBackPressed()
+    }
+
     if (permissionGranted) {
-        CameraScreen()
+        CameraScreen(
+            cameraScreenState = cameraScreenState,
+            showTakenImage = viewModel::takePhoto,
+            onBackPress = onBackPress,
+            backToCamera = viewModel::moveToCameraState
+        )
     }
 }
 
 @Composable
 fun CameraScreen(
-
+    cameraScreenState: CameraScreenState,
+    showTakenImage : (Bitmap) -> Unit,
+    onBackPress: () -> Unit,
+    backToCamera : () -> Unit,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // lensFacing의 경우 추후 viewModel 내 state로 변경할 예정
-    val lensFacing = remember { CameraSelector.LENS_FACING_BACK }
+    var lensFacing by remember { mutableStateOf(CameraSelector.LENS_FACING_BACK) }
     val previewView = remember { PreviewView(context) }
     val cameraController = remember { LifecycleCameraController(context) }
 
@@ -87,7 +124,6 @@ fun CameraScreen(
         cameraController.cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
         previewView.controller = cameraController
     }
-
 
     Box(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -107,7 +143,7 @@ fun CameraScreen(
                 .padding(16.dp)
         ) {
             IconButton(
-                onClick = {  }
+                onClick = { onBackPress() }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),
@@ -149,13 +185,16 @@ fun CameraScreen(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             IconButton(
                 modifier = Modifier
                     .size(64.dp)
                     .background(Color.White, CircleShape),
                 onClick = {
                     // 카메라 전환 기능
+                    lensFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK)
+                        CameraSelector.LENS_FACING_FRONT
+                    else
+                        CameraSelector.LENS_FACING_BACK
                 }
             ) {
                 Icon(
@@ -173,7 +212,22 @@ fun CameraScreen(
                     .size(80.dp)
                     .background(Color.White, CircleShape),
                 onClick = {
-                    // 사진 촬영
+                    cameraController.takePicture(
+                        ContextCompat.getMainExecutor(context),
+                        object : ImageCapture.OnImageCapturedCallback() {
+                            override fun onCaptureSuccess(image: ImageProxy) {
+                                val bitmap = imageProxyToBitmap(image).run {
+                                    if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
+                                        this.reverseHorizontal()
+                                    } else {
+                                        this
+                                    }
+                                }
+
+                                showTakenImage(bitmap)
+                            }
+                        }
+                    )
                 }
             ) {
                 Icon(
@@ -189,6 +243,57 @@ fun CameraScreen(
             Spacer(modifier = Modifier.width(90.dp))
 
         }
+
+        if (cameraScreenState is CameraScreenState.PhotoConfirmation) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .zIndex(1f)
+            ) {
+                IconButton(
+                    onClick = { backToCamera() }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_close),
+                        contentDescription = "back_to_camera_button",
+                        modifier = Modifier
+                            .size(48.dp)
+                            .padding(12.dp),
+                        tint = Color.White
+                    )
+                }
+
+                Image(
+                    modifier = Modifier
+                        .weight(1f),
+                    bitmap = cameraScreenState.bitmap.asImageBitmap(),
+                    contentDescription = "captured photo"
+                )
+
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    TextButton(
+                        onClick = { backToCamera() },
+                        modifier = Modifier.fillMaxWidth().weight(1f)
+                    ) {
+                        Text(text = stringResource(id = R.string.retake_photo), color = Color.White)
+                    }
+
+                    Divider(
+                        modifier = Modifier.width(1.dp).height(24.dp),
+                        color = Color.White
+                    )
+
+                    TextButton(
+                        onClick = {  },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(text = stringResource(id = R.string.confirmation_this_photo), color = Color.White)
+                    }
+                }
+            }
+
+        }
     }
 }
 
@@ -202,6 +307,11 @@ fun CameraScreen(
 @Preview(showBackground = true, widthDp = 360)
 fun CameraScreenPreview(){
     TravelDiaryTheme {
-        CameraScreen()
+        CameraScreen(
+            cameraScreenState = CameraScreenState.Camera,
+            showTakenImage = {},
+            onBackPress = {},
+            backToCamera = {}
+        )
     }
 }
