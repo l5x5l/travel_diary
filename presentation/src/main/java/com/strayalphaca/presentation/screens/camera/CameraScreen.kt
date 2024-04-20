@@ -63,7 +63,8 @@ import com.strayalphaca.presentation.utils.collectAsEffect
 @Composable
 fun CameraScreenContainer(
     viewModel : CameraViewModel,
-    onBackPress : () -> Unit
+    onBackPress : () -> Unit,
+    onBackPressWithResult : (String) -> Unit
 ) {
     var permissionGranted by remember { mutableStateOf(false) }
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
@@ -82,7 +83,7 @@ fun CameraScreenContainer(
         if (photoUri == null) {
             onBackPress()
         } else {
-            // 인자 추가된 onBackPress 구현
+            onBackPressWithResult(photoUri.toString())
         }
     }
 
@@ -99,7 +100,8 @@ fun CameraScreenContainer(
             cameraScreenState = cameraScreenState,
             showTakenImage = viewModel::takePhoto,
             onBackPress = onBackPress,
-            backToCamera = viewModel::moveToCameraState
+            backToCamera = viewModel::moveToCameraState,
+            confirmImage = viewModel::confirmPhoto
         )
     }
 }
@@ -110,6 +112,7 @@ fun CameraScreen(
     showTakenImage : (Bitmap) -> Unit,
     onBackPress: () -> Unit,
     backToCamera : () -> Unit,
+    confirmImage : () -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -271,10 +274,13 @@ fun CameraScreen(
                     contentDescription = "captured photo"
                 )
 
-                Row(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     TextButton(
                         onClick = { backToCamera() },
-                        modifier = Modifier.fillMaxWidth().weight(1f)
+                        modifier = Modifier.weight(1f).padding(vertical = 8.dp)
                     ) {
                         Text(text = stringResource(id = R.string.retake_photo), color = Color.White)
                     }
@@ -285,8 +291,8 @@ fun CameraScreen(
                     )
 
                     TextButton(
-                        onClick = {  },
-                        modifier = Modifier.weight(1f)
+                        onClick = { confirmImage() },
+                        modifier = Modifier.weight(1f).padding(vertical = 8.dp)
                     ) {
                         Text(text = stringResource(id = R.string.confirmation_this_photo), color = Color.White)
                     }
@@ -311,7 +317,8 @@ fun CameraScreenPreview(){
             cameraScreenState = CameraScreenState.Camera,
             showTakenImage = {},
             onBackPress = {},
-            backToCamera = {}
+            backToCamera = {},
+            confirmImage = {}
         )
     }
 }
