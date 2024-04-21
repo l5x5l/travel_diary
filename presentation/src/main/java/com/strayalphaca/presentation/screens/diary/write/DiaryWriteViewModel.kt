@@ -390,6 +390,18 @@ class DiaryWriteViewModel @Inject constructor(
         lockScreenAvailabilityManager.disableLockScreen()
     }
 
+    fun showPhotoOptionDialog() {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.SetShowPhotoOptionDialog(true))
+        }
+    }
+
+    fun dismissPhotoOptionDialog() {
+        viewModelScope.launch {
+            events.send(DiaryWriteEvent.SetShowPhotoOptionDialog(false))
+        }
+    }
+
     private fun reduce(state: DiaryWriteState, events: DiaryWriteEvent): DiaryWriteState {
         return when (events) {
             DiaryWriteEvent.DiaryLoading -> {
@@ -481,6 +493,9 @@ class DiaryWriteViewModel @Inject constructor(
             DiaryWriteEvent.MusicLoadingFail -> {
                 state.copy(musicError = true)
             }
+            is DiaryWriteEvent.SetShowPhotoOptionDialog -> {
+                state.copy(showPhotoOptionDialog = events.show)
+            }
         }
     }
 
@@ -509,6 +524,7 @@ sealed class DiaryWriteEvent {
     object ClearLocation : DiaryWriteEvent()
     class SetDiaryDate(val diaryDate: DiaryDate) : DiaryWriteEvent()
     object MusicLoadingFail : DiaryWriteEvent()
+    class SetShowPhotoOptionDialog(val show : Boolean) : DiaryWriteEvent()
 }
 
 data class DiaryWriteState(
@@ -525,5 +541,6 @@ data class DiaryWriteState(
     val cityName : String ?= null,
     val cityId : Int ?= null,
     val diaryDate: DiaryDate = DiaryDate.getInstanceFromCalendar(),
-    val musicError : Boolean = false
+    val musicError : Boolean = false,
+    val showPhotoOptionDialog : Boolean = false
 )
