@@ -12,6 +12,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
@@ -19,6 +20,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.strayalphaca.presentation.screens.camera.CameraScreenContainer
+import com.strayalphaca.presentation.screens.camera.CameraViewModel
 import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailContainer
 import com.strayalphaca.presentation.screens.diary.detail.DiaryDetailViewModel
 import com.strayalphaca.presentation.screens.diary.write.DiaryWriteContainer
@@ -200,6 +203,13 @@ fun RootNavHost(
         ) { navBackStackEntry ->
             val viewModel = hiltViewModel<DiaryWriteViewModel>()
             val diaryId = navBackStackEntry.arguments?.getString(DiaryWrite.diaryId)
+            val imageUriStringFromCameraScreen = navBackStackEntry.savedStateHandle.get<String>("imageUriString")
+
+            LaunchedEffect(imageUriStringFromCameraScreen) {
+                imageUriStringFromCameraScreen ?: return@LaunchedEffect
+                viewModel.inputImageFile(listOf(imageUriStringFromCameraScreen.toUri()))
+            }
+
             DiaryWriteContainer(
                 id = diaryId,
                 viewModel = viewModel,
@@ -210,6 +220,9 @@ fun RootNavHost(
                 goBackWithModifySuccessResult = {
                     navController.previousBackStackEntry?.savedStateHandle?.set("modify_success", true)
                     navController.popBackStack()
+                },
+                goToCamera = {
+                    navController.navigate(Camera.route)
                 }
             )
         }
@@ -264,6 +277,20 @@ fun RootNavHost(
                 onBackPress = { navController.popBackStack() },
                 initCityGroupId = navBackStackEntry.arguments?.getInt(DiaryList.cityGroupId) ?: -1,
                 viewModel = viewModel
+            )
+        }
+
+        composable(route = Camera.route) {
+            val viewModel = hiltViewModel<CameraViewModel>()
+            CameraScreenContainer(
+                viewModel = viewModel,
+                onBackPress = { navController.popBackStack() },
+                onBackPressWithResult = { imageUriString ->
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("imageUriString", imageUriString)
+                    navController.popBackStack()
+                }
             )
         }
 
