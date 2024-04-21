@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -85,7 +86,8 @@ fun ImageSelectOptionDialog(
                     Image(
                         modifier = Modifier.size(48.dp),
                         painter = painterResource(id = R.drawable.ic_camera),
-                        contentDescription = "image_select_option_camera"
+                        contentDescription = "image_select_option_camera",
+                        colorFilter = ColorFilter.tint(color = MaterialTheme.colors.onSurface)
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -119,7 +121,8 @@ fun ImageSelectOptionDialog(
                     Image(
                         modifier = Modifier.size(48.dp),
                         painter = painterResource(id = R.drawable.ic_image),
-                        contentDescription = "image_select_option_camera"
+                        contentDescription = "image_select_option_camera",
+                        colorFilter = ColorFilter.tint(color = MaterialTheme.colors.onSurface)
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
