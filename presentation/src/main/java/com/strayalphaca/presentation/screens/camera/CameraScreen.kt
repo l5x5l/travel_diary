@@ -3,6 +3,7 @@ package com.strayalphaca.presentation.screens.camera
 import android.Manifest
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -67,10 +68,12 @@ fun CameraScreenContainer(
     onBackPressWithResult : (String) -> Unit
 ) {
     var permissionGranted by remember { mutableStateOf(false) }
+    val context = LocalContext.current
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (!isGranted) {
+                Toast.makeText(context, context.getString(R.string.permission_description_camera), Toast.LENGTH_SHORT).show()
                 onBackPress()
             }
             permissionGranted = isGranted
