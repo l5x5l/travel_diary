@@ -196,10 +196,9 @@ fun CameraScreen(
                     .size(64.dp)
                     .background(Color.White, CircleShape),
                 onClick = {
-                    // 카메라 전환 기능
-                    lensFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK)
-                        CameraSelector.LENS_FACING_FRONT
-                    else
+                    if (lensFacing == CameraSelector.LENS_FACING_BACK && cameraController.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA))
+                        lensFacing = CameraSelector.LENS_FACING_FRONT
+                    else if (lensFacing == CameraSelector.LENS_FACING_FRONT && cameraController.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA))
                         CameraSelector.LENS_FACING_BACK
                 }
             ) {
@@ -255,19 +254,22 @@ fun CameraScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black)
-                    .zIndex(1f)
+                    .zIndex(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                IconButton(
-                    onClick = { backToCamera() }
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_close),
-                        contentDescription = "back_to_camera_button",
-                        modifier = Modifier
-                            .size(48.dp)
-                            .padding(12.dp),
-                        tint = Color.White
-                    )
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    IconButton(
+                        onClick = { backToCamera() }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_close),
+                            contentDescription = "back_to_camera_button",
+                            modifier = Modifier
+                                .size(48.dp)
+                                .padding(12.dp),
+                            tint = Color.White
+                        )
+                    }
                 }
 
                 Image(
