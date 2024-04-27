@@ -101,6 +101,9 @@ dependencies {
 
     // exif interface
     implementation libs.exifinterface
+
+    // camerax
+    implementation libs.bundles.camera
 }
 
 kapt {

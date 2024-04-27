@@ -43,6 +43,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.strayalphaca.presentation.components.atom.text_button.TextButtonState
 import com.strayalphaca.presentation.components.block.EmptySoundView
 import com.strayalphaca.presentation.components.template.dialog.DiaryLocationPickerDialog
+import com.strayalphaca.presentation.components.template.dialog.ImageSelectOptionDialog
 import com.strayalphaca.presentation.components.template.dialog.PermissionRequestDialog
 import com.strayalphaca.presentation.components.template.error_view.ErrorView
 import com.strayalphaca.presentation.screens.diary.component.template.DiaryViewTemplate
@@ -66,7 +67,8 @@ fun DiaryWriteContainer(
     viewModel: DiaryWriteViewModel = viewModel(),
     goBack: () -> Unit = {},
     goToVideo  : (Uri) -> Unit = {},
-    goBackWithModifySuccessResult : () -> Unit = {}
+    goBackWithModifySuccessResult : () -> Unit = {},
+    goToCamera : () -> Unit = {}
 ) {
     val content by viewModel.writingContent.collectAsState()
     val state by viewModel.state.collectAsState()
@@ -126,7 +128,10 @@ fun DiaryWriteContainer(
         hideLocationPickerDialog = viewModel::hideLocationPickerDialog,
         selectCityById = viewModel::selectCityById,
         showPermissionDialog = viewModel::showPermissionRequestDialog,
-        disableLockScreen = viewModel::disableLockScreen
+        disableLockScreen = viewModel::disableLockScreen,
+        goToCamera = goToCamera,
+        showPhotoOptionDialog = viewModel::showPhotoOptionDialog,
+        hidePhotoOptionDialog = viewModel::dismissPhotoOptionDialog
     )
 }
 
@@ -155,7 +160,10 @@ fun DiaryWriteScreen(
     hideLocationPickerDialog : () -> Unit = {},
     selectCityById : (Int?) -> Unit = {},
     showPermissionDialog : (String) -> Unit = {},
-    disableLockScreen : () -> Unit = {}
+    disableLockScreen : () -> Unit = {},
+    goToCamera : () -> Unit = {},
+    showPhotoOptionDialog : () -> Unit = {},
+    hidePhotoOptionDialog : () -> Unit = {}
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val focusManager = LocalFocusManager.current
@@ -228,6 +236,29 @@ fun DiaryWriteScreen(
             prevSelectedCityId = state.cityId
         )
     }
+    
+    if (state.showPhotoOptionDialog) {
+        ImageSelectOptionDialog(
+            onDismissRequest = { hidePhotoOptionDialog() },
+            onCameraClick = { goToCamera() },
+            onGalleryClick = {
+                if (isPhotoPickerAvailable()) {
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(
+                            ActivityResultContracts.PickVisualMedia.ImageOnly
+                        )
+                    )
+                } else {
+                    if (WRITE_EXTERNAL_STORAGE_28 == null) {
+                        disableLockScreen()
+                        prevPhotoPickerLauncher.launch("*/*")
+                    } else {
+                        requestWriteExternalStoragePermissionLauncherForImage.launch(WRITE_EXTERNAL_STORAGE_28)
+                    }
+                }
+            }
+        )
+    }
 
     Surface {
         Column(
@@ -297,22 +328,7 @@ fun DiaryWriteScreen(
                             diaryDate = state.diaryDate,
                             onClickVideo = goToVideo,
                             onClickDeleteButton = deleteImageFile,
-                            onClickAddMedia = {
-                                if (isPhotoPickerAvailable()) {
-                                    photoPickerLauncher.launch(
-                                        PickVisualMediaRequest(
-                                            ActivityResultContracts.PickVisualMedia.ImageOnly
-                                        )
-                                    )
-                                } else {
-                                    if (WRITE_EXTERNAL_STORAGE_28 == null) {
-                                        disableLockScreen()
-                                        prevPhotoPickerLauncher.launch("*/*")
-                                    } else {
-                                        requestWriteExternalStoragePermissionLauncherForImage.launch(WRITE_EXTERNAL_STORAGE_28)
-                                    }
-                                }
-                            },
+                            onClickAddMedia = showPhotoOptionDialog,
                             enabled = state.buttonActive,
                             isTabletMode = isTabletMode
                         )

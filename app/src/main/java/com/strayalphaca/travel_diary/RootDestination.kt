@@ -67,3 +67,7 @@ object DiaryList : RootDestinations {
     val arguments = listOf(navArgument(cityGroupId){type = NavType.IntType})
     val deepLinks = listOf(navDeepLink { uriPattern = "traily://${route}/{${cityGroupId}}" })
 }
+
+object Camera : RootDestinations {
+    override val route: String = "camera"
+}

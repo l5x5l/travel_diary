@@ -3,6 +3,7 @@ package com.strayalphaca.presentation.models.uri_handler
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import android.webkit.MimeTypeMap
 
 import com.strayalphaca.travel_diary.domain.file.model.FileInfo
 import com.strayalphaca.travel_diary.domain.file.model.FileType
@@ -48,23 +49,30 @@ class UriHandler @Inject constructor(
     }
 
     fun getFileType(uri: Uri): FileType {
-        val mimeType = context.contentResolver.getType(uri) ?: return FileType.Unknown
+        val mimeType = context.contentResolver.getType(uri) ?: return getFileTypeByFileExtension(uri)
         return when {
             mimeType.contains("audio") -> {
                 FileType.Voice
             }
-
             mimeType.contains("image") -> {
                 FileType.Image
             }
-
             mimeType.contains("video") -> {
                 FileType.Video
             }
-
             else -> {
                 FileType.Unknown
             }
+        }
+    }
+
+    private fun getFileTypeByFileExtension(uri : Uri) : FileType {
+        val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+        return when(fileExtension) {
+            "jpg", "jpeg", "png" -> { FileType.Image }
+            "mp4", "webm" -> { FileType.Video }
+            "mp3", "wav" -> { FileType.Voice }
+            else -> { FileType.Unknown }
         }
     }
 
