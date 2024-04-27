@@ -199,7 +199,7 @@ fun CameraScreen(
                     if (lensFacing == CameraSelector.LENS_FACING_BACK && cameraController.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA))
                         lensFacing = CameraSelector.LENS_FACING_FRONT
                     else if (lensFacing == CameraSelector.LENS_FACING_FRONT && cameraController.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA))
-                        CameraSelector.LENS_FACING_BACK
+                        lensFacing = CameraSelector.LENS_FACING_BACK
                 }
             ) {
                 Icon(
