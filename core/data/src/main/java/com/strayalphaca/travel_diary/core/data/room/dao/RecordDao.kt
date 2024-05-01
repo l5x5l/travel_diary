@@ -33,7 +33,6 @@ interface RecordDao {
     suspend fun updateRecord(id : Int, content : String, weather : String, feeling : String, locationId : Int?)
 
     // 달력 일지 조회
-    // 이게 문제다, join을 해서, 동일한 id를 가진 일지가 여러개 생긴 거다.
     @Query(
         "SELECT r.id, r.createdAt as date, f.filePath as fileUri, r.locationId as locationId, f.type as fileType FROM RecordEntity r " +
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
@@ -68,7 +67,8 @@ interface RecordDao {
         "LEFT JOIN RecordFileEntity rf ON r.id = rf.recordId " +
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
         "INNER JOIN LocationEntity l on r.locationId = l.id " +
-        "WHERE l.id = :cityId AND ( rf.positionInRecord = 0 OR rf.positionInRecord is null )" +
+        "WHERE l.id = :cityId AND ( rf.positionInRecord = 0 OR rf.positionInRecord is null ) " +
+        "ORDER BY r.createdAt DESC " +
         "LIMIT :perPage OFFSET (:pageIdx - 1) * :perPage"
     )
     suspend fun getRecordListInCity(cityId : Int, pageIdx : Int, perPage : Int): List<RecordItem>
@@ -80,6 +80,7 @@ interface RecordDao {
         "LEFT JOIN FileEntity f on rf.fileId = f.id " +
         "INNER JOIN LocationEntity l on r.locationId = l.id " +
         "WHERE l.cityGroupId = :cityGroupId AND ( rf.positionInRecord = 0 OR rf.positionInRecord is null )" +
+        "ORDER BY r.createdAt DESC " +
         "LIMIT :perPage OFFSET (:pageIdx - 1) * :perPage"
     )
     suspend fun getRecordListInCityGroup(cityGroupId : Int, pageIdx : Int, perPage : Int) : List<RecordItem>

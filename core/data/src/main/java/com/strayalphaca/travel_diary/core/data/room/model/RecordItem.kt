@@ -27,5 +27,4 @@ fun List<RecordItem>.getSingleItemPerId() : List<RecordItem> {
     return this.groupBy { it.id }
         .map { it.value.sortedWith(RecordItem.recordItemComparatorOnSameId).first() }
         .map { if (it.fileType == "Voice") it.copy(fileUri = null) else it } // 일지 아이템에서는 음성 파일 링크는 사용되지 않으므로 null로 변경
-        .sortedBy { it.date }
 }
