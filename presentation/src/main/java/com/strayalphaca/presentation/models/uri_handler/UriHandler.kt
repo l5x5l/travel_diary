@@ -1,14 +1,16 @@
 package com.strayalphaca.presentation.models.uri_handler
 
+import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 
 import com.strayalphaca.travel_diary.domain.file.model.FileInfo
 import com.strayalphaca.travel_diary.domain.file.model.FileType
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
+import java.io.FileOutputStream
+import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,28 +26,43 @@ class UriHandler @Inject constructor(
     }
 
     fun uriToFile(uri : Uri) : FileInfo {
-        val path = uriToFilePath(uri)
         val fileType = getFileType(uri)
-        return FileInfo(file = File(path), fileType = fileType)
+        return FileInfo(file = uriToCacheFile(uri), fileType = fileType)
     }
 
-    private fun uriToFilePath(uri : Uri) : String {
+    private fun uriToCacheFile(uri : Uri) : File {
         if (uri.path?.startsWith("/storage") == true) {
-            return uri.path!!
+            return File(uri.path!!)
         }
 
-        var path : String ?= null
-        context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-            cursor.moveToNext()
-            val columnIndex = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)
-
-            path = if (columnIndex > -1)
-                cursor.getString(columnIndex)
-            else
-                uri.toString()
+        val extension = if (uri.scheme?.equals(ContentResolver.SCHEME_CONTENT) == true) {
+            MimeTypeMap.getSingleton().getExtensionFromMimeType(context.contentResolver.getType(uri))
+        } else {
+            MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(File(uri.path!!)).toString())
         }
 
-        return path ?: throw IllegalArgumentException("file path from uri does not exist : $uri")
+        val fileName = uri.path?.let { path ->
+            path.substring(path.lastIndexOf("/") + 1) + ".$extension"
+        } ?: (Calendar.getInstance().timeInMillis.toString() + ".$extension")
+
+        val file = File(context.cacheDir, fileName.replace(":", ""))
+        file.createNewFile()
+
+        val inputStream = context.contentResolver.openInputStream(uri)
+
+        inputStream?.use { inputStreamLamb ->
+            val outputStream = FileOutputStream(file)
+            val buffer = ByteArray(1024)
+            var length : Int
+            while (inputStreamLamb.read(buffer).also{ length = it } > 0 ) {
+                outputStream.write(buffer, 0, length)
+            }
+
+            outputStream.flush()
+            outputStream.close()
+        }
+
+        return file
     }
 
     fun getFileType(uri: Uri): FileType {
