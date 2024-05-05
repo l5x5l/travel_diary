@@ -8,6 +8,7 @@ import com.strayalphaca.travel_diary.map.model.Location
 import com.strayalphaca.travel_diary.map.model.LocationDiary
 import com.strayalphaca.travel_diary.map.model.LocationId
 import com.strayalphaca.travel_diary.map.model.LocationType
+import com.strayalphaca.travel_diary.map.model.Province
 import javax.inject.Inject
 
 class MapLocalDataSource @Inject constructor(
@@ -16,10 +17,12 @@ class MapLocalDataSource @Inject constructor(
     override suspend fun getDiaryListInNationWide(): BaseResponse<List<LocationDiary>> {
         val recordItemList = recordDao.getRecordInMapNationWide()
             .getSingleItemPerId()
-            .groupBy { it.provinceId }.values
-            .map {
-                it.first()
-            }
+            .groupBy {
+                it.provinceId?.let { provinceId ->
+                    Province.findProvince(provinceId).group
+                }
+            }.values
+            .map { recordItemList -> recordItemList.maxBy { it.date } }
 
         val response = recordItemList.map { recordItem ->
             LocationDiary(
@@ -32,12 +35,13 @@ class MapLocalDataSource @Inject constructor(
     }
 
     override suspend fun getDiaryListInProvince(provinceId: Int): BaseResponse<List<LocationDiary>> {
-        val recordItemList = recordDao.getRecordInMapProvince(provinceId)
+        val recordItemList = Province.getSameGroupProvinceList(Province.findProvince(provinceId))
+            .map { it.id }
+            .map { recordDao.getRecordInMapProvince(it) }
+            .flatten()
             .getSingleItemPerId()
             .groupBy { it.cityGroupId }.values
-            .map {
-                it.first()
-            }
+            .map { recordItemList -> recordItemList.maxBy{ it.date } }
 
         val response = recordItemList.map { recordItem ->
             LocationDiary(
