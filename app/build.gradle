@@ -13,7 +13,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 
 android {
     namespace 'com.strayalphaca.travel_diary'
-    compileSdk 33
+    compileSdk 34
 
     signingConfigs {
         release {
@@ -27,9 +27,9 @@ android {
     defaultConfig {
         applicationId "com.strayalphaca.travel_diary"
         minSdk 24
-        targetSdk 33
-        versionCode 3
-        versionName "1.1.0"
+        targetSdk 34
+        versionCode 4
+        versionName "1.1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

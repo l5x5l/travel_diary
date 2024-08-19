@@ -44,8 +44,14 @@ fun lastDaysOfPrevMonth(year: Int, month: Int): List<Int> {
     calendar.set(Calendar.MONTH, prevMonthIndex)
     calendar.set(Calendar.DAY_OF_MONTH, 1)
 
+    val prevMonth = if (prevMonthIndex == 0) {
+        12
+    } else {
+        month - 1
+    }
+
     val startDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-    val amountOfDayOfPrevMonth = getDayAmountOfMonth(year, month - 1)
+    val amountOfDayOfPrevMonth = getDayAmountOfMonth(year, prevMonth)
 
     return List(startDayOfWeek - 1) { i -> amountOfDayOfPrevMonth - (startDayOfWeek - 2 - i) }
 }
